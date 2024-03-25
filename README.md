@@ -1,4 +1,4 @@
-##### **Cortex Framework for Oracle EBS**
+### **Cortex Framework for Oracle EBS** ###
 
 ### **Deployment for Development or Production environments**
 
