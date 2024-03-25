@@ -1,0 +1,13 @@
+{
+    "projectId": "dataplatr-sandbox",
+    "targetBucket": "gcs-cortex-sfdc-dags",
+    "location": "US",
+
+    "ORACLE": {
+        "datasets": {
+            "cdc": "CortexOds",
+            "raw": "CortexOdsStage",
+            "reporting": "CortexEdw"
+        }
+    }
+}
