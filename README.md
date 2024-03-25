@@ -1,6 +1,6 @@
-**Cortex Framework for Oracle EBS**
+### **Cortex Framework for Oracle EBS**
 
-**Deployment for Development or Production environments**
+### **Deployment for Development or Production environments**
 
 ### **Clone the Data Foundation repository**
 
