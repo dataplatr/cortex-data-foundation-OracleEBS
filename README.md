@@ -2,6 +2,15 @@
 
 **Deployment for Development or Production environments**
 
+### **Clone the Data Foundation repository**
+
+We recommend using the [Cloud Shell](https://shell.cloud.google.com/?fromcloudshell=true&show=ide%2Cterminal).
+
+Note : These steps will require the gcloud sdk (already installed in Cloud Shell)**.**
+
+```
+git clone --recurse-submodules https://github.com/dataplatr/cortex-data-foundation-OracleEBS
+```
 Navigate into the folder
 
 ```
