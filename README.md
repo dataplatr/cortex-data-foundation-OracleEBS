@@ -2,19 +2,10 @@
 
 **Deployment for Development or Production environments**
 
-### **Clone the Data Foundation repository**
-
-We recommend using the [Cloud Shell](https://shell.cloud.google.com/?fromcloudshell=true&show=ide%2Cterminal).
-
-Note : These steps will require the gcloud sdk (already installed in Cloud Shell)**.**
-
-```
-git clone --recurse-submodules https://github.com/dataplatr/cortex-data-foundation-OracleEBS
-```
 Navigate into the folder
 
 ```
-cd cortex-data-foundation-oracle
+cd oracle-data-foundation
 ```
 **Deployment steps**
 
@@ -64,7 +55,7 @@ You will require at least one GCP project to host the BigQuery datasets and exec
 
 This is where the deployment process will trigger Cloud Build runs. Workload should have the Stage, Ods and Reporting dataset (Edw).
 
-![Enter image alt description](Images/p2l_Image_1.png)
+![Enter image alt description](Images/zjh_Image_1.png)
 
 **Data Integration overview**
 
@@ -125,7 +116,7 @@ The behavior of the deployment is controlled by the configuration file** config.
 
 The file contains global configuration and configuration specific to workload.
 
-![Enter image alt description](Images/aI4_Image_2.jpeg)
+![Enter image alt description](Images/Ryj_Image_2.jpeg)
 
 Open the file in** config/config.json. **From the Cloud Shell:
 
@@ -144,11 +135,11 @@ gcloud builds submit --project <execution project> \
 ```
 You can follow the main Build process from the first link of logs:
 
-![Enter image alt description](Images/hjw_Image_3.jpeg)
+![Enter image alt description](Images/bAF_Image_3.jpeg)
 
 Alternatively, if you have enough permissions, you can see the progress from [Cloud Build](https://console.cloud.google.com/cloud-build/).
 
-![Enter image alt description](Images/yYt_Image_4.png)
+![Enter image alt description](Images/6qQ_Image_4.png)
 
 ## **Move the files into the DAG bucket**
 
