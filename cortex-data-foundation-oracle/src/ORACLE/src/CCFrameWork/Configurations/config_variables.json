@@ -1,0 +1,25 @@
+{
+    "Configurations": {
+		"Project": "dataplatr-sandbox",
+        "DF_Region": "us-central1",
+        "DF_Repository_Id": "git-sandbox-dataform",
+        "DF_GitBranch": "develop",
+        "DF_Tags": "Finance-Oracle",
+        "Bigquery_ODS_Stage": "OdsStage",
+		"Bigquery_ODS": "Ods",		
+        "Initial_Extract_Date": "2021-01-01 00:00:00",
+		"BQ_Region": "US",        
+        "Schedule": "0 8 * * *",
+		"SourceTableListFileName": "SourceTableList.csv",
+        "SourceConnectionId_1" : "Sandbox_BQ_SA_Connection",
+		"SourceSystemId": {"EBS": "100","SalesForce": "200"},
+        "TargetConnectionId" : "Sandbox_BQ_SA_Connection",
+        "GCS_STAGE_BUCKET" : "gcs-sandbox-ods-stage",
+        "GCS_PATH":"gs://gcs-sandbox-ods-stage/OracleEBS/inputdata",
+        "GCS_EXTRACT_PATH":"OracleEBS/inputdata",
+        "GCS_SCHEMA_BUCKET":"gcs-sandbox-ods-stage-schema",
+        "GCS_SCHEMA_PATH":"schema",
+        "FILE_FORMAT": "csv",
+        "GCS_ARCHIVE_PATH": "OracleEBS/backup"
+	}
+}
