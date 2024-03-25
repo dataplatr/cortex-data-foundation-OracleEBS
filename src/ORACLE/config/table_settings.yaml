@@ -1,0 +1,8 @@
+oracle_tables:
+  - base_table: OracleEbs-AP_HOLD_CODES_MAR1024
+  - base_table: OracleEbs-AP_PAYMENT_SCHEDULES_ALL_MAR1024
+  - base_table: OracleEbs-AP_TERMS_LINES_MAR1024
+
+edw_oracle_tables:
+  - base_table: Accounting_GLJournalDetails
+  - base_table: Accounting_APInvoiceDistributions

@@ -1,0 +1,2 @@
+SourceSystem,SourceDatasetId,TableName,IsIncremental,PrimaryKey,UpdateKey,CDCColumnName,SoftDeleteColumn,ArchiveDate,ArchiveKey
+EBS,OracleEBS,OracleEbs-AP_PAYMENT_SCHEDULES_ALL_MAR1024,Y,"INVOICE_ID,PAYMENT_NUM","INVOICE_ID,PAYMENT_NUM",LAST_UPDATE_DATE,active_flg,,

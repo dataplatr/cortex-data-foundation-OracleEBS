@@ -1,0 +1,41 @@
+TargetField,DataType
+ParentSystemId,NUMERIC,NOT NULL
+SystemId,INTEGER,NOT NULL
+LedgerId,INTEGER,NOT NULL
+LedgerIdName,STRING,NOT NULL
+LedgerName,STRING,NOT NULL
+LedgerCurrencyCode,STRING,NOT NULL
+GeneralLedgerJournalKey,STRING,NOT NULL
+JournalBatchId,NUMERIC,NOT NULL
+JournalHeaderId,NUMERIC,NOT NULL
+JournalHeaderName,STRING
+JournalHeaderDesc,STRING
+AccrualRevFlag,STRING
+JournalLineNumber,NUMERIC,NOT NULL
+JournalLineDesc,STRING
+JournalBatchName,STRING
+JournalBatchDesc,STRING
+JournalBatchPostedDate,DATETIME
+JournalCategory,STRING
+JournalCategoryDesc,STRING
+LegalEntity,STRING,NOT NULL
+CodeCombinationId,NUMERIC,NOT NULL
+LocationCode,STRING,NOT NULL
+ClientCode,STRING,NOT NULL
+DepartmentCode,STRING,NOT NULL
+AccountCode,STRING,NOT NULL
+InterCompanyCode,STRING,NOT NULL
+Future2Code,STRING,NOT NULL
+PeriodName,STRING,NOT NULL
+EffectiveDate,DATETIME
+JournalSource,STRING
+JournalSourceName,STRING
+JournalStatus,STRING
+ApplicationId,NUMERIC
+EventId,NUMERIC
+AccountingDate,DATETIME
+GeneralLedgerTransferDate,DATETIME
+AccountingEventHeaderId,NUMERIC
+AccountingEventLineNumber,NUMERIC
+AccountingEventDate,DATETIME
+AccountingEventNumber,NUMERIC
