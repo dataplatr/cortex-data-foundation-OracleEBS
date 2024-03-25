@@ -74,7 +74,7 @@ steps:
         set -e
         _GCS_BUCKET=$(jq -r ."targetBucket" "${_CONFIG_FILE}")
         echo "Copying DAG files to bucket location..."
-        gsutil -m cp -r src/CCFrameWork/* gs://$_GCS_BUCKET/dags/CCFrameWork_test
+        gsutil -m cp -r src/CCFramework/* gs://$_GCS_BUCKET/dags
 
 logsBucket: "gs://$_GCS_BUCKET"
 timeout: 10200s

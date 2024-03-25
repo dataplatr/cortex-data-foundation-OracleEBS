@@ -5,9 +5,9 @@
 
     "ORACLE": {
         "datasets": {
-            "OdsStage": "TestStage",
-            "Ods": "TestOds",
-            "Edw": "TestEdw"
+            "OdsStage": "CortexOdsStage",
+            "Ods": "CortexOds",
+            "Edw": "CortexEdw"
         }
     }
 }
