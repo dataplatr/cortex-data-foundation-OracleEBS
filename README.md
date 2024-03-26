@@ -88,7 +88,7 @@ The following Google Cloud components are required:
 
 - BigQuery instance and datasets
 
-- Service Account with Impersonation rights
+- Service Account
 
 - Cloud Storage Buckets
 
