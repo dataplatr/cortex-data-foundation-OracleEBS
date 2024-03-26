@@ -5,9 +5,9 @@
 
     "ORACLE": {
         "datasets": {
-            "cdc": "CortexOds",
-            "raw": "CortexOdsStage",
-            "reporting": "CortexEdw"
+            "OdsStage": "CortexOdsStage",
+            "Ods": "CortexOds",
+            "Edw": "CortexEdw"
         }
     }
 }
