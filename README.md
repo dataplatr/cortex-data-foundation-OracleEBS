@@ -1,5 +1,10 @@
 ## **Cortex Framework for Oracle EBS**
 
+# Quick demo setup
+If you want to create a **demo** instance, with automatic generation of BigQuery datasets, automatic permission granting and test data, click this button:
+
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/?terminal=true&show=terminal&cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdataplatr%2Fcortex-data-foundation-OracleEBS&cloudshell_tutorial=docs%2Ftutorial.md)
+
 ### **Deployment for Development or Production environments**
 
 ### **Clone the Data Foundation repository**
