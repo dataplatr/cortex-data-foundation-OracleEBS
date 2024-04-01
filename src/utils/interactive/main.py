@@ -147,7 +147,7 @@ def main(args: typing.Sequence[str]) -> int:
             apis_text,
             "\n        ‣ " + "\n        ‣ ".join(get_all_datasets(config)),
             buckets_text,
-            config["projectIdSource"],
+            config["projectId"],
             ", ".join(PROJECT_ROLES), projects_text,
             "roles/bigquery.dataEditor",
             "roles/storage.admin"
