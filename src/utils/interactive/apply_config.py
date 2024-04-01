@@ -283,8 +283,8 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
     Returns:
         bool: True if configuration was successful, False otherwise.
     """
-    source_project = config["projectIdSource"]
-    target_project = config["projectIdTarget"]
+    source_project = config["projectId"]
+    target_project = config["projectId"]
     location = config["location"]
 
     try:
@@ -326,26 +326,8 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
         source_datasets = []
         reporting_datasets = []
 
-        dataset_dicts.append(config["k9"]["datasets"])
-        if config.get("deploySAP"):
-            dataset_dicts.append(config["SAP"]["datasets"])
-        if config.get("deploySFDC"):
-            dataset_dicts.append(config["SFDC"]["datasets"])
-        if config.get("deployMarketing"):
-            if config["marketing"].get("deployGoogleAds"):
-                dataset_dicts.append(config["marketing"]["GoogleAds"]
-                                     ["datasets"])
-            if config["marketing"].get("deployCM360"):
-                dataset_dicts.append(config["marketing"]["CM360"]["datasets"])
-            if config["marketing"].get("deployTikTok"):
-                dataset_dicts.append(config["marketing"]["TikTok"]["datasets"])
-            if config["marketing"].get("deployLiveRamp"):
-                dataset_dicts.append(
-                    config["marketing"]["LiveRamp"]["datasets"])
-            if config["marketing"].get("deployMeta"):
-                dataset_dicts.append(config["marketing"]["Meta"]["datasets"])
-            if config["marketing"].get("deploySFMC"):
-                dataset_dicts.append(config["marketing"]["SFMC"]["datasets"])
+        if config.get("deployORACLE"):
+            dataset_dicts.append(config["ORACLE"]["datasets"])
         for dataset_dict in dataset_dicts:
             for ds in dataset_dict.items():
                 add_to = (reporting_datasets
@@ -389,4 +371,3 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
         return False
 
     return True
-
