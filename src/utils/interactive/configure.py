@@ -1,16 +1,3 @@
-# Copyright 2023 Google LLC
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     https://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Data Foundation Deployment UI"""
 
 
@@ -63,16 +50,14 @@ def configure(in_cloud_shell: bool,
     # If source project, target project, location and target bucket
     # are specified in config.json,
     # we assume it's initialized, and use existing config.
-    if (existing_config.get("projectIdSource", "") != "" and
-        existing_config.get("projectIdTarget", "") != "" and
+    if (existing_config.get("projectId", "") != "" and
          existing_config.get("location", "") != "" and
           existing_config.get("targetBucket", "") != ""):
         if yes_no(
             f"{DF_TITLE} Configuration",
             HTML("There is an existing Data Foundation configuration "
             "in <b>config/config.json:</b>\n"
-            f"   Source Project: <b>{existing_config['projectIdSource']}</b>\n"
-            f"   Target Project: <b>{existing_config['projectIdTarget']}</b>\n"
+            f"   Source Project: <b>{existing_config['projectId']}</b>\n"
             f"   Location: <b>{existing_config['location']}</b>"
             "\n\nWould you like to load it?"),
             full_screen=True
@@ -108,27 +93,7 @@ def configure(in_cloud_shell: bool,
     defaults = []
     if config.get("deploySAP"):
         defaults.append("deploySAP")
-    if config.get("deploySFDC"):
-        defaults.append("deploySFDC")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deployGoogleAds")):
-        defaults.append("deployGoogleAds")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deployCM360")):
-        defaults.append("deployCM360")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deployTikTok")):
-        defaults.append("deployTikTok")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deployLiveRamp")):
-        defaults.append("deployLiveRamp")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deployMeta")):
-        defaults.append("deployMeta")
-    if (config.get("deployMarketing") and
-        config["marketing"].get("deploySFMC")):
-        defaults.append("deploySFMC")
-
+    
     while True:
         dialog = checkboxlist_dialog(
             title=HTML(DF_TITLE),
@@ -139,18 +104,6 @@ def configure(in_cloud_shell: bool,
                 ("deploySAP", "SAP"),
                 ("deploySFDC",
                  "Salesforce.com (SFDC)"),
-                ("deployGoogleAds",
-                 "Marketing with Google Ads"),
-                ("deployCM360",
-                 "Marketing with Campaign Manager 360 (CM360)"),
-                ("deployTikTok",
-                 "Marketing with TikTok"),
-                ("deployLiveRamp",
-                 "Marketing with LiveRamp"),
-                ("deployMeta",
-                 "Marketing with Meta"),
-                ("deploySFMC",
-                 "Marketing with SFMC"),
             ],
             default_values=defaults,
             style=Style.from_dict({
@@ -165,19 +118,6 @@ def configure(in_cloud_shell: bool,
             return None
 
         config["deploySAP"] = "deploySAP" in results
-        config["deploySFDC"] = "deploySFDC" in results
-        config["deployMarketing"] = ("deployGoogleAds" in results or
-                                     "deployCM360" in results or
-                                     "deployTikTok" in results or
-                                     "deployLiveRamp" in results or
-                                     "deployMeta" in results or
-                                     "deploySFMC" in results)
-        config["marketing"]["deployGoogleAds"] = "deployGoogleAds" in results
-        config["marketing"]["deployCM360"] = "deployCM360" in results
-        config["marketing"]["deployTikTok"] = "deployTikTok" in results
-        config["marketing"]["deployLiveRamp"] = "deployLiveRamp" in results
-        config["marketing"]["deployMeta"] = "deployMeta" in results
-        config["marketing"]["deploySFMC"] = "deploySFMC" in results
 
         if (config["deploySAP"] is False and config["deploySFDC"] is False
             and config["deployMarketing"] is False):
@@ -252,7 +192,7 @@ def configure(in_cloud_shell: bool,
     elif choice == "testChooseDatasets":
         auto_names = False
 
-    source_project = config.get("projectIdSource", default_project)
+    source_project = config.get("projectId", default_project)
     if source_project == "":
         source_project = default_project
     target_project = config.get("projectIdTarget", source_project)
