@@ -1,3 +1,16 @@
+# Copyright 2023 Google LLC
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     https://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 """Data Foundation Deployment UI"""
 
 
@@ -90,10 +103,10 @@ def configure(in_cloud_shell: bool,
     print("\r", end="")
     print_formatted(f"{DF_TITLE}\n")
 
-    defaults = []
-    if config.get("deploySAP"):
-        defaults.append("deploySAP")
-    
+    defaults = ["deployORACLE"]
+    # if config.get("deploySAP"):
+    #     defaults.append("deploySAP")
+
     while True:
         dialog = checkboxlist_dialog(
             title=HTML(DF_TITLE),
@@ -101,9 +114,7 @@ def configure(in_cloud_shell: bool,
                 f"Welcome to {DF_TITLE}.\n\n"
                 "Please select the workloads for deployment."),
             values=[
-                ("deploySAP", "SAP"),
-                ("deploySFDC",
-                 "Salesforce.com (SFDC)"),
+                ("deployORACLE", "ORACLE"),
             ],
             default_values=defaults,
             style=Style.from_dict({
@@ -117,10 +128,9 @@ def configure(in_cloud_shell: bool,
             print_formatted("See you next time! 🦄")
             return None
 
-        config["deploySAP"] = "deploySAP" in results
+        config["deployORACLE"] = "deployORACLE" in results
 
-        if (config["deploySAP"] is False and config["deploySFDC"] is False
-            and config["deployMarketing"] is False):
+        if (config["deployORACLE"] is False):
             if yes_no(
                     f"{DF_TITLE} Configuration",
                     "Please select one or more Data Foundation workloads.",
@@ -195,7 +205,7 @@ def configure(in_cloud_shell: bool,
     source_project = config.get("projectId", default_project)
     if source_project == "":
         source_project = default_project
-    target_project = config.get("projectIdTarget", source_project)
+    target_project = config.get("projectId", source_project)
     bq_location = config.get("location", "").lower()
     config["location"] = bq_location
 
@@ -230,8 +240,8 @@ def configure(in_cloud_shell: bool,
         allow_arbitrary=False,
     )
 
-    config["projectIdSource"] = source_project
-    config["projectIdTarget"] = target_project
+    config["projectId"] = source_project
+    config["projectId"] = target_project
 
     print_formatted("Retrieving regions...", italic=True, end="")
     regions_completer = RegionsCompleter()
