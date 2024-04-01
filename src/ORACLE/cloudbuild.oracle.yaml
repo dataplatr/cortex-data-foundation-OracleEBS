@@ -72,9 +72,9 @@ steps:
       - "-c"
       - |
         set -e
-        _GCS_BUCKET=$(jq -r ."targetBucket" "${_CONFIG_FILE}")
+        _DAG_BUCKET=$(jq -r ."dag_bucket" "${_CONFIG_FILE}")
         echo "Copying DAG files to bucket location..."
-        gsutil -m cp -r src/CCFramework/* gs://$_GCS_BUCKET/dags
+        gsutil -m cp -r src/CCFramework/* gs://$_DAG_BUCKET/dags/Cortex_oracle_dags
 
 logsBucket: "gs://$_GCS_BUCKET"
 timeout: 10200s
