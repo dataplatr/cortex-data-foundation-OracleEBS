@@ -319,3 +319,4 @@ def configure(in_cloud_shell: bool,
             else:
                 break
     config["targetBucket"] = bucket_name
+    return config
