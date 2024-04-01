@@ -1,16 +1,3 @@
-# Copyright 2023 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Data Foundation Deployment UI main module"""
 
 
@@ -143,23 +130,19 @@ def main(args: typing.Sequence[str]) -> int:
         print_formatted("\nConfiguration:", bold=True)
         print_formatted_json(config)
 
-        projects_text = config["projectIdSource"]
-        if config["projectIdSource"] != config["projectIdTarget"]:
+        projects_text = config["projectId"]
+        if config["projectId"] != config["projectId"]:
             projects_text += " and " + config["projectIdTarget"]
         buckets = set([config["targetBucket"]])
-        if ("marketing" in config and "CM360" in config["marketing"] and
-                config["marketing"]["CM360"].get(
-                        "dataTransferBucket", "") != ""):
-            buckets.add(config["marketing"]["CM360"]["dataTransferBucket"])
         buckets_text = ", ".join(buckets)
         apis_text = (f"<b>{', '.join(SOURCE_PROJECT_APIS)}</b> in "
-            f"project <b>{config['projectIdSource']}</b>")
-        if config["projectIdSource"] != config["projectIdTarget"]:
+            f"project <b>{config['projectId']}</b>")
+        if config["projectId"] != config["projectId"]:
             apis_text += (f"\n    <b>{', '.join(TARGET_PROJECT_APIS)}</b> in "
-            f"project <b>{config['projectIdTarget']}</b>")
+            f"project <b>{config['projectId']}</b>")
         config_message = CONFIG_MESSAGE % (
-            config["projectIdSource"],
-            config["projectIdTarget"],
+            config["projectId"],
+            config["projectId"],
             config["location"],
             apis_text,
             "\n        ‣ " + "\n        ‣ ".join(get_all_datasets(config)),
