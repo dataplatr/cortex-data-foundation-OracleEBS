@@ -31,66 +31,11 @@ from constants import DF_TITLE
 #   target project flag ).
 # Flags and dataset names are addressed as dot-separated path inside config.json
 DATASETS = [
-        ([True], "k9.datasets.processing", "K9 Processing", False),
-        ([True], "k9.datasets.reporting", "K9 Reporting", True),
-        (["deploySAP"], "SAP.datasets.raw", "SAP Raw", False),
-        (["deploySAP"], "SAP.datasets.cdc", "SAP CDC Processed",
+        (["deployORACLE"], "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
+        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE CDC Processed",
             False),
-        (["deploySAP"], "SAP.datasets.reporting", "SAP Reporting",
-            True),
-        (["deploySFDC"], "SFDC.datasets.raw", "Salesforce Raw", False),
-        (["deploySFDC"], "SFDC.datasets.cdc", "Salesforce CDC Processed",
-            False),
-        (["deploySFDC"], "SFDC.datasets.reporting", "Salesforce Reporting",
-            True),
-        (["deployMarketing", "marketing.deployGoogleAds"],
-            "marketing.GoogleAds.datasets.raw", "Google Ads Raw",
-            False),
-        (["deployMarketing", "marketing.deployGoogleAds"],
-            "marketing.GoogleAds.datasets.cdc",
-            "Google Ads CDC Processed", False),
-        (["deployMarketing", "marketing.deployGoogleAds"],
-            "marketing.GoogleAds.datasets.reporting", "Google Ads Reporting",
-            True),
-        (["deployMarketing", "marketing.deployCM360"],
-            "marketing.CM360.datasets.raw", "CM360 Raw",
-            False),
-        (["deployMarketing", "marketing.deployCM360"],
-            "marketing.CM360.datasets.cdc",
-            "CM360 CDC Processed", False),
-        (["deployMarketing", "marketing.deployCM360"],
-            "marketing.CM360.datasets.reporting", "CM360 Reporting",
-            True),
-        (["deployMarketing", "marketing.deployTikTok"],
-            "marketing.TikTok.datasets.raw", "TikTok Raw",
-            False),
-        (["deployMarketing", "marketing.deployTikTok"],
-            "marketing.TikTok.datasets.cdc",
-            "TikTok CDC Processed", False),
-        (["deployMarketing", "marketing.deployTikTok"],
-            "marketing.TikTok.datasets.reporting", "TikTok Reporting",
-            True),
-        (["deployMarketing", "marketing.deployLiveRamp"],
-            "marketing.LiveRamp.datasets.cdc", "LiveRamp CDC",
-            False),
-        (["deployMarketing", "marketing.deployMeta"],
-            "marketing.Meta.datasets.cdc", "Meta CDC",
-            False),
-        (["deployMarketing", "marketing.deployMeta"],
-            "marketing.Meta.datasets.raw", "Meta Raw",
-            False),
-        (["deployMarketing", "marketing.deployMeta"],
-            "marketing.Meta.datasets.reporting", "Meta Reporting",
-            True),
-        (["deployMarketing", "marketing.deploySFMC"],
-            "marketing.SFMC.datasets.cdc", "SFMC CDC",
-            False),
-        (["deployMarketing", "marketing.deploySFMC"],
-            "marketing.SFMC.datasets.raw", "SFMC Raw",
-            False),
-        (["deployMarketing", "marketing.deploySFMC"],
-            "marketing.SFMC.datasets.reporting", "SFMC Reporting",
-            True),
+        # (["deploySAP"], "SAP.datasets.reporting", "SAP Reporting",
+        #     True),
     ]
 
 
@@ -159,8 +104,8 @@ def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
         typing.List[str]: dataset list
     """
     datasets = []
-    source_project = config["projectIdSource"]
-    target_project = config["projectIdTarget"]
+    source_project = config["projectId"]
+    target_project = config["projectId"]
     for dataset in DATASETS:
         name = _get_json_value(config, dataset[1])
         if name and name != "":
@@ -201,9 +146,9 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
     print_formatted("Checking BigQuery datasets...", italic=True, end="")
     datasets_wrong_locations = []
     clients = {
-            config["projectIdSource"]: Client(config["projectIdSource"],
+            config["projectId"]: Client(config["projectId"],
                                            location=config["location"]),
-            config["projectIdTarget"]: Client(config["projectIdTarget"],
+            config["projectId"]: Client(config["projectId"],
                                            location=config["location"])
         }
     location = config["location"].lower()
@@ -211,8 +156,8 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
         if not _is_dataset_needed(config, dataset):
             continue
         current_value = _get_json_value(config, dataset[1])
-        project = (config["projectIdTarget"]
-                    if dataset[3] else config["projectIdSource"])
+        project = (config["projectId"]
+                    if dataset[3] else config["projectId"])
 
         try:
             dataset = clients[project].get_dataset(DatasetReference(project,
