@@ -44,27 +44,20 @@ steps:
 
         export PYTHONPATH=$$PYTHONPATH:./src
 
-        if [[ "${_TGT_BUCKET}" != "" ]]
-        then
-          _TGT_BUCKET_="${_TGT_BUCKET}"
-        else
-          _TGT_BUCKET_=$(jq -r ."targetBucket" "${_CONFIG_FILE}")
-        fi
+        # RAW TABLE creation
+        echo "Creating Raw BigQuery Tables."
+        python src/raw_table_generator/create_stage_tables.py
+        echo "✅ Generated Raw BigQuery tables."
 
-          # RAW TABLE creation
-          echo "Creating Raw BigQuery Tables."
-          python src/raw_table_generator/create_stage_tables.py
-          echo "✅ Generated Raw BigQuery tables."
+        # CDC Table creation
+        echo "Creating Ods BigQuery Tables."
+        python src/ods_table_generator/create_ods_tables.py
+        echo "✅ Created Ods BigQuery tables ."
 
-          # CDC Table creation
-          echo "Creating Ods BigQuery Tables."
-          python src/ods_table_generator/create_ods_tables.py
-          echo "✅ Created Ods BigQuery tables ."
-
-          #Edw Table creation
-          echo "Creating Edw BigQuery Tables."
-          python src/edw_table_generator/create_edw_tables.py
-          echo "✅ Created Edw BigQuery tables ."
+        #Edw Table creation
+        echo "Creating Edw BigQuery Tables."
+        python src/edw_table_generator/create_edw_tables.py
+        echo "✅ Created Edw BigQuery tables ."
 
   - name: 'gcr.io/kittycorn-public/deploy-kittycorn:v2.0'
     entrypoint: "bash"
@@ -72,11 +65,19 @@ steps:
       - "-c"
       - |
         set -e
-        _DAG_BUCKET=$(jq -r ."dag_bucket" "${_CONFIG_FILE}")
-        echo "Copying DAG files to bucket location..."
-        gsutil -m cp -r src/CCFrameWork/* gs:/$_DAG_BUCKET/dags/CCFrameWork_test
 
-logsBucket: "gs://$_GCS_BUCKET"
+        dag_bucket=$(jq -r '.dag_bucket' "$_CONFIG_FILE")
+
+        if [[ "$dag_bucket" != "" ]]; 
+        then
+            dag_bucket="$dag_bucket"
+        else
+            dag_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
+        fi
+
+        echo "Copying DAG files to bucket $dag_bucket... "
+        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/CCFrameWork_prov
+        
 timeout: 10200s
 substitutions:
   _CONFIG_FILE: "config/config.json"
