@@ -15,13 +15,15 @@ from prompt_toolkit.formatted_text import HTML
 
 from completers import WordCompleter
 from configure import configure
-from apply_config import (apply_all, PROJECT_APIS, PROJECT_ROLES)
+from apply_config import (apply_all, PROJECT_APIS, PROJECT_APIS,
+                          PROJECT_ROLES)
 from prompt import get_value, print_formatted, print_formatted_json, yes_no
 from constants import DF_TITLE, CONFIG_MESSAGE
 from datasets import get_all_datasets
 
 _CONFIG_INPUT_FILE = "./config/config_default.json"
 _CONFIG_OUTPUT_FILE = "./config/config.json"
+
 
 def _initialize_console_logging(message_only: bool = True,
                                 debug: bool = False,
@@ -129,12 +131,17 @@ def main(args: typing.Sequence[str]) -> int:
         print_formatted_json(config)
 
         projects_text = config["projectId"]
+        if config["projectId"] != config["projectId"]:
+            projects_text += " and " + config["projectIdTarget"]
         buckets = set([config["targetBucket"]])
         buckets_text = ", ".join(buckets)
         apis_text = (f"<b>{', '.join(PROJECT_APIS)}</b> in "
             f"project <b>{config['projectId']}</b>")
-        
+        if config["projectId"] != config["projectId"]:
+            apis_text += (f"\n    <b>{', '.join(PROJECT_APIS)}</b> in "
+            f"project <b>{config['projectId']}</b>")
         config_message = CONFIG_MESSAGE % (
+            config["projectId"],
             config["projectId"],
             config["location"],
             apis_text,
