@@ -1,18 +1,4 @@
-# Copyright 2023 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Resource Configuration execution routines"""
-
 
 import logging
 import typing
@@ -24,9 +10,8 @@ from google.cloud import bigquery, storage
 from google.cloud.bigquery.enums import EntityTypes
 
 
-SOURCE_PROJECT_APIS = ["cloudresourcemanager", "storage-component",
+PROJECT_APIS = ["cloudresourcemanager", "storage-component",
                         "bigquery", "cloudbuild"]
-TARGET_PROJECT_APIS = ["storage-component", "bigquery"]
 PROJECT_ROLES = ["roles/bigquery.user"]
 
 
@@ -283,79 +268,43 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
     Returns:
         bool: True if configuration was successful, False otherwise.
     """
-    source_project = config["projectId"]
-    target_project = config["projectId"]
+    project = config["projectId"]
     location = config["location"]
 
     try:
-        logging.info("Enabling APIs in %s.", source_project)
+        logging.info("Enabling APIs in %s.", project)
         try:
-            enable_apis(source_project, SOURCE_PROJECT_APIS)
+            enable_apis(project, PROJECT_APIS)
         except HttpError as ex:
             if ex.status_code == 400 and "billing account" in ex.reason.lower():
                 logging.fatal(("Project %s doesn't have "
-                            "a Billing Account linked to it."), source_project)
+                            "a Billing Account linked to it."), project)
                 return False
             else:
                 raise
-        if target_project != source_project:
-            try:
-                logging.info("Enabling APIs in %s.", target_project)
-                enable_apis(target_project, TARGET_PROJECT_APIS)
-            except HttpError as ex:
-                if (ex.status_code == 400 and
-                    "billing account" in ex.reason.lower()):
-                    logging.fatal(("Project %s doesn't have "
-                                "a Billing Account linked to it."),
-                                source_project)
-                    return False
-                else:
-                    raise
 
-        cloud_build_account = get_cloud_build_account(source_project)
+        cloud_build_account = get_cloud_build_account(project)
         logging.info("Using Cloud Build account %s.", cloud_build_account)
 
         # Add project-wide role binding for Cloud Build account
-        add_project_roles(source_project, cloud_build_account,
+        add_project_roles(project, cloud_build_account,
                             PROJECT_ROLES)
-        if target_project != source_project:
-            add_project_roles(target_project, cloud_build_account,
-                                PROJECT_ROLES)
-
-        dataset_dicts = []
-        source_datasets = []
-        reporting_datasets = []
-
-        if config.get("deployORACLE"):
-            dataset_dicts.append(config["ORACLE"]["datasets"])
-        for dataset_dict in dataset_dicts:
-            for ds in dataset_dict.items():
-                add_to = (reporting_datasets
-                            if ds[0] == "reporting" else source_datasets)
-                if ds not in add_to: # type: ignore
-                    if ds[1] != "":
-                        add_to.append(ds[1]) # type: ignore
+        datasets = []
+        datasets.append(config["ORACLE"]["datasets"])
 
         # Create datasets (if needed),
         # and add "roles/bigquery.dataEditor" binding on them
         # for the source project's Cloud Build account.
-        logging.info("Creating datasets in %s.", source_project)
-        for ds in source_datasets:
-            create_bq_dataset_with_roles(source_project, location, ds,
-                            cloud_build_account,
-                            ["roles/bigquery.dataEditor"])
-        if target_project != source_project:
-            # This check is only for logging.
-            logging.info("Creating datasets in %s.", target_project)
-        for ds in reporting_datasets:
-            create_bq_dataset_with_roles(target_project, location, ds,
+        logging.info("Creating datasets in %s.", project)
+        for ds in datasets:
+            create_bq_dataset_with_roles(project, location, ds,
                             cloud_build_account,
                             ["roles/bigquery.dataEditor"])
 
         # Create target storage bucket (if needed),
         # and add "roles/storage.admin" binding on it for Cloud Build account.
         logging.info("Creating storage bucket %s.", config["targetBucket"])
-        create_storage_bucket_with_roles(source_project, location,
+        create_storage_bucket_with_roles(project, location,
                                          config["targetBucket"],
                                          cloud_build_account,
                                          ["roles/storage.admin"])
