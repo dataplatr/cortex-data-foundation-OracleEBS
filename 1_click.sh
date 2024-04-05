@@ -20,6 +20,8 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 pushd "${SCRIPT_DIR}" 1> /dev/null
 
+chmod +w "$(basename "$0")"
+
 echo -n "Please wait..."
 git submodule update --init --recursive &> /dev/null || true
 echo -e -n "\r                \r"
