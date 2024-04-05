@@ -27,7 +27,7 @@ We can automatically create test datasets and artifacts for you in a few clicks.
 Simply run this command in Cloud Shell:
 
 ```bash
-./1_click.sh --project "<walkthrough-project-id/>"
+bash 1_click.sh --project "<walkthrough-project-id/>"
 ```
 
 *__Looking to learn how deployment works?__*
