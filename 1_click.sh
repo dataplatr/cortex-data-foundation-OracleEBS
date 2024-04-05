@@ -16,10 +16,12 @@
 #
 # 1-Click Deployment Launcher
 
-chmod +w 1_click.sh
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 pushd "${SCRIPT_DIR}" 1> /dev/null
+
+chmod +x "${BASH_SOURCE[0]}"
+
 echo -n "Please wait..."
 git submodule update --init --recursive &> /dev/null || true
 echo -e -n "\r                \r"
