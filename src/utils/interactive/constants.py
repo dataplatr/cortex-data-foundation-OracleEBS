@@ -4,7 +4,7 @@ DF_TITLE = ("Google <pp fg='#4285F4'>Cloud</pp> <pp fg='#EA4335'>Cortex</pp>"
           " <pp fg='#FBBC05'>Data</pp> <pp fg='#34A853'>Foundation</pp>")
 
 CONFIG_MESSAGE = (
-    "Project <b>%s</b>\n"
+    "Project : <b>%s</b>.\n"
     "Location: <b>%s</b>.\n"
     "APIs that will be enabled:\n"
     "    %s\n\n"
