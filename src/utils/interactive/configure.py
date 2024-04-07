@@ -105,15 +105,13 @@ def configure(in_cloud_shell: bool,
     print_formatted(f"{DF_TITLE}\n")
 
     defaults = ["deployORACLE"]
-    # if config.get("deploySAP"):
-    #     defaults.append("deploySAP")
 
     while True:
         dialog = checkboxlist_dialog(
             title=HTML(DF_TITLE),
             text=HTML(
                 f"Welcome to {DF_TITLE}.\n\n"
-                "Please select the workloads for deployment."),
+                "Please confirm the workload for deployment."),
             values=[
                 ("deployORACLE", "ORACLE"),
             ],
@@ -154,23 +152,22 @@ def configure(in_cloud_shell: bool,
                      "Auto-configuration will create all necessary resources "
                      "and configure permissions.\n"
                      "\n<b><u><ansibrightred>This creates a demo deployment "
-                     "with test data, not valid for production "
                      "environments.</ansibrightred></u></b>"),
                      values=[
                 ("test",
                  HTML(
                     ("<b>Use pre-configured BigQuery datasets and Storage "
                      "buckets</b> "
-                    "to deploy demo environment with test data and "
+                    "to deploy demo environment with"
                     "auto-configuration."
                         if went_with_existing else
                     "<b>Use default BigQuery datasets and Storage bucket</b> "
-                    "to deploy demo environment with test data and "
+                    "to deploy demo environment with"
                     "auto-configuration."))),
                 ("testChooseDatasets",
                  HTML(
                     "<b>Let me choose BigQuery datasets and "
-                    "Storage buckets</b> to deploy demo with test data, "
+                    "Storage buckets</b> to deploy demo, "
                     " auto-configuration.")),
                 ("deployManual",
                  HTML(
