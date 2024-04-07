@@ -24,11 +24,12 @@ from constants import DF_TITLE
 #   target project flag ).
 # Flags and dataset names are addressed as dot-separated path inside config.json
 DATASETS = [
-        ( "ORACLE.datasets.OdsStage", "ORACLE Raw", True),
-        ("ORACLE.datasets.Ods", "ORACLE Ods",
-            True),
-        ("ORACLE.datasets.Edw", "ORACLE Edw",
-            True)]
+        (["deployORACLE"], "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
+        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE CDC Processed",
+            False),
+        # (["deploySAP"], "SAP.datasets.reporting", "SAP Reporting",
+        #     True),
+    ]
 
 
 def _get_json_value(config: typing.Dict[str, typing.Any],
@@ -76,13 +77,13 @@ def _set_json_value(config: typing.Dict[str, typing.Any],
     return config
 
 
-# def clear_dataset_names(config: typing.Dict[str, typing.Any]) -> typing.Dict[
-#                                                             str, typing.Any]:
-#     for dataset in DATASETS:
-#         if not _is_dataset_needed(config, dataset):
-#             continue
-#         config = _set_json_value(config, dataset[1], "")
-#     return config
+def clear_dataset_names(config: typing.Dict[str, typing.Any]) -> typing.Dict[
+                                                            str, typing.Any]:
+    for dataset in DATASETS:
+        if not _is_dataset_needed(config, dataset):
+            continue
+        config = _set_json_value(config, dataset[1], "")
+    return config
 
 
 def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
@@ -96,39 +97,41 @@ def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
         typing.List[str]: dataset list
     """
     datasets = []
-    project = config["projectId"]
+    source_project = config["projectId"]
+    target_project = config["projectId"]
     for dataset in DATASETS:
-        name = _get_json_value(config, dataset[0])
+        name = _get_json_value(config, dataset[1])
         if name and name != "":
-            datasets.append((project) + "." + name)
+            datasets.append((target_project
+                                if dataset[3] else source_project) + "." + name)
 
     return datasets
 
 
-# def _is_dataset_needed(config: typing.Dict[str, typing.Any],
-#                        dataset: typing.Tuple[typing.List[str],
-#                                              str, str, bool]) -> bool:
-#     """Determines if dataset is needed by checking if the respective
-#        workload needs to be deployed.
+def _is_dataset_needed(config: typing.Dict[str, typing.Any],
+                       dataset: typing.Tuple[typing.List[str],
+                                             str, str, bool]) -> bool:
+    """Determines if dataset is needed by checking if the respective
+       workload needs to be deployed.
 
-#     Args:
-#         config (typing.Dict[str, typing.Any]): Data Foundation configuration
-#         dataset (typing.Tuple[typing.List[str], str, str, bool]):
-#                                                Dataset definition tuple
+    Args:
+        config (typing.Dict[str, typing.Any]): Data Foundation configuration
+        dataset (typing.Tuple[typing.List[str], str, str, bool]):
+                                               Dataset definition tuple
 
-#     Returns:
-#         bool: True if dataset is needed, False otherwise
-#     """
-#     result = True
-#     for flag in dataset[0]:
-#         if isinstance(flag, str):
-#             value = _get_json_value(config, flag)
-#             if not value:
-#                 value = False
-#             result = result and value
-#         else:
-#             result = result and bool(flag)
-#     return result
+    Returns:
+        bool: True if dataset is needed, False otherwise
+    """
+    result = True
+    for flag in dataset[0]:
+        if isinstance(flag, str):
+            value = _get_json_value(config, flag)
+            if not value:
+                value = False
+            result = result and value
+        else:
+            result = result and bool(flag)
+    return result
 
 
 def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
@@ -137,14 +140,17 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
     datasets_wrong_locations = []
     clients = {
             config["projectId"]: Client(config["projectId"],
+                                           location=config["location"]),
+            config["projectId"]: Client(config["projectId"],
                                            location=config["location"])
         }
     location = config["location"].lower()
     for dataset in DATASETS:
-        # if not _is_dataset_needed(config, dataset):
-        #     continue
+        if not _is_dataset_needed(config, dataset):
+            continue
         current_value = _get_json_value(config, dataset[1])
-        project = (config["projectId"])
+        project = (config["projectId"]
+                    if dataset[3] else config["projectId"])
 
         try:
             dataset = clients[project].get_dataset(DatasetReference(project,
@@ -165,19 +171,25 @@ def prompt_for_datasets(session: PromptSession,
     """Asks user to enter names of necessary datasets."""
 
     print_formatted("Accessing BigQuery...", italic=True, end="")
-    project = config["projectId"]
-    source_completer = BigQueryDatasetCompleter(project,
-                                                Client(project=project))
+    source_project = config["projectId"]
+    source_completer = BigQueryDatasetCompleter(source_project,
+                                                Client(project=source_project))
+    target_project = config["projectId"]
+    target_completer = (BigQueryDatasetCompleter(source_project,
+                                                Client(project=target_project))
+                        if target_project != source_project
+                        else source_completer)
     print("\r                       \r", end="")
     for dataset in DATASETS:
-        # if not _is_dataset_needed(config, dataset):
-        #     continue
+        if not _is_dataset_needed(config, dataset):
+            continue
         current_value = _get_json_value(config, dataset[1])
         if not current_value:
             current_value = ""
         while True:
             dataset_name = get_value(session, f"{dataset[2]} Dataset",
-                                (source_completer),
+                                (target_completer
+                                    if dataset[3] else source_completer),
                                 description=f"{dataset[2]} Dataset",
                                 default_value=current_value,
                                 allow_arbitrary=True)
