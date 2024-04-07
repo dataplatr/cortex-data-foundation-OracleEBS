@@ -77,13 +77,13 @@ def _set_json_value(config: typing.Dict[str, typing.Any],
     return config
 
 
-# def clear_dataset_names(config: typing.Dict[str, typing.Any]) -> typing.Dict[
-#                                                             str, typing.Any]:
-#     for dataset in DATASETS:
-#         if not _is_dataset_needed(config, dataset):
-#             continue
-#         config = _set_json_value(config, dataset[1], "")
-#     return config
+def clear_dataset_names(config: typing.Dict[str, typing.Any]) -> typing.Dict[
+                                                            str, typing.Any]:
+    for dataset in DATASETS:
+        if not _is_dataset_needed(config, dataset):
+            continue
+        config = _set_json_value(config, dataset[1], "")
+    return config
 
 
 def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
@@ -106,30 +106,30 @@ def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
     return datasets
 
 
-# def _is_dataset_needed(config: typing.Dict[str, typing.Any],
-#                        dataset: typing.Tuple[typing.List[str],
-#                                              str, str, bool]) -> bool:
-#     """Determines if dataset is needed by checking if the respective
-#        workload needs to be deployed.
+def _is_dataset_needed(config: typing.Dict[str, typing.Any],
+                       dataset: typing.Tuple[typing.List[str],
+                                             str, str, bool]) -> bool:
+    """Determines if dataset is needed by checking if the respective
+       workload needs to be deployed.
 
-#     Args:
-#         config (typing.Dict[str, typing.Any]): Data Foundation configuration
-#         dataset (typing.Tuple[typing.List[str], str, str, bool]):
-#                                                Dataset definition tuple
+    Args:
+        config (typing.Dict[str, typing.Any]): Data Foundation configuration
+        dataset (typing.Tuple[typing.List[str], str, str, bool]):
+                                               Dataset definition tuple
 
-#     Returns:
-#         bool: True if dataset is needed, False otherwise
-#     """
-#     result = True
-#     for flag in dataset[0]:
-#         if isinstance(flag, str):
-#             value = _get_json_value(config, flag)
-#             if not value:
-#                 value = False
-#             result = result and value
-#         else:
-#             result = result and bool(flag)
-#     return result
+    Returns:
+        bool: True if dataset is needed, False otherwise
+    """
+    result = True
+    for flag in dataset[0]:
+        if isinstance(flag, str):
+            value = _get_json_value(config, flag)
+            if not value:
+                value = False
+            result = result and value
+        else:
+            result = result and bool(flag)
+    return result
 
 
 def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
