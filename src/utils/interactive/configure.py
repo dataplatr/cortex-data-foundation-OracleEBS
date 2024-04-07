@@ -177,64 +177,60 @@ def configure(in_cloud_shell: bool,
             default="test")
     dialog.cursor = to_cursor_shape_config(CursorShape.BLINKING_UNDERLINE)
     choice = dialog.run()
-    if not choice or choice == "deployManual":
-        print_formatted(
-            "The guided deployment option is coming soon. "
-            "Please check Data Foundation documentation: \n"
-            "https://github.com/GoogleCloudPlatform/"
-            "cortex-data-foundation/blob/main/README.md 🦄")
-        if in_cloud_shell:
-            subprocess.run("cloudshell edit config/config.json",
-                           shell=True, check=False)
-            # TODO (vladkol): launch guided deployment tutorial when ready
-            #subprocess.run("cloudshell launch-tutorial docs/guide.md",
-            #               shell=True, check=False)
-        return None
-    elif choice == "test":
+    # if not choice or choice == "deployManual":
+    #     print_formatted(
+    #         "The guided deployment option is coming soon. "
+    #         "Please check Data Foundation documentation: \n"
+    #         "https://github.com/GoogleCloudPlatform/"
+    #         "cortex-data-foundation/blob/main/README.md 🦄")
+    #     if in_cloud_shell:
+    #         subprocess.run("cloudshell edit config/config.json",
+    #                        shell=True, check=False)
+    #         # TODO (vladkol): launch guided deployment tutorial when ready
+    #         #subprocess.run("cloudshell launch-tutorial docs/guide.md",
+    #         #               shell=True, check=False)
+    #     return None
+    if choice == "test":
         auto_names = True
     elif choice == "testChooseDatasets":
         auto_names = False
 
-    source_project = config.get("projectId", default_project)
-    if source_project == "":
-        source_project = default_project
-    target_project = config.get("projectId", source_project)
+    project = config.get("projectId", default_project)
+    if project == "":
+        project = default_project
     bq_location = config.get("location", "").lower()
     config["location"] = bq_location
 
-    if source_project == "":
-        source_project = None
-    if target_project == "":
-        target_project = source_project or None
+    if project == "":
+        project = None
     if bq_location == "":
         bq_location = "us"
 
     print_formatted("\nEnter or confirm Data Foundation configuration values:",
                     bold=True)
 
-    old_source_project = source_project
-    source_project = get_value(
+    old_project = project
+    project = get_value(
         session,
-        "Source GCP Project",
+        "GCP Project",
         project_completer,
-        source_project or "",
-        description="Specify Data Foundation Source Project (existing).",
+        project or "",
+        description="Specify Data Foundation Project (existing).",
         allow_arbitrary=False,
     )
-    os.environ["GOOGLE_CLOUD_PROJECT"] = source_project
-    if not target_project or target_project == old_source_project:
-        target_project = source_project
-    target_project = get_value(
-        session,
-        "Target GCP Project",
-        project_completer,
-        target_project,
-        description="Specify Data Foundation Target Project (existing).",
-        allow_arbitrary=False,
-    )
+    os.environ["GOOGLE_CLOUD_PROJECT"] = project
+    # if not target_project or target_project == old_project:
+    #     target_project = source_project
+    # target_project = get_value(
+    #     session,
+    #     "Target GCP Project",
+    #     project_completer,
+    #     target_project,
+    #     description="Specify Data Foundation Target Project (existing).",
+    #     allow_arbitrary=False,
+    # )
 
-    config["projectId"] = source_project
-    config["projectId"] = target_project
+    config["projectId"] = project
 
     print_formatted("Retrieving regions...", italic=True, end="")
     regions_completer = RegionsCompleter()
@@ -253,7 +249,7 @@ def configure(in_cloud_shell: bool,
 
     bucket_name = config.get("targetBucket", "")
     if bucket_name == "":
-        bucket_name = f"cortex-{source_project}-{bq_location}"
+        bucket_name = f"cortex-{project}-{bq_location}"
 
     datasets_wrong_locations = []
     if auto_names:
@@ -289,8 +285,8 @@ def configure(in_cloud_shell: bool,
                 "See you next time! 🦄")
             return None
         if "targetBucket" not in config or config["targetBucket"] == "":
-            config["targetBucket"] = f"cortex-{source_project}-{bq_location}"
-        bucket_completer = StorageBucketCompleter(source_project)
+            config["targetBucket"] = f"cortex-{project}-{bq_location}"
+        bucket_completer = StorageBucketCompleter(project)
         while True:
             bucket_name = get_value(session,
                                     "Target Storage Bucket",
