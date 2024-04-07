@@ -99,7 +99,7 @@ def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
     datasets = []
     project = config["projectId"]
     for dataset in DATASETS:
-        name = _get_json_value(config, dataset[0])
+        name = _get_json_value(config, dataset[1])
         if name and name != "":
             datasets.append((project) + "." + name)
 
