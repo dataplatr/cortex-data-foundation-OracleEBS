@@ -24,10 +24,10 @@ from constants import DF_TITLE
 #   target project flag ).
 # Flags and dataset names are addressed as dot-separated path inside config.json
 DATASETS = [
-        (["deployORACLE"], "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
-        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE Ods",
+        ( "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
+        ("ORACLE.datasets.Ods", "ORACLE Ods",
             False),
-        (["deployORACLE"], "ORACLE.datasets.Edw", "ORACLE Edw",
+        ("ORACLE.datasets.Edw", "ORACLE Edw",
             False)]
 
 
