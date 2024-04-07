@@ -176,9 +176,9 @@ def prompt_for_datasets(session: PromptSession,
         if not current_value:
             current_value = ""
         while True:
-            dataset_name = get_value(session, f"{dataset[1]} Dataset",
+            dataset_name = get_value(session, f"{dataset[2]} Dataset",
                                 (source_completer),
-                                description=f"{dataset[1]} Dataset",
+                                description=f"{dataset[2]} Dataset",
                                 default_value=current_value,
                                 allow_arbitrary=True)
             if not is_dataset_name_valid(dataset_name):
