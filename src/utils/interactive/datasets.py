@@ -54,7 +54,7 @@ def _set_json_value(config: typing.Dict[str, typing.Any],
     Args:
         config (typing.Dict[str, typing.Any]): configuration dictionary
         value_path (str): path to the value in json with nodes separated by dot,
-                          e.g. "SAP.datasets.raw"
+                          e.g. "ORACLE.datasets.raw"
         value (typing.Any): value
 
     Returns:
