@@ -24,11 +24,12 @@ from constants import DF_TITLE
 #   target project flag ).
 # Flags and dataset names are addressed as dot-separated path inside config.json
 DATASETS = [
-        ( "ORACLE.datasets.OdsStage", "ORACLE Raw", True),
-        ("ORACLE.datasets.Ods", "ORACLE Ods",
-            True),
-        ("ORACLE.datasets.Edw", "ORACLE Edw",
-            True)]
+        (["deployORACLE"], "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
+        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE CDC Processed",
+            False),
+        # (["deploySAP"], "SAP.datasets.reporting", "SAP Reporting",
+        #     True),
+    ]
 
 
 def _get_json_value(config: typing.Dict[str, typing.Any],
