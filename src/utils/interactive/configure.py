@@ -158,22 +158,17 @@ def configure(in_cloud_shell: bool,
                  HTML(
                     ("<b>Use pre-configured BigQuery datasets and Storage "
                      "buckets</b> "
-                    "to deploy demo environment with"
+                    "to deploy demo environment with "
                     "auto-configuration."
                         if went_with_existing else
                     "<b>Use default BigQuery datasets and Storage bucket</b> "
-                    "to deploy demo environment with"
+                    "to deploy demo environment with "
                     "auto-configuration."))),
                 ("testChooseDatasets",
                  HTML(
                     "<b>Let me choose BigQuery datasets and "
-                    "Storage buckets</b> to deploy demo, "
+                    "Storage buckets</b> to deploy demo environment with "
                     " auto-configuration.")),
-                ("deployManual",
-                 HTML(
-                    "<b>Manual configuration and deployment</b>. "
-                    "Let me configure and deploy everything manually "
-                    "(Coming soon).")),
             ],
             style=Style.from_dict({
                 "radio-selected": "bg:lightgrey",
