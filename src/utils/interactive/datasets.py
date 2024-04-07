@@ -165,14 +165,9 @@ def prompt_for_datasets(session: PromptSession,
     """Asks user to enter names of necessary datasets."""
 
     print_formatted("Accessing BigQuery...", italic=True, end="")
-    source_project = config["projectId"]
-    source_completer = BigQueryDatasetCompleter(source_project,
-                                                Client(project=source_project))
-    target_project = config["projectId"]
-    target_completer = (BigQueryDatasetCompleter(source_project,
-                                                Client(project=target_project))
-                        if target_project != source_project
-                        else source_completer)
+    project = config["projectId"]
+    source_completer = BigQueryDatasetCompleter(project,
+                                                Client(project=project))
     print("\r                       \r", end="")
     for dataset in DATASETS:
         if not _is_dataset_needed(config, dataset):
@@ -182,8 +177,7 @@ def prompt_for_datasets(session: PromptSession,
             current_value = ""
         while True:
             dataset_name = get_value(session, f"{dataset[2]} Dataset",
-                                (target_completer
-                                    if dataset[3] else source_completer),
+                                (source_completer),
                                 description=f"{dataset[2]} Dataset",
                                 default_value=current_value,
                                 allow_arbitrary=True)
