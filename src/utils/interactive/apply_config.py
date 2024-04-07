@@ -24,9 +24,8 @@ from google.cloud import bigquery, storage
 from google.cloud.bigquery.enums import EntityTypes
 
 
-SOURCE_PROJECT_APIS = ["cloudresourcemanager", "storage-component",
+PROJECT_APIS = ["cloudresourcemanager", "storage-component",
                         "bigquery", "cloudbuild"]
-TARGET_PROJECT_APIS = ["storage-component", "bigquery"]
 PROJECT_ROLES = ["roles/bigquery.user"]
 
 
@@ -290,7 +289,7 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
     try:
         logging.info("Enabling APIs in %s.", source_project)
         try:
-            enable_apis(source_project, SOURCE_PROJECT_APIS)
+            enable_apis(source_project, PROJECT_APIS)
         except HttpError as ex:
             if ex.status_code == 400 and "billing account" in ex.reason.lower():
                 logging.fatal(("Project %s doesn't have "
@@ -298,19 +297,19 @@ def apply_all(config: typing.Dict[str, typing.Any]) -> bool:
                 return False
             else:
                 raise
-        if target_project != source_project:
-            try:
-                logging.info("Enabling APIs in %s.", target_project)
-                enable_apis(target_project, TARGET_PROJECT_APIS)
-            except HttpError as ex:
-                if (ex.status_code == 400 and
-                    "billing account" in ex.reason.lower()):
-                    logging.fatal(("Project %s doesn't have "
-                                "a Billing Account linked to it."),
-                                source_project)
-                    return False
-                else:
-                    raise
+        # if target_project != source_project:
+        #     try:
+        #         logging.info("Enabling APIs in %s.", target_project)
+        #         enable_apis(target_project, TARGET_PROJECT_APIS)
+        #     except HttpError as ex:
+        #         if (ex.status_code == 400 and
+        #             "billing account" in ex.reason.lower()):
+        #             logging.fatal(("Project %s doesn't have "
+        #                         "a Billing Account linked to it."),
+        #                         source_project)
+        #             return False
+        #         else:
+        #             raise
 
         cloud_build_account = get_cloud_build_account(source_project)
         logging.info("Using Cloud Build account %s.", cloud_build_account)
