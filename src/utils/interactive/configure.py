@@ -1,3 +1,4 @@
+
 # Copyright 2023 Google LLC
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,8 +32,7 @@ from completers import (GCPProjectCompleter,
                         RegionsCompleter,
                         StorageBucketCompleter)
 from prompt import (get_value, yes_no, print_formatted, print_formatted_json)
-from datasets import (prompt_for_datasets, check_datasets_locations,
-                      clear_dataset_names)
+from datasets import (prompt_for_datasets, check_datasets_locations)
 from name_checker import is_bucket_name_valid
 from constants import DF_TITLE
 
@@ -284,7 +284,7 @@ def configure(in_cloud_shell: bool,
                           no_text="CANCEL"):
                     config = None
                     break
-                config = clear_dataset_names(config)
+                config = config
             config = prompt_for_datasets(session, config) # type: ignore
             datasets_wrong_locations = check_datasets_locations(
                                             config) # type: ignore
