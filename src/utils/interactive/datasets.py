@@ -1,9 +1,3 @@
-
-# Copyright 2023 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
 """Dataset manager for the interactive deployer"""
 
 import typing
@@ -25,12 +19,11 @@ from constants import DF_TITLE
 # Flags and dataset names are addressed as dot-separated path inside config.json
 DATASETS = [
         (["deployORACLE"], "ORACLE.datasets.OdsStage", "ORACLE Raw", False),
-        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE CDC Processed",
+        (["deployORACLE"], "ORACLE.datasets.Ods", "ORACLE Ods",
             False),
-        # (["deploySAP"], "SAP.datasets.reporting", "SAP Reporting",
-        #     True),
+        (["deployORACLE"], "ORACLE.datasets.Edw", "ORACLE Edw",
+            False),
     ]
-
 
 def _get_json_value(config: typing.Dict[str, typing.Any],
                     value_path: str) -> typing.Any:
@@ -167,7 +160,7 @@ def prompt_for_datasets(session: PromptSession,
 
     print_formatted("Accessing BigQuery...", italic=True, end="")
     project = config["projectId"]
-    source_completer = BigQueryDatasetCompleter(project,
+    completer = BigQueryDatasetCompleter(project,
                                                 Client(project=project))
     print("\r                       \r", end="")
     for dataset in DATASETS:
@@ -178,7 +171,7 @@ def prompt_for_datasets(session: PromptSession,
             current_value = ""
         while True:
             dataset_name = get_value(session, f"{dataset[2]} Dataset",
-                                (source_completer),
+                                (completer),
                                 description=f"{dataset[2]} Dataset",
                                 default_value=current_value,
                                 allow_arbitrary=True)
