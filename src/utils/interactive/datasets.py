@@ -1,16 +1,3 @@
-# Copyright 2023 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     https://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """Dataset manager for the interactive deployer"""
 
 import typing
@@ -37,7 +24,6 @@ DATASETS = [
         (["deployORACLE"], "ORACLE.datasets.Edw", "ORACLE Edw",
             False),
     ]
-
 
 def _get_json_value(config: typing.Dict[str, typing.Any],
                     value_path: str) -> typing.Any:
@@ -68,7 +54,7 @@ def _set_json_value(config: typing.Dict[str, typing.Any],
     Args:
         config (typing.Dict[str, typing.Any]): configuration dictionary
         value_path (str): path to the value in json with nodes separated by dot,
-                          e.g. "SAP.datasets.raw"
+                          e.g. "ORACLE.datasets.raw"
         value (typing.Any): value
 
     Returns:
@@ -104,13 +90,11 @@ def get_all_datasets(config: typing.Dict[str, typing.Any]) -> typing.List[str]:
         typing.List[str]: dataset list
     """
     datasets = []
-    source_project = config["projectId"]
-    target_project = config["projectId"]
+    project = config["projectId"]
     for dataset in DATASETS:
         name = _get_json_value(config, dataset[1])
         if name and name != "":
-            datasets.append((target_project
-                                if dataset[3] else source_project) + "." + name)
+            datasets.append((project) + "." + name)
 
     return datasets
 
@@ -147,17 +131,14 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
     datasets_wrong_locations = []
     clients = {
             config["projectId"]: Client(config["projectId"],
-                                           location=config["location"]),
-            config["projectId"]: Client(config["projectId"],
                                            location=config["location"])
         }
     location = config["location"].lower()
     for dataset in DATASETS:
-        if not _is_dataset_needed(config, dataset):
-            continue
+        # if not _is_dataset_needed(config, dataset):
+        #     continue
         current_value = _get_json_value(config, dataset[1])
-        project = (config["projectId"]
-                    if dataset[3] else config["projectId"])
+        project = (config["projectId"])
 
         try:
             dataset = clients[project].get_dataset(DatasetReference(project,
@@ -178,25 +159,19 @@ def prompt_for_datasets(session: PromptSession,
     """Asks user to enter names of necessary datasets."""
 
     print_formatted("Accessing BigQuery...", italic=True, end="")
-    source_project = config["projectId"]
-    source_completer = BigQueryDatasetCompleter(source_project,
-                                                Client(project=source_project))
-    target_project = config["projectId"]
-    target_completer = (BigQueryDatasetCompleter(source_project,
-                                                Client(project=target_project))
-                        if target_project != source_project
-                        else source_completer)
+    project = config["projectId"]
+    completer = BigQueryDatasetCompleter(project,
+                                                Client(project=project))
     print("\r                       \r", end="")
     for dataset in DATASETS:
-        if not _is_dataset_needed(config, dataset):
-            continue
+        # if not _is_dataset_needed(config, dataset):
+        #     continue
         current_value = _get_json_value(config, dataset[1])
         if not current_value:
             current_value = ""
         while True:
             dataset_name = get_value(session, f"{dataset[2]} Dataset",
-                                (target_completer
-                                    if dataset[3] else source_completer),
+                                (completer),
                                 description=f"{dataset[2]} Dataset",
                                 default_value=current_value,
                                 allow_arbitrary=True)
