@@ -153,9 +153,3 @@ You can follow the main Build process from the first link of logs:
 Alternatively, if you have enough permissions, you can see the progress from [Cloud Build](https://console.cloud.google.com/cloud-build/).
 
 ![Enter image alt description](Images/Log2.png)
-
-## **Move the files into the DAG bucket**
-
-```
-gsutil -m cp -r  gs://<output bucket>/dags/ gs://<composer dag bucket>/
-```
