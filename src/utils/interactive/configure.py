@@ -1,4 +1,3 @@
-
 # Copyright 2023 Google LLC
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -71,7 +70,7 @@ def configure(in_cloud_shell: bool,
             f"{DF_TITLE} Configuration",
             HTML("There is an existing Data Foundation configuration "
             "in <b>config/config.json:</b>\n"
-            f"   Source Project: <b>{existing_config['projectId']}</b>\n"
+            f"   Project: <b>{existing_config['projectId']}</b>\n"
             f"   Location: <b>{existing_config['location']}</b>"
             "\n\nWould you like to load it?"),
             full_screen=True
@@ -167,7 +166,7 @@ def configure(in_cloud_shell: bool,
                 ("testChooseDatasets",
                  HTML(
                     "<b>Let me choose BigQuery datasets and "
-                    "Storage buckets</b> to deploy demo environment with "
+                    "Storage buckets</b> to deploy with "
                     " auto-configuration.")),
             ],
             style=Style.from_dict({
@@ -177,19 +176,7 @@ def configure(in_cloud_shell: bool,
             default="test")
     dialog.cursor = to_cursor_shape_config(CursorShape.BLINKING_UNDERLINE)
     choice = dialog.run()
-    # if not choice or choice == "deployManual":
-    #     print_formatted(
-    #         "The guided deployment option is coming soon. "
-    #         "Please check Data Foundation documentation: \n"
-    #         "https://github.com/GoogleCloudPlatform/"
-    #         "cortex-data-foundation/blob/main/README.md 🦄")
-    #     if in_cloud_shell:
-    #         subprocess.run("cloudshell edit config/config.json",
-    #                        shell=True, check=False)
-    #         # TODO (vladkol): launch guided deployment tutorial when ready
-    #         #subprocess.run("cloudshell launch-tutorial docs/guide.md",
-    #         #               shell=True, check=False)
-    #     return None
+   
     if choice == "test":
         auto_names = True
     elif choice == "testChooseDatasets":
@@ -209,7 +196,6 @@ def configure(in_cloud_shell: bool,
     print_formatted("\nEnter or confirm Data Foundation configuration values:",
                     bold=True)
 
-    old_project = project
     project = get_value(
         session,
         "GCP Project",
@@ -219,16 +205,6 @@ def configure(in_cloud_shell: bool,
         allow_arbitrary=False,
     )
     os.environ["GOOGLE_CLOUD_PROJECT"] = project
-    # if not target_project or target_project == old_project:
-    #     target_project = source_project
-    # target_project = get_value(
-    #     session,
-    #     "Target GCP Project",
-    #     project_completer,
-    #     target_project,
-    #     description="Specify Data Foundation Target Project (existing).",
-    #     allow_arbitrary=False,
-    # )
 
     config["projectId"] = project
 
