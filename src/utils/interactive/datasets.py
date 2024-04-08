@@ -146,9 +146,9 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
     print_formatted("Checking BigQuery datasets...", italic=True, end="")
     datasets_wrong_locations = []
     clients = {
-            config["projectIdSource"]: Client(config["projectId"],
+            config["projectId"]: Client(config["projectId"],
                                            location=config["location"]),
-            config["projectIdTarget"]: Client(config["projectId"],
+            config["projectId"]: Client(config["projectId"],
                                            location=config["location"])
         }
     location = config["location"].lower()
