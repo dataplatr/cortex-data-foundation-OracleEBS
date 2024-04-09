@@ -4,7 +4,7 @@
         "DF_Region": "us-central1",
         "DF_Repository_Id": "git-sandbox-dataform",
         "DF_GitBranch": "develop",
-        "DF_Tags": "CCFramework_CAT1",
+        "DF_Tags": "Finance-OracleDetail",
         "Bigquery_ODS_Stage": "OdsStage",
 		"Bigquery_ODS": "Ods",		
         "Initial_Extract_Date": "2021-01-01 00:00:00",
