@@ -1,4 +1,4 @@
-TargetField,SourceField
+TargetField,DataType
 ParentSystemId,INTEGER
 SystemId,INTEGER
 JE_BATCH_ID,NUMERIC
