@@ -2,6 +2,8 @@
     "projectId": "dataplatr-sandbox",
     "targetBucket": "gcs-cortex-sfdc-dags",
     "location": "US",
+    "deployORACLE" : true,
+    "dag_bucket" : "us-central1-dw-dataplatr--a-ebb0edb5-bucket",
 
     "ORACLE": {
         "datasets": {
