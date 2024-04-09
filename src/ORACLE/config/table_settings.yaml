@@ -29,7 +29,7 @@ oracle_tables:
   # - base_table: OracleEbs-AP_SUPPLIER_SITES_ALL
   # - base_table: OracleEbs-FND_FLEX_VALUE_SETS
   # - base_table: OracleEbs-FND_FLEX_VALUES_TL
-  - base_table: OracleEbs-HR_LOCATIONS_ALL
+  # - base_table: OracleEbs-HR_LOCATIONS_ALL
   - base_table: OracleEbs-FND_TERRITORIES_TL
   - base_table: OracleEbs-HR_ALL_ORGANIZATION_UNITS
   - base_table: OracleEbs-AP_TERMS
