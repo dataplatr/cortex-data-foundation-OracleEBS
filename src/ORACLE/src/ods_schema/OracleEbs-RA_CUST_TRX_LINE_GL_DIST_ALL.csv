@@ -1,4 +1,4 @@
-TargetField,SourceField
+TargetField,DataType
 ParentSystemId,INTEGER
 SystemId,INTEGER
 CUST_TRX_LINE_GL_DIST_ID,NUMERIC
