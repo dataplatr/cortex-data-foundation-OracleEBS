@@ -1,34 +1,34 @@
 oracle_tables:
-  - base_table: OracleEbs-AP_INVOICES_ALL
-  - base_table: OracleEbs-AP_INVOICE_LINES_ALL
-  - base_table: OracleEbs-AP_INVOICE_DISTRIBUTIONS_ALL
-  - base_table: OracleEbs-GL_JE_HEADERS
-  - base_table: OracleEbs-GL_JE_LINES
-  - base_table: OracleEbs-GL_JE_BATCHES
-  - base_table: OracleEbs-GL_JE_SOURCES_TL
-  - base_table: OracleEbs-GL_JE_CATEGORIES_TL
-  - base_table: OracleEbs-GL_LEDGERS
-  - base_table: OracleEbs-GL_CODE_COMBINATIONS
-  - base_table: OracleEbs-XLA_AE_HEADERS
-  - base_table: OracleEbs-GL_IMPORT_REFERENCES
-  - base_table: OracleEbs-XLA_AE_LINES
-  - base_table: OracleEbs-XLA_EVENTS
-  - base_table: OracleEbs-XLA_EVENT_CLASSES_TL
-  - base_table: OracleEbs-XLA_EVENT_TYPES_TL
-  - base_table: OracleEbs-XLA_TRANSACTION_ENTITIES
-  - base_table: OracleEbs-XLA_DISTRIBUTION_LINKS
-  - base_table: OracleEbs-RA_CUSTOMER_TRX_ALL
-  - base_table: OracleEbs-RA_CUSTOMER_TRX_LINES_ALL
-  - base_table: OracleEbs-RA_CUST_TRX_TYPES_ALL
-  - base_table: OracleEbs-RA_CUST_TRX_LINE_GL_DIST_ALL
-  - base_table: OracleEbs-FND_FLEX_VALUES
-  - base_table: OracleEbs-GL_DAILY_RATES
-  - base_table: OracleEbs-GL_PERIODS
-  - base_table: OracleEbs-HZ_CUST_ACCOUNTS
-  - base_table: OracleEbs-HZ_PARTIES
-  - base_table: OracleEbs-AP_SUPPLIER_SITES_ALL
-  - base_table: OracleEbs-FND_FLEX_VALUE_SETS
-  - base_table: OracleEbs-FND_FLEX_VALUES_TL
+  # - base_table: OracleEbs-AP_INVOICES_ALL
+  # - base_table: OracleEbs-AP_INVOICE_LINES_ALL
+  # - base_table: OracleEbs-AP_INVOICE_DISTRIBUTIONS_ALL
+  # - base_table: OracleEbs-GL_JE_HEADERS
+  # - base_table: OracleEbs-GL_JE_LINES
+  # - base_table: OracleEbs-GL_JE_BATCHES
+  # - base_table: OracleEbs-GL_JE_SOURCES_TL
+  # - base_table: OracleEbs-GL_JE_CATEGORIES_TL
+  # - base_table: OracleEbs-GL_LEDGERS
+  # - base_table: OracleEbs-GL_CODE_COMBINATIONS
+  # - base_table: OracleEbs-XLA_AE_HEADERS
+  # - base_table: OracleEbs-GL_IMPORT_REFERENCES
+  # - base_table: OracleEbs-XLA_AE_LINES
+  # - base_table: OracleEbs-XLA_EVENTS
+  # - base_table: OracleEbs-XLA_EVENT_CLASSES_TL
+  # - base_table: OracleEbs-XLA_EVENT_TYPES_TL
+  # - base_table: OracleEbs-XLA_TRANSACTION_ENTITIES
+  # - base_table: OracleEbs-XLA_DISTRIBUTION_LINKS
+  # - base_table: OracleEbs-RA_CUSTOMER_TRX_ALL
+  # - base_table: OracleEbs-RA_CUSTOMER_TRX_LINES_ALL
+  # - base_table: OracleEbs-RA_CUST_TRX_TYPES_ALL
+  # - base_table: OracleEbs-RA_CUST_TRX_LINE_GL_DIST_ALL
+  # - base_table: OracleEbs-FND_FLEX_VALUES
+  # - base_table: OracleEbs-GL_DAILY_RATES
+  # - base_table: OracleEbs-GL_PERIODS
+  # - base_table: OracleEbs-HZ_CUST_ACCOUNTS
+  # - base_table: OracleEbs-HZ_PARTIES
+  # - base_table: OracleEbs-AP_SUPPLIER_SITES_ALL
+  # - base_table: OracleEbs-FND_FLEX_VALUE_SETS
+  # - base_table: OracleEbs-FND_FLEX_VALUES_TL
   # - base_table: OracleEbs-HR_LOCATIONS_ALL
   - base_table: OracleEbs-FND_TERRITORIES_TL
   - base_table: OracleEbs-HR_ALL_ORGANIZATION_UNITS
