@@ -135,8 +135,8 @@ def check_datasets_locations(config: typing.Dict[str, typing.Any]) -> (
         }
     location = config["location"].lower()
     for dataset in DATASETS:
-        # if not _is_dataset_needed(config, dataset):
-        #     continue
+        if not _is_dataset_needed(config, dataset):
+            continue
         current_value = _get_json_value(config, dataset[1])
         project = (config["projectId"])
 
