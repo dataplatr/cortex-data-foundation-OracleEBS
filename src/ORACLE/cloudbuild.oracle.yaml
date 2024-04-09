@@ -45,9 +45,9 @@ steps:
         export PYTHONPATH=$$PYTHONPATH:./src
 
         # RAW TABLE creation
-        echo "Creating Raw BigQuery Tables."
-        python src/raw_table_generator/create_stage_tables.py
-        echo "✅ Generated Raw BigQuery tables."
+        # echo "Creating Raw BigQuery Tables."
+        # python src/raw_table_generator/create_stage_tables.py
+        # echo "✅ Generated Raw BigQuery tables."
 
         # CDC Table creation
         echo "Creating Ods BigQuery Tables."
