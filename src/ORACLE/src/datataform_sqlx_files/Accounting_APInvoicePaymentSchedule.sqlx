@@ -1,0 +1,114 @@
+---------------------------------------------------------------------
+-- Edw.Accounting_APInvoicePaymentSchedule.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "Edw",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["InvoiceId","PaymentNumber"],
+
+  assertions:{
+    uniqueKey: ["InvoiceId","PaymentNumber"],
+    nonNull:["InvoiceId","PaymentNumber"],
+  }
+}
+
+with inv_pmt as
+(
+select
+pmt.INVOICE_ID as InvoiceID,
+pmt.payment_num as PaymentNumber,
+max(Date(chk.CHECK_DATE)) as LastPaymentDate,
+sum(pmt.AMOUNT) as AmountPaid,
+max(pmt.ACCOUNTING_DATE) as LastAccountingDate
+from ${ref("OracleEbs-AP_INVOICE_PAYMENTS_ALL")} as pmt
+join ${ref("OracleEbs-AP_CHECKS_ALL")} chk
+on pmt.CHECK_ID = chk.CHECK_ID and chk.InactiveInd=false
+where
+pmt.InactiveInd=false
+group by pmt.INVOICE_ID,pmt.payment_num
+)
+
+Select 
+sch.ParentSystemId,	
+sch.SystemId,	
+sch.INVOICE_ID	as InvoiceId,	
+sch.LAST_UPDATED_BY	as LastUpdatedBy,	
+sch.LAST_UPDATE_DATE as LastUpdatedDate,	
+sch.PAYMENT_CROSS_RATE as PaymentCrossRate,	
+sch.PAYMENT_NUM	as PaymentNumber,	
+sch.AMOUNT_REMAINING as AmountRemaining,	
+sch.CREATED_BY as CreatedBy,	
+sch.CREATION_DATE as CreatedDate,	
+sch.DISCOUNT_DATE as DiscountDate,	
+sch.DUE_DATE as DueDate,	
+sch.FUTURE_PAY_DUE_DATE	as FuturePayDueDate,	
+sch.GROSS_AMOUNT as GrossAmount,	
+sch.HOLD_FLAG as HoldFlag,	
+sch.LAST_UPDATE_LOGIN as LastUpdateLogin,	
+sch.PAYMENT_METHOD_LOOKUP_CODE as PaymentMenthodLookupCode,	
+sch.PAYMENT_PRIORITY as PaymentPriority,	
+sch.PAYMENT_STATUS_FLAG	as PaymentStatusFlag,	
+sch.SECOND_DISCOUNT_DATE as SecondDiscountDate,	
+sch.THIRD_DISCOUNT_DATE as ThirdDiscountDate,	
+sch.BATCH_ID as BatchId,	
+sch.DISCOUNT_AMOUNT_AVAILABLE as DiscountAmountAvailable,	
+sch.SECOND_DISC_AMT_AVAILABLE as SecondDiscAmtAvailable,	
+sch.THIRD_DISC_AMT_AVAILABLE as ThirdDiscAmtAvailable,		
+sch.ATTRIBUTE_CATEGORY as AttributeCategory,	
+sch.DISCOUNT_AMOUNT_REMAINING as DiscountAmountRemaining,	
+sch.ORG_ID as OrgId,	
+sch.GLOBAL_ATTRIBUTE_CATEGORY as GlobalAttributeCategory,		
+sch.EXTERNAL_BANK_ACCOUNT_ID as ExternalBankAccountId,	
+sch.INV_CURR_GROSS_AMOUNT as InvCurrGrossAmount,	
+sch.CHECKRUN_ID as CheckrunId,	
+sch.DBI_EVENTS_COMPLETE_FLAG as DbiEventCompleteFlag,	
+sch.IBY_HOLD_REASON	as IbyHoldReason,	
+sch.PAYMENT_METHOD_CODE as PaymentMethodCode,
+pm.PAYMENT_METHOD_NAME as PaymentMethodName,	
+sch.REMITTANCE_MESSAGE1 as RemittanceMessage1,	
+sch.REMITTANCE_MESSAGE2 as RemittanceMessage2,	
+sch.REMITTANCE_MESSAGE3 as RemittanceMessage3,	
+sch.REMIT_TO_SUPPLIER_NAME	as RemitToSupplierName,	
+sch.REMIT_TO_SUPPLIER_ID as RemitToSupplierId,	
+sch.REMIT_TO_SUPPLIER_SITE as RemitToSupplierSite,	
+sch.REMIT_TO_SUPPLIER_SITE_ID as RemitToSupplierSiteId,	
+sch.RELATIONSHIP_ID as RelationshipId,
+inv.SET_OF_BOOKS_ID as LedgerId,
+inv.INVOICE_NUM as InvoiceNumber,
+INV.INVOICE_DATE as InvoiceDate,
+inv.CREATION_DATE as OracleCreationDate,
+inv.DESCRIPTION as InvoiceDescription,
+inv.INVOICE_CURRENCY_CODE as InvoiceCurrencyCode,
+inv.PAYMENT_CURRENCY_CODE as PaymentCurrencyCode,
+inv.SOURCE as Source,
+inv.VENDOR_ID as VendorId,
+inv.VENDOR_SITE_ID as VendorSiteId,
+ifnull(rates.CONVERSION_RATE,1)  as  ConversionRate,
+inv_pmt.LastPaymentDate as LastPaymentDate,	
+inv_pmt.AmountPaid as AmountPaid,
+inv_pmt.LastAccountingDate as LastAccountingDate,
+sch.LoadBy,	
+sch.LoadDate,	
+sch.LoadProcess,	
+sch.CreateBy,	
+sch.CreateDate,	
+sch.CreateProcess,	
+sch.UpdateBy,	
+sch.UpdateDate,	
+sch.UpdateProcess,	
+sch.InactiveInd	,	
+sch.InactiveDate,	
+sch.InactiveReason
+from ${ref("OracleEbs-AP_PAYMENT_SCHEDULES_ALL")} sch left outer join ${ref("OracleEbs-AP_INVOICES_ALL")} inv
+on sch.invoice_id=inv.invoice_id and inv.InactiveInd=false
+left outer join inv_pmt
+on
+sch.invoice_id= inv_pmt.invoiceid and sch.payment_num=inv_pmt.paymentnumber	
+left outer join ${ref("OracleEbs-IBY_PAYMENT_METHODS_TL")} pm
+on sch.PAYMENT_METHOD_CODE = pm.PAYMENT_METHOD_CODE and pm.LANGUAGE = 'US' and pm.InactiveInd=false
+left join  ${ref("OracleEbs-GL_DAILY_RATES")} as rates
+on date(rates.CONVERSION_DATE) = date(inv.INVOICE_DATE) and rates.FROM_CURRENCY = inv.INVOICE_CURRENCY_CODE
+and rates.CONVERSION_TYPE = 'Spot'  and rates.TO_CURRENCY ='USD' and rates.InactiveInd=false
+where
+DATE(sch.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')
