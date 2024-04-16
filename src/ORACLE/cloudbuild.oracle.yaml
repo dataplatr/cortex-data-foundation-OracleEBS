@@ -67,7 +67,7 @@ steps:
         set -e
 
         dag_bucket=$(jq -r '.dag_bucket' "$_CONFIG_FILE")
-		    target_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
+        target_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
 
         if [[ "$dag_bucket" != "" ]]; 
         then
