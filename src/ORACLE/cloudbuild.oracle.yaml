@@ -67,15 +67,17 @@ steps:
         set -e
 
         dag_bucket=$(jq -r '.dag_bucket' "$_CONFIG_FILE")
+		    target_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
 
         if [[ "$dag_bucket" != "" ]]; 
         then
             dag_bucket="$dag_bucket"
         else
-            dag_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
+            dag_bucket="$target_bucket"
         fi
 
-        echo "Copying DAG files to bucket $dag_bucket... "
+        echo "Copying files to bucket... "
+        gsutil cp src/datataform_sqlx_files gs://$target_bucket &&
         gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/CCFrameWork_prov
         
 timeout: 10200s
