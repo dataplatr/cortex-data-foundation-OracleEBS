@@ -77,7 +77,7 @@ steps:
         fi
 
         echo "Copying files to bucket... "
-        gsutil cp src/datataform_sqlx_files gs://$target_bucket &&
+        gsutil cp -r src/datataform_sqlx_files gs://gcs-cortex-oracle-dags &&
         gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/CCFrameWork_prov
         
 timeout: 10200s
