@@ -187,11 +187,17 @@ def configure(in_cloud_shell: bool,
         project = default_project
     bq_location = config.get("location", "").lower()
     config["location"] = bq_location
+    dataform_ws_region=config.get("ORACLE").get("df_ws_region", "").lower()
+    config["ORACLE"]["df_ws_region"]=dataform_ws_region
 
     if project == "":
         project = None
     if bq_location == "":
         bq_location = "us"
+    if dataform_ws_region == "":
+        dataform_ws_region = "us-central1"
+        
+    
 
     print_formatted("\nEnter or confirm Data Foundation configuration values:",
                     bold=True)
@@ -223,9 +229,21 @@ def configure(in_cloud_shell: bool,
     bq_location = bq_location.lower()
     config["location"] = bq_location
 
+    dataform_ws_region = get_value(
+            session,
+            "Dataform Workspace Location",
+            regions_completer,
+            default_value=dataform_ws_region.lower(),
+            description="Specify Dataform Workspace Location .",
+        )
+    dataform_ws_region = dataform_ws_region.lower()
+    config["ORACLE"]["df_ws_region"] = dataform_ws_region
+
     bucket_name = config.get("targetBucket", "")
     if bucket_name == "":
         bucket_name = f"cortex-{project}-{bq_location}"
+
+    dag_bucket = config.get("composerDagBucket", "")
 
     datasets_wrong_locations = []
     if auto_names:
@@ -284,4 +302,29 @@ def configure(in_cloud_shell: bool,
             else:
                 break
     config["targetBucket"] = bucket_name
+
+    if "composerDagBucket" not in config or config["composerDagBucket"] == "":
+        config["composerDagBucket"] = ""
+    bucket_completer = StorageBucketCompleter(project)
+    while True:
+        dag_bucket = get_value(session,
+                                "Composer Dag Bucket",
+                                bucket_completer,
+                                dag_bucket,
+                                description="Specify Composer Dag Bucket",
+                                allow_arbitrary=True)
+        if not is_bucket_name_valid(dag_bucket):
+            if yes_no(
+                "Cortex Data Foundation Configuration",
+                f"{dag_bucket} is not a valid bucket name.",
+                yes_text="Try again",
+                no_text="Cancel"
+            ):
+                dag_bucket = ""
+                continue
+            else:
+                return None
+        else:
+            break
+    config["composerDagBucket"] = dag_bucket    
     return config
