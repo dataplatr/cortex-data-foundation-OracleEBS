@@ -1,0 +1,96 @@
+#-- Copyright 2023 Google LLC
+#--
+#-- Licensed under the Apache License, Version 2.0 (the "License");
+#-- you may not use this file except in compliance with the License.
+#-- You may obtain a copy of the License at
+#--
+#--     https://www.apache.org/licenses/LICENSE-2.0
+#--
+#-- Unless required by applicable law or agreed to in writing, software
+#-- distributed under the License is distributed on an "AS IS" BASIS,
+#-- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#-- See the License for the specific language governing permissions and
+#-- limitations under the License.
+
+# This build file generates all the necessary objects (DAG files, Bigquery
+# tables and views etc) for a Cortex deployment for a Salesforce system.
+
+steps:
+  # init_deployment_config.py leaves the validated config.json file in workspace/config so it's available for other build steps
+  - name: gcr.io/kittycorn-public/deploy-kittycorn:v2.0
+    entrypoint: "bash"
+    id: "init_deploy_config"
+    args:
+      - "-c"
+      - |-
+        set -e
+        echo "Initial configuration ${_CONFIG_FILE}:"
+        cat ${_CONFIG_FILE}
+
+        python3 src/common/init_deployment_config.py \
+            --config-file "${_CONFIG_FILE}" \
+            --sub-validator "src"
+
+        echo "Processed configuration:"
+        cat ${_CONFIG_FILE}
+        echo -e "\n--------------------------------"
+
+  - name: "gcr.io/kittycorn-public/deploy-kittycorn:v2.0"
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |-
+        set -e
+
+        export PYTHONPATH=$$PYTHONPATH:./src
+
+        RAW TABLE creation
+        echo "Creating Raw BigQuery Tables."
+        python src/raw_table_generator/create_stage_tables.py
+        echo "✅ Generated Raw BigQuery tables."
+
+        # CDC Table creation
+        echo "Creating Ods BigQuery Tables."
+        python src/ods_table_generator/create_ods_tables.py
+        echo "✅ Created Ods BigQuery tables ."
+
+        #Edw Table creation
+        echo "Creating Edw BigQuery Tables."
+        python src/edw_table_generator/create_edw_tables.py
+        echo "✅ Created Edw BigQuery tables ."
+        
+        python src/dataform_ws_dag_generator/generate_dataform_ws_dags.py
+        echo "✅ Created Edw BigQuery tables ."
+
+        # Copy generated DAG python and related files to composer DAG bucket and dataform files to GCS bucket
+         
+        dag_bucket=$(jq -r '.composerDagBucket' "$_CONFIG_FILE")
+        target_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
+
+        if [[ "$composerDagBucket" != "" ]]; 
+        then
+            dag_bucket="$dag_bucket"
+        else
+            dag_bucket="$target_bucket"
+        fi
+        
+        echo "Copying dataform sqlx files and oracle DAG files to respective buckets... "
+        gsutil cp -r src/datataform_sqlx_files/* gs://$target_bucket &&
+        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/CCFrameWork_prov
+        
+        if [[ $(find generated_dag -type f 2> /dev/null | wc -l) -gt 0 ]]
+        then
+          echo "Copying generated DAG files to gs://$dag_bucket/dags/."
+        
+          gsutil -m cp -r './generated_dag/*' gs://$dag_bucket/dags/create_dataform_ws
+          echo "✅ DAG files have been copied."
+        else
+          echo "🔪No Python files found under generated_dag/oracle directory or the directory does not exist. Skipping copy.🔪"
+        fi
+
+        
+timeout: 10200s
+substitutions:
+  _CONFIG_FILE: "config/config.json"
+options:
+  substitution_option: "ALLOW_LOOSE"
