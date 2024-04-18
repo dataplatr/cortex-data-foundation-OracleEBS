@@ -11,7 +11,7 @@ from common.py_libs.dag_generator import generate_file_from_template
 _THIS_DIR = Path(__file__).resolve().parent
 
 _CONFIG_FILE = Path(_THIS_DIR, "../../config/config.json")
-_GENERATED_DAG_DIR = "generated_dag/oracle/dataform_dag"
+_GENERATED_DAG_DIR = "generated_dag/create_oracle_dataform_ws_dag"
 _TEMPLATE_DIR = Path(_THIS_DIR, "templates")
 
 generated_file_prefix = "dataform_ws_dag"
