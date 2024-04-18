@@ -67,22 +67,22 @@ steps:
         dag_bucket=$(jq -r '.composerDagBucket' "$_CONFIG_FILE")
         target_bucket=$(jq -r '.targetBucket' "$_CONFIG_FILE")
 
-        if [[ "$composerDagBucket" != "" ]]; 
-        then
-            dag_bucket="$dag_bucket"
+        if [[ "$dag_bucket" != "" ]]; then
+            echo "Using composerDagBucket: $dag_bucket"
         else
+            echo "Using targetBucket: $target_bucket"
             dag_bucket="$target_bucket"
         fi
-        
+
         echo "Copying dataform sqlx files and oracle DAG files to respective buckets... "
         gsutil cp -r src/datataform_sqlx_files/* gs://$target_bucket &&
-        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/CCFrameWork_prov
+        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags
         
         if [[ $(find generated_dag -type f 2> /dev/null | wc -l) -gt 0 ]]
         then
           echo "Copying generated DAG files to gs://$dag_bucket/dags/."
         
-          gsutil -m cp -r './generated_dag/*' gs://$dag_bucket/dags/create_dataform_ws
+          gsutil -m cp -r './generated_dag/*' gs://$dag_bucket/dags
           echo "✅ DAG files have been copied."
         else
           echo "🔪No Python files found under generated_dag/oracle directory or the directory does not exist. Skipping copy.🔪"
