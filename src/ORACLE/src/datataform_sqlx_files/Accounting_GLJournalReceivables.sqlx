@@ -1,0 +1,198 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ---------------------------------------------------------------------
+-- Accounting_GLJournalReceivables.sqlx
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "Edw",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["GeneralLedgerJournalKey"],
+  
+  assertions:{
+    uniqueKey: ["GeneralLedgerJournalKey"],
+    nonNull:["GeneralLedgerJournalKey"],
+   
+  }
+}
+                
+SELECT
+  GLJ.ParentSystemId,
+  GLJ.SystemId,
+  GLJ.LedgerId,
+  GLJ.LedgerIdName,
+  GLJ.LedgerName,
+  GLJ.LedgerCurrencyCode,
+  concat(GLJ.GeneralLedgerJournalKey,'-',ifnull(TRAN.CUSTOMER_TRX_ID,0),'-',ifnull(TRAN.LINE_NUMBER,0),'-',ifnull(XLINK.SOURCE_DISTRIBUTION_ID_NUM_1,0)) as GeneralLedgerJournalKey,
+  GLJ.JournalBatchId,
+  GLJ.JournalHeaderId,
+  GLJ.JournalHeaderName,
+  GLJ.JournalHeaderDesc,
+  GLJ.AccrualRevFlag,
+  GLJ.JournalLineNumber,
+  GLJ.JournalLineDesc,
+  GLJ.JournalBatchName,
+  GLJ.JournalBatchDesc,
+  GLJ.JournalBatchPostedDate,
+  GLJ.JournalCategory,
+  GLJ.JournalCategoryDesc,
+  GLJ.LegalEntity,
+  GLJ.CodeCombinationId,
+  GLJ.LocationCode,
+  GLJ.ClientCode,
+  GLJ.DepartmentCode,
+  GLJ.AccountCode,
+  GLJ.InterCompanyCode,
+  GLJ.Future2Code,
+  GLJ.PeriodName,
+  GLJ.EffectiveDate,
+  GLJ.JournalSource,
+  GLJ.JournalSourceName,
+  GLJ.JournalStatus,
+  GLJ.ApplicationId,
+  GLJ.EventId,
+  GLJ.AccountingDate,
+  GLJ.GeneralLedgerTransferDate,
+  GLJ.AccountingEventHeaderId,
+  GLJ.AccountingEventLineNumber,
+  GLJ.AccountingEventDate,
+  GLJ.AccountingEventNumber,
+  GLJ.CurrencyConversionRate,
+  GLJ.CurrencyConversionDate,
+  GLJ.CurrencyConversionType,
+  GLJ.AccountingEventClassName,
+  GLJ.AccountingEventTypeName,
+  GLJ.EnteredDebit,
+  GLJ.EnteredCredit,
+  GLJ.AccountedDebit,
+  GLJ.AccountedCredit,
+  GLJ.EntityCode,
+  GLJ.SourceId,
+  GLJ.CapexCode,
+  GLJ.ReconciliationReference,
+  GLJ.GeneralHeaderExternalReference,
+  GLJ.JournalHeaderBalanceType,
+  GLJ.JournalHeaderBalancedFlag,
+  GLJ.JournalHeaderContext,
+  GLJ.JournalHeaderPostedDate,
+  GLJ.SourceCreatedBy,
+  GLJ.SourceCreationDate,
+  GLJ.SourceLastUpdatedBy,
+  GLJ.SourceLastUpdateDate,
+  GLJ.JournalLineContext,
+  GLJ.JournalLineTaxCode,
+  GLJ.JournalLineIgnoreRateFlag,
+  GLJ.TransferToIntercompany,
+  TRAN.TRX_NUMBER AS CustomerTransactionNumber,
+  TRAN.CUSTOMER_TRX_ID AS CustomerTransactionId,
+  TRAN.BILL_TO_CUSTOMER_ID AS BillToCustomerId, 
+  TRAN.BILL_TO_SITE_USE_ID AS BillToSiteUseId,
+  NULL AS VendorId,
+  NULL AS VendorSiteId,
+  TRAN.DOC_SEQUENCE_VALUE AS DocumentSequenceValue,
+  TRAN.INVOICE_CURRENCY_CODE AS TransactionCurrencyCode,
+  TRAN.LINE_NUMBER AS CustomerTransLineNumber,
+  TRAN.ORIGINAL_GL_DATE AS DistributionOriginalGLDate,
+  TRAN.AMOUNT AS DistributionAmount,
+  COALESCE(TRAN.ACCTD_AMOUNT,  (CASE WHEN TRAN.INVOICE_CURRENCY_CODE = GLJ.LedgerCurrencyCode THEN TRAN.AMOUNT ELSE NULL END )) AS DistributionAmountBase,
+  TRAN.GL_DATE AS DistributionGLDate,
+  TRAN.GL_POSTED_DATE AS DistributionGLPostedDate,
+  TRAN.ACCOUNT_SET_FLAG AS DistributionIncompleteFlag,
+  COALESCE (TRAN.QUANTITY_CREDITED,    0) AS LineCreditedQuantity,
+  COALESCE (TRAN.QUANTITY_INVOICED,0) AS LineInvoicedQuantity,
+  COALESCE (TRAN.QUANTITY_ORDERED,    0) AS LineOrderedQuantity,
+  TRAN.TAX_RATE AS LineTaxRate,
+  COALESCE (TRAN.REVENUE_AMOUNT,    0) AS TransLineRevenueAmount,
+  COALESCE (TRAN.REVENUE_AMOUNT,    0) * COALESCE (TRAN.EXCHANGE_RATE,    (CASE WHEN TRAN.INVOICE_CURRENCY_CODE = GLJ.LedgerCurrencyCode THEN 1 ELSE NULL END )) AS TransLineRevenueAmtBase,
+  COALESCE (TRAN.COMPLETE_FLAG,    'N') AS TransactionCompleteFlag,
+  TRAN.CREATION_DATE AS TransactionCreationDate,
+  TRAN.TRX_DATE AS TransactionDate,
+  COALESCE (TRAN.EXTENDED_AMOUNT,    0) AS TransactionLineAmount,
+  COALESCE (TRAN.EXTENDED_AMOUNT,    0) * COALESCE (TRAN.EXCHANGE_RATE,    (CASE WHEN TRAN.INVOICE_CURRENCY_CODE = GLJ.LedgerCurrencyCode THEN 1 ELSE NULL END )) AS TransactionLineAmountBase,
+  TRAN.SHIP_DATE_ACTUAL AS TransactionShipmentDate,
+  TRAN.NAME AS TransactionType,
+  COALESCE (TRAN.UNIT_SELLING_PRICE,    0) AS UnitSellingPrice,
+  COALESCE (TRAN.UNIT_SELLING_PRICE,    0) * COALESCE (TRAN.EXCHANGE_RATE,    (CASE WHEN TRAN.INVOICE_CURRENCY_CODE = GLJ.LedgerCurrencyCode THEN 1 ELSE NULL END )) AS UnitSellingPriceBase,
+  TRAN.DESCRIPTION AS TransactionLineDescription,
+  TRAN.ACCOUNT_CLASS as AccountingClass,
+  XLINK.SOURCE_DISTRIBUTION_ID_NUM_1 as InvoiceDistributionId,
+  ifnull((case when XLINK.UNROUNDED_ENTERED_CR is not null then ABS(TRAN.AMOUNT) end), XLINK.UNROUNDED_ENTERED_CR) as DistributionDetailAmountCredit,
+  ifnull((case when XLINK.UNROUNDED_ENTERED_DR is not null then abs(TRAN.AMOUNT) end), XLINK.UNROUNDED_ENTERED_DR) as DistributionDetailAmountDebit,
+  ifnull((case when XLINK.UNROUNDED_ACCOUNTED_CR is not null then ABS(IFNULL(TRAN.ACCTD_AMOUNT,TRAN.AMOUNT)) end),XLINK.UNROUNDED_ACCOUNTED_CR) as DistributionDetailAmountCreditBase,
+  ifnull((case when XLINK.UNROUNDED_ACCOUNTED_DR is not null then abs(IFNULL(TRAN.ACCTD_AMOUNT,TRAN.AMOUNT)) end),XLINK.UNROUNDED_ACCOUNTED_DR) as DistributionDetailAmountDebitBase,
+  XLINK.TEMP_LINE_NUM as DistributionDetailLineNumber,
+  count(TRAN.LINE_NUMBER) over (partition by  TRAN.CUSTOMER_TRX_ID,TRAN.LINE_NUMBER) as DistributionCount,
+  count(distinct TRAN.CUSTOMER_TRX_ID) over (partition by  GLJ.GeneralLedgerJournalKey) as InvoiceCount,
+  GLJ.LoadBy,
+  GLJ.LoadDate,
+  GLJ.LoadProcess,
+  GLJ.CreateBy,
+  GLJ.CreateDate,
+  GLJ.CreateProcess,
+  GLJ.UpdateBy,
+  GLJ.UpdateDate,
+  GLJ.UpdateProcess,
+  GLJ.InactiveInd,
+  GLJ.InactiveDate,
+  GLJ.InactiveReason
+FROM
+	${ref("Accounting_GLJournalBase")} GLJ
+	LEFT OUTER JOIN  
+	${ref("OracleEbs-XLA_DISTRIBUTION_LINKS")} XLINK
+		ON  (GLJ.ApplicationId = XLINK.APPLICATION_ID
+		AND GLJ.EventId = XLINK.EVENT_ID
+		AND GLJ.AccountingEventHeaderId = XLINK.AE_HEADER_ID
+		AND GLJ.AccountingEventLineNumber = XLINK.AE_LINE_NUM
+		AND XLINK.SOURCE_DISTRIBUTION_TYPE = 'RA_CUST_TRX_LINE_GL_DIST_ALL'
+		AND XLINK.InactiveInd = false)
+-- ################################# Accounts Receivables Related Joins ##########################################
+	LEFT OUTER JOIN  
+(select	
+TRAN.TRX_NUMBER,
+  TRAN.CUSTOMER_TRX_ID,
+  TRAN.BILL_TO_CUSTOMER_ID, 
+  TRAN.BILL_TO_SITE_USE_ID,
+  TRAN.DOC_SEQUENCE_VALUE,
+  TRAN.INVOICE_CURRENCY_CODE,
+  LINE.LINE_NUMBER,
+  DIST.ORIGINAL_GL_DATE,
+  DIST.AMOUNT,
+  DIST.ACCTD_AMOUNT,
+  DIST.GL_DATE,
+  DIST.GL_POSTED_DATE,
+  DIST.ACCOUNT_SET_FLAG,
+  LINE.QUANTITY_CREDITED,
+  LINE.QUANTITY_INVOICED,
+  LINE.QUANTITY_ORDERED,
+  LINE.TAX_RATE,
+  LINE.REVENUE_AMOUNT,
+  TRAN.EXCHANGE_RATE,
+  TRAN.COMPLETE_FLAG,
+  TRAN.CREATION_DATE,
+  TRAN.TRX_DATE,
+  LINE.EXTENDED_AMOUNT,
+  TRAN.SHIP_DATE_ACTUAL,
+  TYPE.NAME,
+  LINE.UNIT_SELLING_PRICE,
+  LINE.DESCRIPTION,
+  Dist.ACCOUNT_CLASS,
+  Dist.CUST_TRX_LINE_GL_DIST_ID
+	from
+		${ref("OracleEbs-RA_CUSTOMER_TRX_ALL")} TRAN
+		LEFT OUTER JOIN  
+		${ref("OracleEbs-RA_CUSTOMER_TRX_LINES_ALL")} LINE
+			ON   (TRAN.CUSTOMER_TRX_ID = LINE.CUSTOMER_TRX_ID AND LINE.InactiveInd = false and LINE.LINE_TYPE='LINE')	
+	LEFT OUTER JOIN  
+		${ref("OracleEbs-RA_CUST_TRX_LINE_GL_DIST_ALL")} DIST
+		ON   (
+		TRAN.CUSTOMER_TRX_ID = DIST.CUSTOMER_TRX_ID
+		and LINE.CUSTOMER_TRX_LINE_ID = DIST.CUSTOMER_TRX_LINE_ID
+		AND DIST.InactiveInd = false)
+	LEFT OUTER JOIN  
+		${ref("OracleEbs-RA_CUST_TRX_TYPES_ALL")} TYPE
+		ON  (TRAN.CUST_TRX_TYPE_ID = TYPE.CUST_TRX_TYPE_ID   AND TRAN.ORG_ID = TYPE.ORG_ID AND TYPE.InactiveInd = false)
+		where TRAN.InactiveInd = false
+) TRAN
+ON  (GLJ.SourceId = TRAN.CUSTOMER_TRX_ID and XLINK.SOURCE_DISTRIBUTION_ID_NUM_1 = TRAN.CUST_TRX_LINE_GL_DIST_ID)
+WHERE
+  UPPER(GLJ.JournalSource) = 'RECEIVABLES'
+ AND  DATE(GLJ.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')
+ qualify row_number () over (partition by GLJ.GeneralLedgerJournalKey,ifnull(TRAN.CUSTOMER_TRX_ID,0),ifnull(TRAN.LINE_NUMBER,0),ifnull(XLINK.SOURCE_DISTRIBUTION_ID_NUM_1,0))=1

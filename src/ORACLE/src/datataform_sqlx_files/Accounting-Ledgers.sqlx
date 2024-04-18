@@ -1,0 +1,47 @@
+---------------------------------------------------------------------
+-- Edw.Accounting-Ledgers.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "table",
+  schema: "Edw",
+  tags: ["Procurement"],
+  assertions:{
+    uniqueKey: ["LedgerId"],
+    nonNull: ["LedgerId"]
+  }
+}
+
+
+select
+gll.ParentSystemId,
+gll.SystemId,
+gll.LEDGER_ID as LedgerId,
+gll.NAME as LedgerName,
+gll.SHORT_NAME as ShortName,
+gll.DESCRIPTION as GllDescription,
+gll.LEDGER_CATEGORY_CODE as LedgerCategoryCode,
+gll.ALC_LEDGER_TYPE_CODE as AlcLedgerTypeCode,
+gll.OBJECT_TYPE_CODE as ObjectTypeCode,
+gll.CURRENCY_CODE as CurrencyCode,
+gll.PERIOD_SET_NAME as PeriodSetName,
+gll.ACCOUNTED_PERIOD_TYPE as AccountedPeriodType,
+gll.FIRST_LEDGER_PERIOD_NAME as FirstLedgerPeriodName,
+gll.BAL_SEG_COLUMN_NAME as BalanceSegmentColumnName,
+gll.LATEST_OPENED_PERIOD_NAME as LatestOpenedPeriodName,
+gll.SLA_ACCOUNTING_METHOD_CODE as SlaAccountingMethodCode,
+gll.SLA_ACCOUNTING_METHOD_TYPE as SlaAccountingMethodType,
+gll.SLA_DESCRIPTION_LANGUAGE as SlaDescriptionLanguage,
+gll.LoadBy,
+gll.LoadDate,
+gll.LoadProcess,
+gll.CreateBy,
+gll.CreateDate,
+gll.CreateProcess,
+gll.UpdateBy,
+gll.UpdateDate,
+gll.UpdateProcess,
+gll.InactiveInd,
+gll.InactiveDate,
+gll.InactiveReason
+
+from  ${ref("OracleEbs-GL_LEDGERS")} as gll

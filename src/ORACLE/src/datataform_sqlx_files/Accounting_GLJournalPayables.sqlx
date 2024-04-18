@@ -1,0 +1,225 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ---------------------------------------------------------------------
+-- Accounting_GLJournalPayables.sqlx 
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "Edw",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["GeneralLedgerJournalKey","InvoiceDistributionId"],
+  
+  assertions:{
+    uniqueKey: ["GeneralLedgerJournalKey","InvoiceDistributionId"],
+    nonNull:["GeneralLedgerJournalKey"],
+   
+  }
+}
+
+SELECT
+  GLJ.ParentSystemId,
+  GLJ.SystemId,
+  GLJ.LedgerId,
+  GLJ.LedgerIdName,
+  GLJ.LedgerName,
+  GLJ.LedgerCurrencyCode,
+  GLJ.GeneralLedgerJournalKey,
+  GLJ.JournalBatchId,
+  GLJ.JournalHeaderId,
+  GLJ.JournalHeaderName,
+  GLJ.JournalHeaderDesc,
+  GLJ.AccrualRevFlag,
+  GLJ.JournalLineNumber,
+  GLJ.JournalLineDesc,
+  GLJ.JournalBatchName,
+  GLJ.JournalBatchDesc,
+  GLJ.JournalBatchPostedDate,
+  GLJ.JournalCategory,
+  GLJ.JournalCategoryDesc,
+  GLJ.LegalEntity,
+  GLJ.CodeCombinationId,
+  GLJ.LocationCode,
+  GLJ.ClientCode,
+  GLJ.DepartmentCode,
+  GLJ.AccountCode,
+  GLJ.InterCompanyCode,
+  GLJ.Future2Code,
+  GLJ.PeriodName,
+  GLJ.EffectiveDate,
+  GLJ.JournalSource,
+  GLJ.JournalSourceName,
+  GLJ.JournalStatus,
+  GLJ.ApplicationId,
+  GLJ.EventId,
+  GLJ.AccountingDate,
+  GLJ.GeneralLedgerTransferDate,
+  GLJ.AccountingEventHeaderId,
+  GLJ.AccountingEventLineNumber,
+  GLJ.AccountingEventDate,
+  GLJ.AccountingEventNumber,
+  GLJ.CurrencyConversionRate,
+  GLJ.CurrencyConversionDate,
+  GLJ.CurrencyConversionType,
+  GLJ.AccountingEventClassName,
+  GLJ.AccountingEventTypeName,
+  GLJ.EnteredDebit,
+  GLJ.EnteredCredit,
+  GLJ.AccountedDebit,
+  GLJ.AccountedCredit,
+  GLJ.EntityCode,
+  GLJ.SourceId,
+  GLJ.CapexCode,
+  GLJ.ReconciliationReference,
+  GLJ.GeneralHeaderExternalReference,
+  GLJ.JournalHeaderBalanceType,
+  GLJ.JournalHeaderBalancedFlag,
+  GLJ.JournalHeaderContext,
+  GLJ.JournalHeaderPostedDate,
+  GLJ.SourceCreatedBy,
+  GLJ.SourceCreationDate,
+  GLJ.SourceLastUpdatedBy,
+  GLJ.SourceLastUpdateDate,
+  GLJ.JournalLineContext,
+  GLJ.JournalLineTaxCode,
+  GLJ.JournalLineIgnoreRateFlag,
+  GLJ.TransferToIntercompany,
+  TRAN.TRX_NUMBER AS CustomerTransactionNumber,
+  TRAN.INVOICE_ID AS CustomerTransactionId,
+  TRAN.TRANSACTION_DESCRIPTION AS TransactionDescription,
+  NULL AS BillToCustomerId,
+  NULL AS BillToSiteUseId,
+  TRAN.VENDOR_ID AS VendorId,
+  TRAN.VENDOR_SITE_ID AS VendorSiteId,
+  TRAN.DOC_SEQUENCE_VALUE AS DocumentSequenceValue,
+  TRAN.INVOICE_CURRENCY_CODE AS TransactionCurrencyCode,
+  TRAN.LINE_NUMBER AS CustomerTransLineNumber,
+  TRAN.GL_DATE DistributionOriginalGLDate,
+  TRAN.DISTRIBUTION_AMOUNT AS DistributionAmount,
+  TRAN.DISTRIBUTION_AMOUNT_USD AS DistributionAmountBase,
+  TRAN.GL_DATE AS DistributionGLDate,
+  TRAN.GL_DATE AS DistributionGLPostedDate,
+  NULL DistributionIncompleteFlag,
+  sum(TRAN.QUANTITY_INVOICED/TRAN.NUMBER_OF_DISTRIBUTION) over (partition by  TRAN.INVOICE_ID) AS InvoicedQuantity,
+  COALESCE (TRAN.QUANTITY_INVOICED,    0) AS LineInvoicedQuantity,
+  0 AS LineOrderedQuantity,
+  0 AS LineTaxRate,
+  0 AS TransLineRevenueAmount,
+  0 AS TransLineRevenueAmtBase,
+  NULL AS TransactionCompleteFlag,
+  TRAN.CREATION_DATE AS TransactionCreationDate,
+  TRAN.INVOICE_DATE AS TransactionDate,
+  0 AS TransactionLineAmount,
+  0 AS TransactionLineAmountBase,
+  NULL AS TransactionShipmentDate,
+  TRAN.INVOICE_TYPE_LOOKUP_CODE AS TransactionType,
+  COALESCE (TRAN.UNIT_PRICE,    0) AS UnitSellingPrice,
+  0 AS UnitSellingPriceBase,
+  TRAN.INVOICE_LINE_DESCRIPTION AS TransactionLineDescription,
+  TRAN.INVOICE_LINE_ITEM_DESCRIPTION AS InvoiceLineItemDescription,
+  TRAN.LINE_TYPE_LOOKUP_CODE as LineTypeCode,
+  TRAN.LINE_SOURCE as LineSource,
+  TRAN.CASH_OR_CREDIT as CashOrCredit,
+  TRAN.EXPENDITURE_TYPE as ExpenditureType,
+  TRAN.ACCOUNTING_DATE as DistributionAccountingDate,
+  TRAN.EXPENSE_REPORT_KEY AS ExpenseReportKey,
+  XLINK.SOURCE_DISTRIBUTION_ID_NUM_1 as InvoiceDistributionId,
+  TRAN.MERCHANT_NAME as MerchantName,
+  ifnull((case when XLINK.UNROUNDED_ENTERED_CR is not null then ABS(TRAN.DISTRIBUTION_AMOUNT) end), XLINK.UNROUNDED_ENTERED_CR) as DistributionDetailAmountCredit,
+  ifnull((case when XLINK.UNROUNDED_ENTERED_DR is not null then ABS(TRAN.DISTRIBUTION_AMOUNT) end), XLINK.UNROUNDED_ENTERED_DR) as DistributionDetailAmountDebit,
+  ifnull((case when XLINK.UNROUNDED_ACCOUNTED_CR is not null then ABS(TRAN.DISTRIBUTION_AMOUNT_BASE) end),XLINK.UNROUNDED_ACCOUNTED_CR) as DistributionDetailAmountCreditBase,
+  ifnull((case when XLINK.UNROUNDED_ACCOUNTED_DR is not null then ABS(TRAN.DISTRIBUTION_AMOUNT_BASE) end),XLINK.UNROUNDED_ACCOUNTED_DR) as DistributionDetailAmountDebitBase,
+  XLINK.TEMP_LINE_NUM as DistributionDetailLineNumber,
+  TRAN.NUMBER_OF_DISTRIBUTION as DistributionCount,
+  count(distinct TRAN.INVOICE_ID) over (partition by  GLJ.GeneralLedgerJournalKey) as InvoiceCount,
+  GLJ.LoadBy,
+  GLJ.LoadDate,
+  GLJ.LoadProcess,
+  GLJ.CreateBy,
+  GLJ.CreateDate,
+  GLJ.CreateProcess,
+  GLJ.UpdateBy,
+  GLJ.UpdateDate,
+  GLJ.UpdateProcess,
+  GLJ.InactiveInd,
+  GLJ.InactiveDate,
+  GLJ.InactiveReason
+FROM
+	--`Edw.Accounting_GLJournalBase` GLJ
+	${ref("Accounting_GLJournalBase")} GLJ
+	LEFT OUTER JOIN  
+	${ref("OracleEbs-XLA_DISTRIBUTION_LINKS")} XLINK
+		ON  (GLJ.ApplicationId = XLINK.APPLICATION_ID
+		AND GLJ.EventId = XLINK.EVENT_ID
+		AND GLJ.AccountingEventHeaderId = XLINK.AE_HEADER_ID
+		AND GLJ.AccountingEventLineNumber = XLINK.AE_LINE_NUM
+		AND XLINK.SOURCE_DISTRIBUTION_TYPE = 'AP_INV_DIST'
+		AND XLINK.InactiveInd = false)
+
+-- ################################# Accounts Payables Related Joins ##########################################
+  left outer JOIN 
+(SELECT
+  AIA.INVOICE_ID,
+  AIA.INVOICE_DATE,
+  AIA.DOC_SEQUENCE_VALUE,
+  AIA.INVOICE_NUM AS TRX_NUMBER,
+  AILA.LINE_NUMBER AS LINE_NUMBER,
+  AIA.INVOICE_CURRENCY_CODE,
+  AIA.DESCRIPTION as TRANSACTION_DESCRIPTION,
+  AIDA.AMOUNT AS DISTRIBUTION_AMOUNT,
+  (CASE WHEN IFNULL(AIDA.BASE_AMOUNT,0)=0 THEN AIDA.AMOUNT ELSE AIDA.BASE_AMOUNT END)  AS DISTRIBUTION_AMOUNT_BASE,
+  (
+    CASE
+      WHEN GLL.CURRENCY_CODE = 'USD' THEN AIDA.TOTAL_DIST_AMOUNT
+    ELSE
+    AIDA.TOTAL_DIST_AMOUNT * (
+    SELECT
+      cast(CONVERSION_RATE as numeric) as CONVERSION_RATE
+    FROM
+    --`DevEmployeeOds.OracleEbs-GL_DAILY_RATES` GDR
+	  ${ref("OracleEbs-GL_DAILY_RATES")} GDR
+    WHERE
+      TO_CURRENCY = 'USD'
+      AND GDR.CONVERSION_TYPE = 'Spot'
+      AND FROM_CURRENCY = GLL.CURRENCY_CODE
+      AND CONVERSION_DATE = AIDA.ACCOUNTING_DATE 
+	  AND GDR.InactiveInd = false)
+  END
+    ) AS DISTRIBUTION_AMOUNT_USD,
+  AIA.INVOICE_TYPE_LOOKUP_CODE,
+  AILA.LINE_TYPE_LOOKUP_CODE,
+  AILA.LINE_SOURCE,
+  AIA.CREATION_DATE,
+  AIA.GL_DATE,
+  (AIDA.QUANTITY_INVOICED) QUANTITY_INVOICED,
+  count(INVOICE_DISTRIBUTION_ID) over (partition by  AIA.INVOICE_ID,AILA.LINE_NUMBER) as NUMBER_OF_DISTRIBUTION,
+  (AIDA.UNIT_PRICE) UNIT_PRICE,
+  AILA.DESCRIPTION AS INVOICE_LINE_DESCRIPTION,
+  AIA.VENDOR_ID,
+  AIA.VENDOR_SITE_ID,
+  CASE    WHEN AILA.CREDIT_CARD_TRX_ID IS NULL THEN 'Cash'  ELSE  'Credit' END  AS CASH_OR_CREDIT,
+  AILA.EXPENDITURE_TYPE,
+  AIA.REFERENCE_KEY1 AS EXPENSE_REPORT_KEY,
+  AILA.ITEM_DESCRIPTION AS INVOICE_LINE_ITEM_DESCRIPTION,
+  COALESCE(AILA.MERCHANT_NAME, AIDA.MERCHANT_NAME) AS MERCHANT_NAME,
+  AIDA.INVOICE_DISTRIBUTION_ID,
+  AIDA.ACCOUNTING_DATE
+FROM
+  --`DevEmployeeOds.OracleEbs-AP_INVOICES_ALL` AIA
+	${ref("OracleEbs-AP_INVOICES_ALL")} AIA
+	INNER JOIN
+    --`DevEmployeeOds.OracleEbs-AP_INVOICE_LINES_ALL` AILA  
+		${ref("OracleEbs-AP_INVOICE_LINES_ALL")} AILA
+		ON  (AIA.INVOICE_ID = AILA.INVOICE_ID AND AILA.InactiveInd = false)
+	INNER JOIN  
+		--`DevEmployeeOds.OracleEbs-AP_INVOICE_DISTRIBUTIONS_ALL` AIDA
+        ${ref("OracleEbs-AP_INVOICE_DISTRIBUTIONS_ALL")} AIDA
+            ON  (AIA.INVOICE_ID = AIDA.INVOICE_ID  AND AILA.LINE_NUMBER = AIDA.INVOICE_LINE_NUMBER AND AIDA.InactiveInd = false)
+        INNER JOIN                                      
+		--`DevEmployeeOds.OracleEbs-GL_LEDGERS` GLL
+    ${ref("OracleEbs-GL_LEDGERS")} GLL
+		ON  (AIDA.SET_OF_BOOKS_ID = GLL.LEDGER_ID AND GLL.InactiveInd = false)
+) TRAN ON (GLJ.SourceId = TRAN.INVOICE_ID and XLINK.SOURCE_DISTRIBUTION_ID_NUM_1 = TRAN.INVOICE_DISTRIBUTION_ID)
+
+WHERE
+  (1=1)
+  AND UPPER (GLJ.JournalSource) = 'PAYABLES'
+  and 
+DATE(GLJ.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')
