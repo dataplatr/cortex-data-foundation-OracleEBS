@@ -1,0 +1,17 @@
+{
+    "projectId": "dataplatr-sandbox",
+    "targetBucket": "cortex-dataplatr-sandbox-us",
+    "location": "us",
+    "deployORACLE": true,
+    "composerDagBucket": "us-central1-dw-dataplatr--a-ebb0edb5-bucket",
+    "ORACLE": {
+        "datasets": {
+            "OdsStage": "CortexOdsStage",
+            "Ods": "CortexOds",
+            "Edw": "CortexEdw"
+        },
+        "df_ws_region": "us-central1",
+        "df_repository_id": "oracle_dataform",
+        "df_workspace_id": "oracle_dataform_workspace"
+    }
+}
