@@ -1,9 +1,28 @@
 ## **Cortex Framework for Oracle EBS**
 
 # Quick demo setup
-If you want to create a **demo** instance, with automatic generation of BigQuery datasets, automatic permission granting, click this button:
+If you want to create a **demo or development** instance, with automatic generation of BigQuery datasets, automatic permission granting, click this button:
+
+To start deployment with automatic generation of BigQuery datasets, automatic permission granting click the below button. Make sure your user account has enough permissions to run builds, assign permissions to the Cloud Build service account, and create artifacts in Cloud Storage and BigQuery.
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/?terminal=true&show=terminal&cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdataplatr%2Fcortex-data-foundation-OracleEBS&cloudshell_tutorial=docs%2Ftutorial.md)
+
+### Deployment configuration
+
+| Parameter | Default Value | Description |
+|---|---|---|
+| projectId | - | Project where the source dataset is and the build will run. |
+| deployORACLE | true | Execute the deployment for Oracle workload. |
+| targetBucket | - | Bucket where dataform related files and logs will be generated. |
+| location | “us” | Location where the BigQuery dataset and GCS buckets are. |
+| composerDagBucket | - | Bucket where DAG related files will be generated. |
+| df_ws_region | "us-central1" | Location where dataform Repository will be created. |
+| ORACLE.datasets.OdsStage | - | This is where the raw data lands from ORACLE. |
+| ORACLE.datasets.Ods | - | Processed data will land from the Stage. |
+| ORACLE.datasets.Edw | - | Dataset that is accessible to end users for reporting, where views and user-facing tables are deployed. |
+| df_repository_id | oracle_dataform | Name of the Repository that will be created. |
+| df_workspace_id | oracle_dataform_workspace | Name of the dataform workspace to be created. |
+
 
 ### **Deployment for Production environments**
 
