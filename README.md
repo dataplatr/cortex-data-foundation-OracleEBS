@@ -1,9 +1,8 @@
 ## **Cortex Framework for Oracle EBS**
 
-# Quick demo setup
-If you want to create a **demo or development** instance, with automatic generation of BigQuery datasets, automatic permission granting, click this button:
+# Quick setup for development instance
 
-To start deployment with automatic generation of BigQuery datasets, automatic permission granting click the below button. Make sure your user account has enough permissions to run builds, assign permissions to the Cloud Build service account, and create artifacts in Cloud Storage and BigQuery.
+If you want to create a **demo or development** instance, with automatic generation of BigQuery datasets, automatic permission granting click the below button. Make sure your user account has enough permissions to run builds, assign permissions to the Cloud Build service account, and create artifacts in Cloud Storage and BigQuery.
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/?terminal=true&show=terminal&cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdataplatr%2Fcortex-data-foundation-OracleEBS&cloudshell_tutorial=docs%2Ftutorial.md)
 
