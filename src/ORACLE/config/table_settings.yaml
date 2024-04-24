@@ -97,3 +97,8 @@ edw_oracle_tables:
   - base_table: Accounting_APInvoicePaymentSchedule
   - base_table: Accounting_GLJournalDetails
   - base_table: Accounting_APInvoiceDistributions
+  - base_table: Accounting_APInvoicePaymentScheduleDetails
+  - base_table: Accounting_ARTransactionsDetails
+  - base_table: Accounting_AssetTransactionsDetails
+  - base_table: Accounting_GLBalancesDetails
+  - base_table: Accounting-CodeCombinationsDetails
