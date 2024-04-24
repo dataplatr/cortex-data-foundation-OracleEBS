@@ -1,0 +1,50 @@
+----------------------------------------------------------
+-- Edw.Accounting-CodeCombinations.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+
+config {
+  type: "incremental",
+  schema: "EdwBI",
+  tags: ["Finance-OracleDetail-test"],
+  assertions:{
+    uniqueKey: ["CodeCombinationId"],
+    nonNull: ["CodeCombinationId"]
+  }
+}
+
+select
+ParentSystemId,
+SystemId,
+CodeCombinationId,
+ChartOfAccountsId,
+cast(DetailPostingAllowedFlag as string) as DetailPostingAllowedFlag,
+cast(DetailBudgetingAllowedFlag as string) as DetailBudgetingAllowedFlag,
+AccountType,
+cast(EnabledFlag as string) as EnabledFlag,
+Location,
+LocationDescription,
+Client,
+ClientDescription,
+Department,
+DepartmentDescription,
+Account,
+AccountDescription,
+cast(InterCompany as string) as InterCompany,
+cast(Future2 as string) as Future2,
+BusinessSegment,
+DepartmentLeader,
+LoadBy,
+LoadDate,
+LoadProcess,
+CreateBy,
+CreateDate,
+CreateProcess,
+UpdateBy,
+UpdateDate,
+UpdateProcess,
+InactiveInd,
+InactiveDate,
+InactiveReason
+from ${ref("Edw","Accounting-CodeCombinations")} period
+where 
+DATE(period.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')

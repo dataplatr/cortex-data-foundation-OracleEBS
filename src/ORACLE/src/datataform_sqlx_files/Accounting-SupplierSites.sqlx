@@ -1,0 +1,185 @@
+
+config {
+  type: "incremental",
+  schema: "Edw",
+  tags: ["Procurement"],
+  assertions:{
+    uniqueKey: ["VendorSiteId"],
+    nonNull: ["VendorSiteId"]
+  }
+}
+WITH 
+invoice as (
+SELECT 
+VENDOR_ID,
+INVOICE_DATE
+FROM ${ref("OracleEbs-AP_INVOICES_ALL")}
+where 1 = 1
+qualify row_number () over(partition by VENDOR_ID order by INVOICE_DATE desc) = 1
+),
+check as 
+(
+SELECT 
+VENDOR_ID,
+CHECK_DATE
+FROM  ${ref("OracleEbs-AP_CHECKS_ALL")}
+where 1 = 1
+qualify row_number () over(partition by VENDOR_ID order by CHECK_DATE desc) = 1
+)
+
+SELECT
+  sup.ParentSystemId,
+  sup.SystemId,
+  sup.VENDOR_ID AS VendorId,
+  sup.SEGMENT1 AS VendorNumber,
+  sup.VENDOR_NAME AS VendorName,
+  sup.VENDOR_NAME_ALT AS VendorNameAlternate,
+  sup.MINORITY_GROUP_LOOKUP_CODE AS MinorityGroupLookupCode,
+  sup.END_DATE_ACTIVE AS EndDateActive,
+  sup.START_DATE_ACTIVE AS StartDateActive,
+  sup.VAT_CODE AS VatCode,
+  sup.PAYMENT_PRIORITY AS PaymentPriority,
+  sup.PAY_DATE_BASIS_LOOKUP_CODE AS PayDateBasisLookupCode,
+  sup.TERMS_ID AS TermsId,
+  sup.PARENT_VENDOR_ID AS ParentVendorId,
+  sup.CUSTOMER_NUM AS CustomerNumber,
+  sup.VENDOR_TYPE_LOOKUP_CODE AS VendorTypeLookupCode,
+  sup.EMPLOYEE_ID AS EmployeeId,
+  sup.ENABLED_FLAG AS EnabledFlag,
+  sup.TAX_REPORTING_NAME AS TaxReportingName,
+  sup.VAT_REGISTRATION_NUM AS VatRegistrationNumber,
+  sup.FEDERAL_REPORTABLE_FLAG AS FederalReportingFlag,
+  sup.STATE_REPORTABLE_FLAG AS StateReportableFlag,
+  sup.AMOUNT_INCLUDES_TAX_FLAG AS AmountIncludesTaxFlag,
+  sup.STANDARD_INDUSTRY_CLASS AS StandardIndustryClass,
+  sup.SMALL_BUSINESS_FLAG AS SmallBusinessFlag,
+  sup.WOMEN_OWNED_FLAG AS WomenOwnedFlag,
+  sup.ONE_TIME_FLAG AS OneTimeFlag,
+  sup.QTY_RCV_TOLERANCE AS QuantityReceiveTolerance,
+  sup.QTY_RCV_EXCEPTION_CODE AS QuantityReceiveExceptionCode,
+  sup.DAYS_EARLY_RECEIPT_ALLOWED AS DaysEarlyReceiptAllowed,
+  sup.DAYS_LATE_RECEIPT_ALLOWED AS DaysLateReceiptAllowed,
+  sup.RECEIPT_DAYS_EXCEPTION_CODE AS ReceiptDaysExceptionCode,
+  sup.ORGANIZATION_TYPE_LOOKUP_CODE AS OrganisationTypeLookupCode,
+  sup.PAY_GROUP_LOOKUP_CODE AS PayGroupLookupCode,
+  sup.TAX_VERIFICATION_DATE AS TaxVerificationDate,
+  sup.CREATION_DATE AS SupplierCreationDate,
+  sup.LAST_UPDATE_DATE AS SupplierLastUpdateDate,
+  sup.HOLD_ALL_PAYMENTS_FLAG as HoldAllPaymentsFlag,
+  sup.HOLD_UNMATCHED_INVOICES_FLAG as HoldUnmatchedInvoicesFlag,
+  COALESCE (sup.NUM_1099,sup.INDIVIDUAL_1099) AS TaxPayerId,
+  COALESCE (sup.NUM_1099,sup.INDIVIDUAL_1099) AS TaxRegistrationNumber, 
+  sup.ENFORCE_SHIP_TO_LOCATION_CODE AS EnforceShipToLocationCode, 
+  case when ifnull(sup.receipt_required_flag, 'N') = 'Y'
+       and  ifnull(sup.inspection_required_flag, 'N') = 'Y'
+       then '4-Way'
+       when ifnull(sup.receipt_required_flag, 'N') = 'Y'
+       and  ifnull(sup.inspection_required_flag, 'N') <> 'Y'
+       then '3-Way'
+       else '2-Way'
+       end as MatchApprovalLevel,
+  sites.VENDOR_SITE_ID AS VendorSiteId,
+  sites.VENDOR_SITE_CODE AS VendorSiteCode,
+  sites.VENDOR_SITE_CODE_ALT AS VendorSiteCodeAlternate,
+  sites.PURCHASING_SITE_FLAG AS PurchasingSiteFlag,
+  sites.PAYMENT_METHOD_LOOKUP_CODE AS PaymentMethodLookupCode,
+  sites.TELEX AS Telex,
+  sites.FAX_AREA_CODE AS FaxAreaCode,
+  sites.FAX AS Fax,
+  sites.PHONE AS Phone,
+  sites.AREA_CODE AS AreaCode,
+  sites.COUNTRY AS Country,
+  sites.PROVINCE AS Province,
+  sites.PAY_SITE_FLAG AS PaySiteFlag,
+  sites.RFQ_ONLY_SITE_FLAG AS RfqOnlySiteFlag,
+  sites.PARTY_SITE_ID AS PartySiteId,
+  sites.LOCATION_ID AS LocationId,
+  sites.LEGAL_BUSINESS_NAME AS LegalBusinessName,
+  sites.REMITTANCE_EMAIL AS RemittanceEmail,
+  sites.EMAIL_ADDRESS AS EmailAddress,
+  sites.ADDRESS_LINE1 AS AddressLine1,
+  sites.ADDRESS_LINE2 AS AddressLine2,
+  sites.ADDRESS_LINE3 AS AddressLine3,
+  sites.ADDRESS_LINE4 AS AddressLine4,
+  sites.ADDRESS_LINES_ALT AS AddressLinesAlternate,
+  sites.ADDRESS_STYLE AS AddressStyle,
+  sites.CITY AS City,
+  sites.COUNTY AS County,
+  sites.STATE AS State,
+  sites.ZIP AS Zip,
+  sites.PAYMENT_CURRENCY_CODE AS PaymentCurrencyCode,
+  sites.INVOICE_CURRENCY_CODE AS InvoiceCurrencyCode,
+  sites.DUNS_NUMBER AS DunsNumber,
+  sites.INACTIVE_DATE AS VendorSiteInactiveDate,
+  sites.ORG_ID AS OrganisationId,
+  sites.VENDOR_SITE_CODE as SiteName,
+  sites.ATTRIBUTE1 as ManageSiteEmailAddress1,
+  sites.ATTRIBUTE2 as ManageSiteEmailAddress2,  
+  sites.ATTRIBUTE3 as ManageSiteEmailAddress3,
+  sites.TAX_REPORTING_SITE_FLAG AS TaxReportingSiteFlag,
+  sites.OFFSET_TAX_FLAG as OffsetTaxFlag,
+  sites.HOLD_REASON as PaymentHoldReason,
+  sites.TERMS_DATE_BASIS as TermsDateBasis,
+  sites.VENDOR_SITE_CODE AS AddressName,
+  CASE WHEN sites.INACTIVE_DATE is  null      THEN 'ACTIVE'
+       WHEN sites.INACTIVE_DATE is  not null  THEN 'INACTIVE'
+       END as AddressStatus,
+  CASE WHEN UPPER(hlcs.LOCATION_CODE) = 'SEE DESCRIPTION' THEN hlcs.DESCRIPTION
+       ELSE hlcs.LOCATION_CODE 
+       END AS ShipToLocation,
+  CASE WHEN UPPER(hlcb.LOCATION_CODE) = 'SEE DESCRIPTION' THEN hlcb.DESCRIPTION
+       ELSE hlcb.LOCATION_CODE 
+       END AS BillToLocation,
+  ou.NAME AS OrganisationName,
+  usrc.USER_NAME AS SupplierCreatedBy,
+  usrlu.USER_NAME AS SupplierLastUpdateBy,
+  inv.INVOICE_DATE AS LatestInvoiceDate,
+  chk.CHECK_DATE AS LatestCheckDate,
+  trm.NAME AS PaymentTerm,
+  tt.TOLERANCE_NAME AS ToleranceName,
+  lv.MEANING AS RoutingName,
+  sites.LoadBy,
+  sites.LoadDate,
+  sites.LoadProcess,
+  sites.CreateBy,
+  sites.CreateDate,
+  sites.CreateProcess,
+  sites.UpdateBy,
+  sites.UpdateDate,
+  sites.UpdateProcess,
+  sites.InactiveInd,
+  sites.InactiveDate,
+  sites.InactiveReason
+
+FROM  ${ref("OracleEbs-AP_SUPPLIERS")} AS sup
+INNER JOIN  ${ref("OracleEbs-AP_SUPPLIER_SITES_ALL")} AS sites
+      ON  sup.VENDOR_ID = sites.VENDOR_ID and sites.InactiveInd=false
+LEFT  JOIN  ${ref("OracleEbs-HR_ALL_ORGANIZATION_UNITS")} ou
+      ON ou.ORGANIZATION_ID = sites.ORG_ID and ou.InactiveInd=false
+LEFT  JOIN  ${ref("OracleEbs-HR_LOCATIONS_ALL")} hlcs
+      ON sup.SHIP_TO_LOCATION_ID = hlcs.LOCATION_ID and hlcs.InactiveInd=false
+LEFT  JOIN  ${ref("OracleEbs-HR_LOCATIONS_ALL")} hlcb
+      ON sup.BILL_TO_LOCATION_ID = hlcb.LOCATION_ID and hlcb.InactiveInd=false
+LEFT  JOIN  ${ref("OracleEbs-FND_USER")} usrc
+      ON sup.CREATED_BY = usrc.USER_ID and usrc.InactiveInd=false
+LEFT  JOIN  ${ref("OracleEbs-FND_USER")} usrlu
+      ON sup.LAST_UPDATED_BY = usrlu.USER_ID and usrlu.InactiveInd=false
+LEFT  JOIN   invoice inv
+      ON inv.VENDOR_ID = sup.VENDOR_ID   
+LEFT  JOIN   check chk
+      ON chk.VENDOR_ID = sup.VENDOR_ID  
+LEFT  JOIN ${ref("OracleEbs-AP_TERMS_TL")} trm
+      ON  trm.TERM_ID = COALESCE(sites.TERMS_ID, sup.TERMS_ID)
+      AND trm.LANGUAGE = 'US' and trm.InactiveInd=false
+LEFT  JOIN ${ref("OracleEbs-AP_TOLERANCE_TEMPLATES")} tt
+      ON  tt.TOLERANCE_ID = sites.TOLERANCE_ID and tt.InactiveInd=false
+LEFT JOIN ${ref("OracleEbs-FND_LOOKUP_VALUES")} lv
+      ON  lv.LANGUAGE = 'US'
+      AND lv.view_application_id = 0
+      AND lv.security_group_id = 0
+      AND lv.lookup_type = 'RCV_ROUTING_HEADERS'
+      AND CAST (lv.lookup_code AS NUMERIC) = sup.RECEIVING_ROUTING_ID
+      AND lv.InactiveInd=false
+
+WHERE
+DATE(sites.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')

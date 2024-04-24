@@ -1,0 +1,116 @@
+---------------------------------------------------------------------
+-- Edw.Accounting_AssetTransactions.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "EdwBI",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["TransactionHeaderIdIn","AssetNumber","AssetInvoiceId","LocationId","CodeCombinationId","InvoiceNumber"],
+
+  assertions:{
+    uniqueKey: ["TransactionHeaderIdIn","AssetNumber","AssetInvoiceId","LocationId","CodeCombinationId","InvoiceNumber"],
+    nonNull:["BookTypeCode","AssetId","TransactionHeaderIdIn","DatePlacedInService"],
+   
+  }
+}
+
+with ffv as
+(
+select flex_value as LocationCode,
+attribute16 as LegalEntityNumber 
+from 
+	${ref("OracleEbs-FND_FLEX_VALUES")} 
+ WHERE flex_value_set_id = 1002610 and InactiveInd = false 
+)
+
+
+SELECT  
+trans.ParentSystemId,
+trans.SystemId,
+BookTypeCode,
+AssetId,
+AssetNumber,
+AssetCategoryId,
+AssetDescription,
+AssetType,
+ManufacturerName,
+TagNumber,
+SerialNumber,
+ModelNumber,
+PropertyTypeCode,
+InUseFlag,
+OwnedOrLeased,
+TotalUnits,
+DateEffective,
+DepreciationStartDate,
+DepreciationMethodCode,
+MethodName,
+CapitalizeFlag,
+DepreciateFlag,
+TransactionHeaderIdIn,
+RetirementPendingFlag,
+PartialRetired,
+FullyRetired,
+LedgerId,
+PeriodCounterCapitalized,
+TotalLifeInMonths,
+PeriodCounterFullRetired,
+ifnull(TotalLifeInMonths, 0) - (case when PeriodCounterFullRetired is null then 0 else case when RemainingLifeInMonths > 0 then RemainingLifeInMonths else 0 end end) as AgeInMonths,  
+RemainingLifeInMonths,
+AssetOriginalCost,
+AssetCurrentCost,
+AdjustedCost,
+DepreciationAmount,
+YtdDepreciationAmount,
+DepreciationReserveAmount,
+NetBookValue,
+DatePlacedInService,
+ProrateConvention,
+ProrateDate,
+ConvertedAssetNumber,
+RetirementDate,
+UnitsRetired,
+NetBookValueRetired,
+CapitalizationDate,
+ProjectCCode,
+trans.CodeCombinationId,
+LocationId,
+AssetInvoiceId,
+InvoiceId,
+FeederSystemName,
+InvoiceNumber,
+InvoiceLineNumber,
+InvoiceDate,
+OrganizationId,
+VendorId,
+VendorSiteId,
+PurchaseOrderNumber,
+InvoiceAmount,
+cc.Location as LocationCode,
+cc.Client as ClientCode,
+cc.Department as DepartmentCode,
+cc.Account as AccountCode,
+cast(cc.Intercompany as string) as IntercompanyCode,
+cast(cc.Future2  as string) as FutureCode,
+cast(ffv.LegalEntityNumber  as string) as LegalEntity,
+RankLocation,
+RankAssetInvoice,
+trans.LoadBy,
+trans.LoadDate,
+trans.LoadProcess,
+trans.CreateBy,
+trans.CreateDate,
+trans.CreateProcess,
+trans.UpdateBy,
+trans.UpdateDate,
+trans.UpdateProcess,
+trans.InactiveInd,
+trans.InactiveDate,
+trans.InactiveReason
+from
+${ref("Edw","Accounting_AssetTransactions")} trans
+left outer join ${ref("Edw","Accounting-CodeCombinations")} cc on
+trans.CodeCombinationId=cc.CodeCombinationId and cc.InactiveInd=false
+left outer join ffv on cc.Location=ffv.LocationCode
+where
+DATE(trans.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')

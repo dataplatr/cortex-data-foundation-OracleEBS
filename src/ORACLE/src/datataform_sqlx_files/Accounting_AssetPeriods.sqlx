@@ -1,0 +1,47 @@
+-------------------------------------------------------------
+-- Edw.Accounting_AssetPeriods.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "Edw",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["BookTypeCode","PeriodCounter","PeriodOpenDate"],
+
+  assertions:{
+    uniqueKey: ["BookTypeCode","PeriodCounter"],
+    nonNull:["BookTypeCode","PeriodCounter","PeriodName","FiscalYear","PeriodNumber"],
+   
+  }
+}
+
+
+select
+ParentSystemID as ParentSystemId,
+SystemID as SystemId,
+BOOK_TYPE_CODE as BookTypeCode,
+PERIOD_NAME as PeriodName,
+PERIOD_COUNTER as PeriodCounter,
+FISCAL_YEAR as FiscalYear,
+PERIOD_NUM as PeriodNumber,
+PERIOD_OPEN_DATE as PeriodOpenDate,
+PERIOD_CLOSE_DATE as PeriodCloseDate,
+CALENDAR_PERIOD_OPEN_DATE as CalendarPeriodOpenDate,
+CALENDAR_PERIOD_CLOSE_DATE as CalendarPeriodEndDate,
+DEPRN_RUN as DepreciationRun,
+GL_TRANSFER_FLAG as GeneralLedgerTransferFlag,
+XLA_CONVERSION_STATUS as SubledgerConversionStatus,
+LoadBy,
+LoadDate,
+LoadProcess,
+CreateBy,
+CreateDate,
+CreateProcess,
+UpdateBy,
+UpdateDate,
+UpdateProcess,
+InactiveInd,
+InactiveDate,
+InactiveReason
+from ${ref("OracleEbs-FA_DEPRN_PERIODS")} period
+where
+DATE(period.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM ${self()}),'1900-01-01')
