@@ -1,0 +1,141 @@
+TargetField,DataType
+ParentSystemId,INT64,NOT NULL
+SystemId,INT64,NOT NULL
+VendorId,NUMERIC
+InvoiceId,NUMERIC,NOT NULL
+QuickPurchaseOrderHeaderId,NUMERIC
+PaymentMethodCode,STRING
+LegalEntityId,NUMERIC
+TaxationCountry,STRING
+SelfAssessedTaxAmount,NUMERIC
+TotalTaxAmount,NUMERIC
+AwardId,NUMERIC
+GlDate,DATETIME,NOT NULL
+PaymentCrossRateDate,DATETIME
+PaymentCrossRateType,STRING
+AutoTaxCalculationFlag,STRING
+OrganisationId,NUMERIC,NOT NULL
+DocumentCategoryCode,STRING
+DocumentSequenceValue,NUMERIC
+DocumentSequenceId,NUMERIC
+ExcludeFreightFromDiscount,STRING
+DiscountIsInvoiceLessTaxFlag,STRING
+ExchangeDate,DATETIME
+ExchangeRateType,STRING
+ExchangeRate,NUMERIC
+VoucherNumber,STRING
+InvoiceReceivedDate,DATETIME
+GoodsReceivedDate,DATETIME
+FreightAmount,NUMERIC
+PaymentStatusFlag,STRING
+AccountsPayCodeCombinationId,NUMERIC
+PayGroupLookupCode,STRING
+PaymentMethodLookupCode,STRING
+TermsDate,DATETIME
+TermsId,NUMERIC
+AmountApplicableToDiscount,NUMERIC
+BatchId,NUMERIC
+InvoiceDescription,STRING
+InvoiceTypeLookupCode,STRING
+Source,STRING
+InvoiceDate,DATETIME,NOT NULL
+InvoiceDateYear,INT64
+InvoiceDateQuarter,INT64
+InvoiceDatePeriodNum,INT64
+InvoiceDatePeriod,STRING
+CancelledDate,DATETIME
+DiscountAmountTaken,NUMERIC
+AmountPaid,NUMERIC
+AmountPaidUSD,NUMERIC
+VendorSiteId,NUMERIC
+InvoiceAmount,NUMERIC
+InvoiceAmountUSD,NUMERIC
+PaymentCrossRate,NUMERIC
+PaymentCurrencyCode,STRING
+CurrencyCode,STRING,NOT NULL
+InvoiceNumber,STRING
+InvoiceCreationDate,DATETIME,NOT NULL
+InvoiceCreationYear,INT64
+InvoiceCreationQuarter,INT64
+InvoiceCreationPeriodNum,INT64
+InvoiceCreationPeriod,STRING
+WfApprovalStatus,STRING
+RcvShipmentLineId,NUMERIC
+IncludedTaxAmount,NUMERIC
+PurchaseOrderDistributionId,NUMERIC
+PurchaseOrderLineLocationId,NUMERIC
+PurchaseOrderLineId,NUMERIC
+PurchaseOrderHeaderId,NUMERIC
+UnitMeasureLookupCode,STRING
+QuantityInvoiced,NUMERIC
+PeriodName,STRING
+ItemDescription,STRING
+InventoryItemId,NUMERIC
+LineDescription,STRING
+LineTypeLookupCode,STRING
+LineNumber,NUMERIC
+TaxRate,NUMERIC
+LineAmount,NUMERIC
+LineAmountUSD,NUMERIC
+InvoiceLineNumber,NUMERIC
+AccountingEventId,NUMERIC
+MatchedUomLookupCode,STRING
+InvoiceDistributionId,NUMERIC,NOT NULL
+DistributionLineNumber,NUMERIC
+PostedFlag,STRING
+DistributionAmount,NUMERIC
+DistributionAmountUSD,NUMERIC
+LedgerId,NUMERIC
+DistributionCodeCombinationId,NUMERIC
+AccountingDate,DATETIME
+AccountingDateYear,INT64
+AcountingDateQuarter,INT64
+AcountingDatePeriodNum,INT64
+AcountingDatePeriod,STRING
+MatchStatusFlag,STRING
+LedgerName,STRING
+ConversionRate,NUMERIC
+PurchaseOrderNumber,STRING
+CapexCode,STRING
+PurchaseOrderCreationDate,DATETIME
+PurchaseOrderHeaderAmount,NUMERIC
+PurchaseOrderConversionRate,NUMERIC
+RequisitionNumber,STRING
+NumberOfRequisition,INT64
+CheckNumber,NUMERIC
+LastPaymentDate,DATE
+OperatingUnitName,STRING
+PaymentTerms,STRING
+LocationCountry,STRING
+PaymentMethodName,STRING
+InvoiceStatus,STRING
+HoldLookupCode,STRING
+AlsoOnHold,STRING
+InvoiceVsDistribution,STRING
+CheckPaymentStatus,STRING
+CreatedBy,STRING
+CreatedByName,STRING
+LastUpdatedBy,STRING
+LastUpdatedByName,STRING
+LocationCode,STRING
+ClientCode,STRING
+DepartmentCode,STRING
+AccountCode,STRING
+IntercompanyCode,STRING
+FutureCode,STRING
+LegalEntity,STRING
+Rank,INT64
+RankInvoiceLine,INT64
+RankPOHeader,INT64
+LoadBy,STRING,NOT NULL
+LoadDate,TIMESTAMP,NOT NULL
+LoadProcess,STRING,NOT NULL
+CreateBy,STRING,NOT NULL
+CreateDate,TIMESTAMP,NOT NULL
+CreateProcess,STRING,NOT NULL
+UpdateBy,STRING,NOT NULL
+UpdateDate,TIMESTAMP,NOT NULL
+UpdateProcess,STRING,NOT NULL
+InactiveInd,BOOL,NOT NULL
+InactiveDate,TIMESTAMP
+InactiveReason,STRING
