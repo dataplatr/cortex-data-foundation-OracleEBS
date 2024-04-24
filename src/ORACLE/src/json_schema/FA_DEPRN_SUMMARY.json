@@ -1,0 +1,268 @@
+[
+  {
+    "name": "BOOK_TYPE_CODE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ASSET_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_RUN_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "YTD_DEPRN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_RESERVE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_SOURCE_CODE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ADJUSTED_COST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BONUS_RATE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LTD_PRODUCTION",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PERIOD_COUNTER",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PRODUCTION",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVAL_AMORTIZATION",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVAL_AMORTIZATION_BASIS",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVAL_DEPRN_EXPENSE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVAL_RESERVE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "YTD_PRODUCTION",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "YTD_REVAL_DEPRN_EXPENSE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PRIOR_FY_EXPENSE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BONUS_DEPRN_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BONUS_YTD_DEPRN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BONUS_DEPRN_RESERVE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PRIOR_FY_BONUS_EXPENSE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_OVERRIDE_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SYSTEM_DEPRN_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SYSTEM_BONUS_DEPRN_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "IMPAIRMENT_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "YTD_IMPAIRMENT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "IMPAIRMENT_RESERVE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EVENT_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_RUN_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEPRN_ADJUSTMENT_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BONUS_DEPRN_ADJUSTMENT_AMOUNT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CAPITAL_ADJUSTMENT",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GENERAL_FUND",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVAL_LOSS_BALANCE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "UNREVALUED_COST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "HISTORICAL_NBV",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  }
+]

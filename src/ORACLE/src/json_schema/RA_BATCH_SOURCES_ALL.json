@@ -1,0 +1,681 @@
+[
+  {
+    "name": "BATCH_SOURCE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATION_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_LOGIN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "NAME",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ORG_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DESCRIPTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "STATUS",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_BATCH_NUM",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEFAULT_INV_TRX_TYPE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE_CATEGORY",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE1",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE2",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE3",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE4",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE5",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE6",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE7",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE8",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE9",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE10",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ACCOUNTING_FLEXFIELD_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ACCOUNTING_RULE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AGREEMENT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AUTO_BATCH_NUMBERING_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AUTO_TRX_NUMBERING_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BATCH_SOURCE_TYPE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BILL_ADDRESS_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BILL_CONTACT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BILL_CUSTOMER_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATE_CLEARING_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUST_TRX_TYPE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DERIVE_DATE_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "END_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "FOB_POINT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GL_DATE_PERIOD_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INVALID_LINES_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INVALID_TAX_RATE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INVENTORY_ITEM_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INVOICING_RULE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MEMO_REASON_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REV_ACC_ALLOCATION_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SALESPERSON_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SALES_CREDIT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SALES_CREDIT_TYPE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SALES_TERRITORY_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SHIP_ADDRESS_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SHIP_CONTACT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SHIP_CUSTOMER_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SHIP_VIA_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SOLD_CUSTOMER_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "START_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TERM_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "UNIT_OF_MEASURE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE11",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE12",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE13",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE14",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE15",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUSTOMER_BANK_ACCOUNT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MEMO_LINE_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RECEIPT_METHOD_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RELATED_DOCUMENT_RULE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ALLOW_SALES_CREDIT_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GROUPING_RULE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREDIT_MEMO_BATCH_SOURCE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE1",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE2",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE3",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE4",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE5",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE6",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE7",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE8",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE9",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE10",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE11",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE12",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE13",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE14",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE15",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE16",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE17",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE18",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE19",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE20",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE_CATEGORY",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "COPY_DOC_NUMBER_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DEFAULT_REFERENCE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "COPY_INV_TIDFF_TO_CM_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RECEIPT_HANDLING_OPTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ALLOW_DUPLICATE_TRX_NUM_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LEGAL_ENTITY_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GEN_LINE_LEVEL_BAL_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PAYMENT_DET_DEF_HIERARCHY",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  }
+]

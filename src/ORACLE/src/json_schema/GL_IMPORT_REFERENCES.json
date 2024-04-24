@@ -1,0 +1,156 @@
+[
+  {
+    "name": "JE_BATCH_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "JE_HEADER_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "JE_LINE_NUM",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATION_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_LOGIN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_1",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_2",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_3",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_4",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_5",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_6",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_7",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_8",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_9",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REFERENCE_10",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SUBLEDGER_DOC_SEQUENCE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SUBLEDGER_DOC_SEQUENCE_VALUE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GL_SL_LINK_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GL_SL_LINK_TABLE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  }
+]

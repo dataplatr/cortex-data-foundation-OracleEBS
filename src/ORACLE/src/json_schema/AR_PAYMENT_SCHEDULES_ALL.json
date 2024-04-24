@@ -1,0 +1,926 @@
+[
+  {
+    "name": "PAYMENT_SCHEDULE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "STAGED_DUNNING_LEVEL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DUNNING_LEVEL_OVERRIDE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATION_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_LOGIN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DUE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_DUE_ORIGINAL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_DUE_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "NUMBER_OF_DUE_DATES",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "STATUS",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INVOICE_CURRENCY_CODE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CLASS",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUST_TRX_TYPE_ID",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUSTOMER_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUSTOMER_SITE_USE_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CUSTOMER_TRX_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_RECEIPT_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ASSOCIATED_CASH_RECEIPT_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TERM_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TERMS_SEQUENCE_NUMBER",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GL_DATE_CLOSED",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ACTUAL_DATE_CLOSED",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISCOUNT_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_LINE_ITEMS_ORIGINAL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_LINE_ITEMS_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_APPLIED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_ADJUSTED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_IN_DISPUTE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_CREDITED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RECEIVABLES_CHARGES_CHARGED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RECEIVABLES_CHARGES_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "FREIGHT_ORIGINAL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "FREIGHT_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TAX_ORIGINAL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TAX_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISCOUNT_ORIGINAL",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISCOUNT_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISCOUNT_TAKEN_EARNED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISCOUNT_TAKEN_UNEARNED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "IN_COLLECTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_APPLIED_ID_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_APPLIED_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_APPLIED_AMOUNT_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_APPLIED_STATUS_LAST",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_GL_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_RECEIPT_ID_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_RECEIPT_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_RECEIPT_AMOUNT_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CASH_RECEIPT_STATUS_LAST",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXCHANGE_RATE_TYPE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXCHANGE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXCHANGE_RATE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ADJUSTMENT_ID_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ADJUSTMENT_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ADJUSTMENT_GL_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ADJUSTMENT_AMOUNT_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "FOLLOW_UP_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "FOLLOW_UP_CODE_LAST",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PROMISE_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PROMISE_AMOUNT_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "COLLECTOR_LAST",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CALL_DATE_LAST",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TRX_NUMBER",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "TRX_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE_CATEGORY",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE1",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE2",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE3",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE4",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE5",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE6",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE7",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE8",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE9",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE10",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REVERSED_CASH_RECEIPT_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "AMOUNT_ADJUSTED_PENDING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE11",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE12",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE13",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE14",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ATTRIBUTE15",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GL_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ACCTD_AMOUNT_DUE_REMAINING",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PROGRAM_APPLICATION_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PROGRAM_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PROGRAM_UPDATE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RECEIPT_CONFIRMED_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REQUEST_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SELECTED_FOR_RECEIPT_BATCH_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_CHARGE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "SECOND_LAST_CHARGE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DISPUTE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ORG_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE1",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE2",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE3",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE4",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE5",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE6",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE7",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE8",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE9",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE10",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE11",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE12",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE13",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE14",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE15",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE16",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE17",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE18",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE19",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE20",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "GLOBAL_ATTRIBUTE_CATEGORY",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CONS_INV_ID",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CONS_INV_ID_REV",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXCLUDE_FROM_DUNNING_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MRC_EXCHANGE_RATE_TYPE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MRC_EXCHANGE_DATE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MRC_EXCHANGE_RATE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MRC_ACCTD_AMOUNT_DUE_REMAINING",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "MRC_CUSTOMER_TRX_ID",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "BR_AMOUNT_ASSIGNED",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RESERVED_TYPE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "RESERVED_VALUE",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "ACTIVE_CLAIM_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXCLUDE_FROM_CONS_BILL_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "PAYMENT_APPROVAL",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  }
+]

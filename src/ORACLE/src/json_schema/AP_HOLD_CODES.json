@@ -1,0 +1,128 @@
+[
+  {
+    "name": "HOLD_LOOKUP_CODE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "HOLD_TYPE",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "DESCRIPTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "USER_RELEASEABLE_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "USER_UPDATEABLE_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INACTIVE_DATE",
+    "mode": "",
+    "type": "DATE",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "POSTABLE_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "LAST_UPDATE_LOGIN",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATION_DATE",
+    "mode": "",
+    "type": "DATETIME",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "CREATED_BY",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "EXTERNAL_DESCRIPTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "HOLD_INSTRUCTION",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "WAIT_BEFORE_NOTIFY_DAYS",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "REMINDER_DAYS",
+    "mode": "",
+    "type": "NUMERIC",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "INITIATE_WORKFLOW_FLAG",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  },
+  {
+    "name": "active_flg",
+    "mode": "",
+    "type": "STRING",
+    "description": null,
+    "fields": []
+  }
+]
