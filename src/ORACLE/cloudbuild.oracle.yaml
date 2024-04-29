@@ -49,7 +49,7 @@ steps:
         python src/raw_table_generator/create_stage_tables.py
         echo "✅ Generated Raw BigQuery tables."
 
-        # CDC Table creation
+        # Ods Table creation
         echo "Creating Ods BigQuery Tables."
         python src/ods_table_generator/create_ods_tables.py
         echo "✅ Created Ods BigQuery tables ."
