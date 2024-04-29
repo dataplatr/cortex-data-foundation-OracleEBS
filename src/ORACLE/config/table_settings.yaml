@@ -1,4 +1,4 @@
-oracle_tables:
+oracle_raw_tables::
   - base_table: AP_INVOICES_ALL
   - base_table: AP_INVOICE_LINES_ALL
   - base_table: AP_INVOICE_DISTRIBUTIONS_ALL
@@ -72,6 +72,86 @@ oracle_tables:
   - base_table: GL_LEGAL_ENTITIES_BSVS
   - base_table: XLE_ENTITY_PROFILES
   - base_table: RA_BATCH_SOURCES_ALL
+  - base_table: FND_LOOKUP_VALUES
+
+oracle_ods_tables:
+- base_table: AP_INVOICES_ALL
+  - base_table: AP_INVOICE_LINES_ALL
+  - base_table: AP_INVOICE_DISTRIBUTIONS_ALL
+  - base_table: GL_JE_HEADERS
+  - base_table: GL_JE_LINES
+  - base_table: GL_JE_BATCHES
+  - base_table: GL_JE_SOURCES_TL
+  - base_table: GL_JE_CATEGORIES_TL
+  - base_table: GL_LEDGERS
+  - base_table: GL_CODE_COMBINATIONS
+  - base_table: XLA_AE_HEADERS
+  - base_table: GL_IMPORT_REFERENCES
+  - base_table: XLA_AE_LINES
+  - base_table: XLA_EVENTS
+  - base_table: XLA_EVENT_CLASSES_TL
+  - base_table: XLA_EVENT_TYPES_TL
+  - base_table: XLA_TRANSACTION_ENTITIES
+  - base_table: XLA_DISTRIBUTION_LINKS
+  - base_table: RA_CUSTOMER_TRX_ALL
+  - base_table: RA_CUSTOMER_TRX_LINES_ALL
+  - base_table: RA_CUST_TRX_TYPES_ALL
+  - base_table: RA_CUST_TRX_LINE_GL_DIST_ALL
+  - base_table: FND_FLEX_VALUES
+  - base_table: GL_DAILY_RATES
+  - base_table: GL_PERIODS
+  - base_table: HZ_CUST_ACCOUNTS
+  - base_table: HZ_PARTIES
+  - base_table: AP_SUPPLIER_SITES_ALL
+  - base_table: FND_FLEX_VALUE_SETS
+  - base_table: FND_FLEX_VALUES_TL
+  - base_table: HR_LOCATIONS_ALL
+  - base_table: FND_TERRITORIES_TL
+  - base_table: HR_ALL_ORGANIZATION_UNITS
+  - base_table: AP_TERMS
+  - base_table: IBY_PAYMENT_METHODS_TL
+  - base_table: PO_HEADERS_ALL
+  - base_table: PO_LINES_ALL
+  - base_table: PO_LINE_LOCATIONS_ALL
+  - base_table: PO_DISTRIBUTIONS_ALL
+  - base_table: AP_HOLDS_ALL
+  - base_table: PO_REQUISITION_HEADERS_ALL
+  - base_table: PO_REQUISITION_LINES_ALL 
+  - base_table: PO_REQ_DISTRIBUTIONS_ALL
+  - base_table: AP_INVOICE_PAYMENTS_ALL
+  - base_table: AP_PAYMENT_SCHEDULES_ALL
+  - base_table: AR_CASH_RECEIPTS_ALL
+  - base_table: AR_RECEIVABLE_APPLICATIONS_ALL
+  - base_table: GL_BALANCES
+  - base_table: FA_BOOKS
+  - base_table: FA_ADDITIONS_B
+  - base_table: FA_ADDITIONS_TL
+  - base_table: FA_METHODS
+  - base_table: FA_ASSET_INVOICES
+  - base_table: FA_DISTRIBUTION_HISTORY
+  - base_table: FA_RETIREMENTS
+  - base_table: FA_DEPRN_SUMMARY
+  - base_table: FA_BOOK_CONTROLS
+  - base_table: FA_LOCATIONS
+  - base_table: FA_CATEGORIES_B
+  - base_table: FA_DEPRN_PERIODS
+  - base_table: AP_HOLD_CODES
+  - base_table: FND_APPLICATION
+  - base_table: AR_DISTRIBUTIONS_ALL
+  - base_table: AP_TERMS_LINES
+  - base_table: AR_ADJUSTMENTS_ALL
+  - base_table: AR_PAYMENT_SCHEDULES_ALL
+  - base_table: FND_ID_FLEX_SEGMENTS
+  - base_table: FND_SEGMENT_ATTRIBUTE_VALUES
+  - base_table: HZ_CUST_SITE_USES_ALL
+  - base_table: JTF_RS_SALESREPS
+  - base_table: GL_LEGAL_ENTITIES_BSVS
+  - base_table: XLE_ENTITY_PROFILES
+  - base_table: RA_BATCH_SOURCES_ALL
+  - base_table: FND_LOOKUP_VALUES
+  - base_table: AirflowRunAuditLog
+  - base_table: CdcLoadDetails
+  - base_table: DEPARTMENT_LEADER
 
 edw_oracle_tables:
   - base_table: Accounting_ARAging
@@ -102,3 +182,7 @@ edw_oracle_tables:
   - base_table: Accounting_AssetTransactionsDetails
   - base_table: Accounting_GLBalancesDetails
   - base_table: Accounting-CodeCombinationsDetails
+
+df_sources:
+  - source: Ods
+  - source: Edw
