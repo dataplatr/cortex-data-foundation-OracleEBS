@@ -160,7 +160,6 @@ edw_oracle_tables:
   - base_table: Accounting_ARAging
   - base_table: Accounting_APInvoiceAging
   - base_table: Accounting_APInvoiceAggregate
-  - base_table: Accounting-SupplierSites
   - base_table: Accounting-Ledgers
   - base_table: Accounting-GLPeriods
   - base_table: Accounting-CustomerAccounts
