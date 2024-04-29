@@ -73,6 +73,8 @@ oracle_raw_tables:
   - base_table: XLE_ENTITY_PROFILES
   - base_table: RA_BATCH_SOURCES_ALL
   - base_table: FND_LOOKUP_VALUES
+  - base_table: FND_USER
+  - base_table: AP_CHECKS_ALL
 
 oracle_ods_tables:
 - base_table: AP_INVOICES_ALL
@@ -151,7 +153,8 @@ oracle_ods_tables:
   - base_table: FND_LOOKUP_VALUES
   - base_table: AirflowRunAuditLog
   - base_table: CdcLoadDetails
-  - base_table: DEPARTMENT_LEADER
+  - base_table: FND_USER
+  - base_table: AP_CHECKS_ALL
 
 edw_oracle_tables:
   - base_table: Accounting_ARAging
