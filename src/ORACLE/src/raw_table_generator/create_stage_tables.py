@@ -1,8 +1,6 @@
 """
-Generates BigQuery Raw Tables to copy/move Oracle data from
-Oracle system to BigQuery dataset.
+Generates BigQuery Raw Tables BigQuery dataset.
 """
-
 import csv
 import datetime
 import json
@@ -100,9 +98,9 @@ def main():
                         _SETTINGS_FILE)
         sys.exit()
 
-    if not "oracle_tables" in configs:
+    if not "oracle_raw_tables" in configs:
         logging.warning(
-            "File '%s' is missing property `oracle_tables`. "
+            "File '%s' is missing property `oracle_raw_tables`. "
             "Skipping BQ Table generation.", _SETTINGS_FILE)
         sys.exit()
 
@@ -110,7 +108,7 @@ def main():
 
     bq_client = bigquery.Client()
 
-    table_configs = configs["oracle_tables"]
+    table_configs = configs["oracle_raw_tables"]
     for table_config in table_configs:
         logging.info("Processing tables---{}".format(table_config))
         process_table(bq_client, table_config, raw_dataset, raw_project)
