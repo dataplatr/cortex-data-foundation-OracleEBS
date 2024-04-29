@@ -44,31 +44,17 @@ _SQLX_FILEPATH= Path(_THIS_DIR, "../dataform_templates/")
 
 _SOURCE_FILEPATH=Path(_THIS_DIR, "../dataform_templates/source_files")
 
-# _TEMPLATE_FILE_PREFIX = "sfdc_raw_to_cdc_"
-# _TEMPLATE_SQL_NAME = "template"
-
 # Directory under which all the generated sql files will be created.
-_GENERATED_SQLX_DIR = "generated_sql/oracle/dataform/sqlx_scripts"
-
-# # Directory containing various template files.
-# _TEMPLATE_DIR = Path(_THIS_DIR, "templates")
-# # Directory containing various template files.
-# _SQL_TEMPLATE_DIR = Path(_TEMPLATE_DIR, "sql")
-
+_GENERATED_SQLX_DIR = "generated_sql/oracle/dataform/sql_scripts"
 
 def process_table(table_setting, edw_dataset,ods_dataset):
     """For a given table config, creates required tables as well as
     dag and related files. """
 
-    # base_table = table_setting["base_table"]
-    # source_file = table_setting["source"]
-    # edw_table = table_setting["raw_table"]
-
     if "base_table" in table_setting:
         base_table = table_setting["base_table"]
         logging.info("__ Processing table '%s' __", base_table)
         sqlx_file = (_SQLX_FILEPATH/  f"{base_table}.sqlx").resolve()
-        print(sqlx_file)
         sql_file_name = (base_table.replace(".", "_") +".sqlx")
         output_sql_file = Path(_GENERATED_SQLX_DIR, sql_file_name)
         sql_subs = {
@@ -76,11 +62,10 @@ def process_table(table_setting, edw_dataset,ods_dataset):
         }
         generate_file_from_template(sqlx_file, output_sql_file, **sql_subs)
         logging.info(f"Generated SQLX file {sql_file_name}.")
-
+ 
     else:
         source_table = table_setting["source"]
         source_file = (_SOURCE_FILEPATH/  f"{source_table}.js").resolve()
-        print(source_file)
         source_file_name = (source_table.replace(".", "_") +".js")
         output_source_file = Path(_GENERATED_SQLX_DIR, source_file_name)
         sql_subs = {
@@ -89,6 +74,7 @@ def process_table(table_setting, edw_dataset,ods_dataset):
         }
         generate_file_from_template(source_file, output_source_file,**sql_subs)
         logging.info(f"Generated source file {source_file_name}.")
+    
 
 def main():
     logging.basicConfig(level=logging.INFO)
@@ -146,7 +132,7 @@ def main():
     for table_setting in table_settings:
         process_table(table_setting, edw_dataset,ods_dataset)
 
-    logging.info("Done generating dataform tables .")
+    logging.info("Done generating dataform files .")
 
 
 if __name__ == "__main__":
