@@ -1,0 +1,60 @@
+---------------------------------------------------------------------
+-- Accounting-GLPeriods.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  assertions:{
+    uniqueKey: ["PeriodKey"],
+    nonNull: ["PeriodKey"]
+  }
+}
+
+SELECT
+  glp.ParentSystemId,
+  glp.SystemId,
+  concat(glp.PERIOD_SET_NAME,'-',glp.PERIOD_NAME) PeriodKey,
+  glp.PERIOD_SET_NAME AS PeriodSetName,
+  glp.PERIOD_NAME AS PeriodName,
+  glp.LAST_UPDATE_DATE AS LastUpdateDate,
+  glp.LAST_UPDATED_BY AS LastUpdatedBy,
+  glp.START_DATE AS StartDate,
+  glp.END_DATE AS EndDate,
+  glp.YEAR_START_DATE AS YearStartDate,
+  glp.QUARTER_START_DATE AS QuarterStartDate,
+  glp.PERIOD_TYPE AS PeriodType,
+  glp.PERIOD_YEAR AS PeriodYear,
+  glp.PERIOD_NUM AS PeriodNum,
+  glp.QUARTER_NUM AS QuarterNum,
+  glp.ENTERED_PERIOD_NAME AS EnteredPeriodName,
+  glp.ADJUSTMENT_PERIOD_FLAG AS AdjustmentPeriodFlag,
+  glp.CREATION_DATE AS CreationDate,
+  glp.CREATED_BY AS CreatedBy,
+  glp.LAST_UPDATE_LOGIN AS LastUpdateLogin,
+  glp.DESCRIPTION AS Description,
+  glp.ATTRIBUTE1 AS Attribute1,
+  glp.ATTRIBUTE2 AS Attribute2,
+  glp.ATTRIBUTE3 AS Attribute3,
+  glp.ATTRIBUTE4 AS Attribute4,
+  glp.ATTRIBUTE5 AS Attribute5,
+  glp.ATTRIBUTE6 AS Attribute6,
+  glp.ATTRIBUTE7 AS Attribute7,
+  glp.ATTRIBUTE8 AS Attribute8,
+  glp.CONTEXT AS Context,
+  glp.LoadBy,
+  glp.LoadDate,
+  glp.LoadProcess,
+  glp.CreateBy,
+  glp.CreateDate,
+  glp.CreateProcess,
+  glp.UpdateBy,
+  glp.UpdateDate,
+  glp.UpdateProcess,
+  glp.InactiveInd,
+  glp.InactiveDate,
+  glp.InactiveReason
+FROM
+  $${ref("GL_PERIODS")} AS glp
+where
+DATE(glp.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')

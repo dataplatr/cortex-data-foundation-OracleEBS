@@ -1,0 +1,176 @@
+---------------------------------------------------------------------
+-- Accounting_GLJournalBase.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["GeneralLedgerJournalKey"],
+  
+  assertions:{
+    uniqueKey: ["GeneralLedgerJournalKey"],
+    nonNull:["GeneralLedgerJournalKey"],
+    
+  }
+}
+
+SELECT DISTINCT
+	GJL.ParentSystemId,
+    GJL.SystemId,
+	CAST(SOBS.LEDGER_ID AS INT64) AS LedgerId,
+	CONCAT(SOBS.LEDGER_ID,' - ',SOBS.NAME) AS LedgerIdName,
+	SOBS.NAME AS LedgerName,
+	SOBS.CURRENCY_CODE AS LedgerCurrencyCode,
+	CONCAT(GJH.JE_HEADER_ID ,"-",GJL.JE_LINE_NUM) AS GeneralLedgerJournalKey,
+	GJH.JE_BATCH_ID JournalBatchId,
+	GJH.JE_HEADER_ID JournalHeaderId,
+	GJH.NAME AS JournalHeaderName,
+	GJH.DESCRIPTION AS JournalHeaderDesc,
+	GJH.ACCRUAL_REV_FLAG AS AccrualRevFlag,
+	GJL.JE_LINE_NUM AS JournalLineNumber,
+	GJL.DESCRIPTION AS JournalLineDesc,
+	GLB.NAME AS JournalBatchName,
+	GLB.DESCRIPTION AS JournalBatchDesc,
+	GLB.POSTED_DATE AS JournalBatchPostedDate,
+	GJH.JE_CATEGORY AS JournalCategory,
+	JECAT.DESCRIPTION AS JournalCategoryDesc,
+	cast(ffv.attribute16 as string) AS LegalEntity,
+	GJL.CODE_COMBINATION_ID AS CodeCombinationId,
+	COALESCE(GCC.SEGMENT1,'0') AS LocationCode,
+	COALESCE(GCC.SEGMENT2,'0') AS ClientCode,
+	COALESCE(GCC.SEGMENT3,'0') AS DepartmentCode,
+	COALESCE(GCC.SEGMENT4,'0') AS AccountCode,
+	--COALESCE(GCC.SEGMENT5,'0') AS InterCompanyCode,
+	--COALESCE(GCC.SEGMENT6,'0') AS Future2Code,
+    COALESCE(GCC.SEGMENT5,'0')  AS InterCompanyCode,
+	COALESCE(GCC.SEGMENT6,'0') AS Future2Code,
+	GJL.PERIOD_NAME AS PeriodName,
+	COALESCE(GJL.EFFECTIVE_DATE,GJH.DEFAULT_EFFECTIVE_DATE) AS EffectiveDate,
+	GJH.JE_SOURCE AS JournalSource,
+	GJSTL.USER_JE_SOURCE_NAME AS JournalSourceName,
+	GJL.STATUS JournalStatus,
+	GJL.ATTRIBUTE3 AS CapexCode,
+	XAH.APPLICATION_ID AS ApplicationId,
+	XAH.EVENT_ID AS EventId,
+	XAH.ACCOUNTING_DATE AS AccountingDate,
+	XAH.GL_TRANSFER_DATE AS GeneralLedgerTransferDate,
+	XAL.AE_HEADER_ID AS AccountingEventHeaderId,
+	XAL.AE_LINE_NUM AS AccountingEventLineNumber,
+	XAL.DISPLAYED_LINE_NUMBER AS AccountingEventDisplayLineNumber,
+	XEVNT.EVENT_DATE AS AccountingEventDate,
+	XEVNT.EVENT_NUMBER AS AccountingEventNumber,
+	XAL.CURRENCY_CONVERSION_RATE AS CurrencyConversionRate,
+	XAL.CURRENCY_CONVERSION_DATE AS CurrencyConversionDate,
+	XAL.CURRENCY_CONVERSION_TYPE AS CurrencyConversionType,
+	XAL.CURRENCY_CODE AS CurrencyConversionCode,
+	EVCLS.NAME AS AccountingEventClassName,
+	EVTYP.NAME AS AccountingEventTypeName,
+	GJL.ENTERED_DR AS EnteredDebit,
+	GJL.ENTERED_CR AS EnteredCredit,
+	GJH.CURRENCY_CODE AS TransactionCurrencyCode,
+	GJH.JGZZ_RECON_REF as ReconciliationReference,
+	GJH.EXTERNAL_REFERENCE as GeneralHeaderExternalReference,
+	GJH.ACTUAL_FLAG as JournalHeaderBalanceType,
+	ifnull (GJH.BALANCED_JE_FLAG, 'N') JournalHeaderBalancedFlag,
+	GJH.CONTEXT as JournalHeaderContext,
+	GJH.POSTED_DATE as JournalHeaderPostedDate,
+	GJL.ACCOUNTED_DR AS AccountedDebit,
+	GJL.ACCOUNTED_CR AS AccountedCredit,
+	GJL.CREATED_BY as SourceCreatedBy,
+	GJL.CREATION_DATE AS SourceCreationDate,
+	GJL.LAST_UPDATED_BY as SourceLastUpdatedBy,
+	GJL.LAST_UPDATE_DATE as SourceLastUpdateDate,
+	GJL.CONTEXT as JournalLineContext,
+	GJL.TAX_CODE as JournalLineTaxCode,
+	ifnull(GJL.IGNORE_RATE_FLAG, 'N') as JournalLineIgnoreRateFlag,
+	GJL.ATTRIBUTE5 as TransferToIntercompany,
+	XTE.ENTITY_CODE AS EntityCode,
+	XTE.SOURCE_ID_INT_1 AS SourceId,
+	GJL.LoadBy,
+	GJL.LoadDate,
+	GJL.LoadProcess,
+	GJL.CreateBy,
+	GJL.CreateDate,
+	GJL.CreateProcess,
+	GJL.UpdateBy,
+	GJL.UpdateDate,
+	GJL.UpdateProcess,
+	GJL.InactiveInd,
+	GJL.InactiveDate,
+	GJL.InactiveReason
+FROM
+	$${ref("GL_JE_HEADERS")} GJH
+	INNER JOIN 
+	$${ref("GL_JE_LINES")} GJL
+	 	ON (GJL.JE_HEADER_ID = GJH.JE_HEADER_ID 
+		AND GJL.PERIOD_NAME = GJH.PERIOD_NAME 
+		AND GJL.InactiveInd = false)
+	INNER JOIN  
+	$${ref("GL_JE_BATCHES")} GLB
+		ON (GJH.JE_BATCH_ID = GLB.JE_BATCH_ID
+		AND GLB.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("GL_JE_CATEGORIES_TL")}	JECAT
+		ON (GJH.JE_CATEGORY = JECAT.JE_CATEGORY_NAME 
+		AND JECAT.LANGUAGE LIKE 'US'
+		AND JECAT.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("GL_JE_SOURCES_TL")} GJSTL
+		ON (GJH.JE_SOURCE = GJSTL.JE_SOURCE_NAME  
+		AND GJSTL.LANGUAGE = 'US'
+		AND GJSTL.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("GL_IMPORT_REFERENCES")} GIR
+		ON ( GJL.JE_HEADER_ID = GIR.JE_HEADER_ID
+		AND GJL.JE_LINE_NUM = GIR.JE_LINE_NUM
+		AND GJL.GL_SL_LINK_ID = GIR.GL_SL_LINK_ID
+		AND GJL.GL_SL_LINK_TABLE = GIR.GL_SL_LINK_TABLE 
+		AND GIR.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_AE_LINES")} XAL
+		ON (GIR.GL_SL_LINK_ID = XAL.GL_SL_LINK_ID 
+		AND GIR.GL_SL_LINK_TABLE = XAL.GL_SL_LINK_TABLE 
+		AND XAL.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_AE_HEADERS")} XAH
+		ON (XAL.AE_HEADER_ID = XAH.AE_HEADER_ID 
+		AND XAL.APPLICATION_ID = XAH.APPLICATION_ID 
+		AND XAH.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_EVENTS")} XEVNT
+		ON   (XAH.EVENT_ID = XEVNT.EVENT_ID  
+		AND XAH.APPLICATION_ID = XEVNT.APPLICATION_ID 
+		AND XEVNT.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_TRANSACTION_ENTITIES")} XTE
+		ON (XAH.ENTITY_ID = XTE.ENTITY_ID 
+		AND XAH.APPLICATION_ID = XTE.APPLICATION_ID 
+		AND XTE.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_EVENT_TYPES_TL")} EVTYP
+		ON  (XEVNT.APPLICATION_ID = EVTYP.APPLICATION_ID
+		AND XEVNT.EVENT_TYPE_CODE = EVTYP.EVENT_TYPE_CODE
+		AND EVTYP.LANGUAGE = 'US'
+		AND EVTYP.InactiveInd = false)
+	LEFT OUTER JOIN 
+	$${ref("XLA_EVENT_CLASSES_TL")} EVCLS
+		ON  (EVTYP.APPLICATION_ID = EVCLS.APPLICATION_ID
+		AND EVTYP.ENTITY_CODE = EVCLS.ENTITY_CODE
+		AND EVTYP.EVENT_CLASS_CODE = EVCLS.EVENT_CLASS_CODE
+		AND EVCLS.LANGUAGE = 'US'
+		AND EVCLS.InactiveInd = false)
+	INNER JOIN  
+	$${ref("GL_LEDGERS")} SOBS
+		ON  (GJH.LEDGER_ID = SOBS.LEDGER_ID 
+		AND SOBS.InactiveInd = false)
+	INNER JOIN 
+	$${ref("GL_CODE_COMBINATIONS")} GCC
+	 	ON (GJL.CODE_COMBINATION_ID = GCC.CODE_COMBINATION_ID
+		--AND GCC.ENABLED_FLAG='Y'
+        AND GCC.ENABLED_FLAG = 'TRUE'
+		AND GCC.InactiveInd = false)
+	Left outer join 
+	$${ref("FND_FLEX_VALUES")} ffv 
+	on gcc.SEGMENT1=ffv.flex_value and flex_value_set_id = 1002610 and ffv.InactiveInd = false
+where 
+DATE(GJL.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')

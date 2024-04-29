@@ -1,0 +1,105 @@
+---------------------------------------------------------------------
+-- Accounting_ARCashReceipts.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["CashReceiptKey"],
+  
+  assertions:{
+    uniqueKey: ["CashReceiptKey"],
+    nonNull:["CashReceiptKey"],
+   
+  }
+}
+
+with ffv as
+(
+select flex_value as LocationCode,
+cast(attribute16 as string) as LegalEntityNumber 
+from 
+	$${ref("FND_FLEX_VALUES")} 
+ WHERE flex_value_set_id = 1002610 and InactiveInd = false 
+)
+
+SELECT
+  ACR.ParentSystemId,
+  ACR.SystemId,
+  ACR.CASH_RECEIPT_ID||'~'||ARAA.RECEIVABLE_APPLICATION_ID AS CashReceiptKey,
+  ACR.CASH_RECEIPT_ID AS CashReceiptId,
+  CAST(ACR.SET_OF_BOOKS_ID AS INT64) AS LedgerId,
+  ARAA.RECEIVABLE_APPLICATION_ID AS ReceivableApplicationId,
+  ACR.RECEIPT_NUMBER AS ReceiptNumber,
+  ACR.RECEIPT_DATE AS ReceiptDate,
+  ACR.STATUS AS ReceiptStatus,
+  ACR.TYPE AS ReceiptType,
+  ACR.CONFIRMED_FLAG AS ConfirmedFlag,
+  ACR.CURRENCY_CODE AS CurrencyCode,
+  RCTA.TRX_NUMBER AS InvoiceNumber,
+  ACR.DOC_SEQUENCE_VALUE AS DocumentSequenceValue,
+  ACR.PAY_FROM_CUSTOMER AS PayFromCustomerId,
+  ACR.CUSTOMER_SITE_USE_ID AS CustomerSiteUseId,
+  ffv.LegalEntityNumber AS LegalEntity,
+  ARAA.CODE_COMBINATION_ID AS CodeCombinationId,
+  COALESCE(GCC.SEGMENT1,'0') AS LocationCode,
+  COALESCE(GCC.SEGMENT2,'0') AS ClientCode,
+  COALESCE(GCC.SEGMENT3,'0') AS DepartmentCode,
+  COALESCE(GCC.SEGMENT4,'0') AS AccountCode,
+  --COALESCE(GCC.SEGMENT5,'0') AS InterCompanyCode,
+  --COALESCE(GCC.SEGMENT6,'0') AS Future2Code,
+  COALESCE(GCC.SEGMENT5,'0') AS InterCompanyCode,
+  COALESCE(GCC.SEGMENT6,'0') AS Future2Code,
+  ARAA.APPLICATION_TYPE AS ApplicationType,
+  ARAA.STATUS AS ApplicationStatus,
+  ARAA.GL_DATE AS GeneralLedgerDate,
+  GLP.PERIOD_NAME AS PeriodName,
+  GLP.PERIOD_YEAR AS PeriodYear,
+  cast(ifnull(rates.CONVERSION_RATE,1) as numeric)  as  ConversionRate,
+  ACR.AMOUNT AS Amount,
+  ARAA.AMOUNT_APPLIED AS AmountApplied,
+  ACR.LoadBy, 
+  ACR.LoadDate,
+  ACR.LoadProcess,
+  ACR.CreateBy,
+  ACR.CreateDate,
+  ACR.CreateProcess,
+  ACR.UpdateBy,
+  ACR.UpdateDate,
+  ACR.UpdateProcess,
+  ACR.InactiveInd,
+  ACR.InactiveDate,
+  ACR.InactiveReason
+FROM
+  $${ref("AR_CASH_RECEIPTS_ALL")} ACR
+INNER JOIN
+  $${ref("AR_RECEIVABLE_APPLICATIONS_ALL")} ARAA
+ON
+  (ACR.CASH_RECEIPT_ID = ARAA.CASH_RECEIPT_ID
+    AND ARAA.InactiveInd = FALSE)
+INNER JOIN
+  $${ref("RA_CUSTOMER_TRX_ALL")} RCTA
+ON
+  (ARAA.APPLIED_CUSTOMER_TRX_ID = RCTA.CUSTOMER_TRX_ID
+    AND RCTA.InactiveInd = FALSE)
+LEFT OUTER JOIN
+  $${ref("GL_PERIODS")} GLP
+ON
+  (GLP.PERIOD_SET_NAME ='CORP CALENDAR'
+  	AND GLP.PERIOD_TYPE='Month'
+    AND (ACR.RECEIPT_DATE BETWEEN GLP.START_DATE AND GLP.END_DATE)
+    AND GLP.InactiveInd = FALSE)
+LEFT OUTER JOIN
+  $${ref("GL_CODE_COMBINATIONS")} GCC
+ON
+  (ARAA.CODE_COMBINATION_ID = GCC.CODE_COMBINATION_ID
+    --AND GCC.ENABLED_FLAG='Y'  
+    AND GCC.ENABLED_FLAG = 'TRUE'
+    AND GCC.InactiveInd = FALSE)
+
+left outer join ffv on COALESCE(GCC.SEGMENT1,'0')=ffv.LocationCode
+left join  $${ref("GL_DAILY_RATES")} as rates
+on date(rates.CONVERSION_DATE) = date(ACR.RECEIPT_DATE) and rates.FROM_CURRENCY = ACR.CURRENCY_CODE
+and rates.CONVERSION_TYPE = 'Spot'  and rates.TO_CURRENCY ='USD' and rates.InactiveInd = FALSE
+WHERE
+  DATE(ACR.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')

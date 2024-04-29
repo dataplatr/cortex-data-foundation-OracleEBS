@@ -1,0 +1,90 @@
+---------------------------------------------------------------------
+-- Accounting_ARAging.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["SnapshotKey"],
+
+  assertions:{
+    uniqueKey: ["SnapshotKey"],
+    nonNull:["SnapshotKey"],
+   
+  }
+}
+
+with distinctCustomers as
+(select distinct BillToCustomerId from ${edw_dataset}.Accounting_ARTransactions
+where BillToCustomerId not in (select BillToCustomerId from ${edw_dataset}.Accounting_ARAging))
+select
+F.ParentSystemId,
+F.SystemId,
+F.ReceivableTransactionsKey,
+F.CustomerTransactionId,
+F.CustomerTransactionLineId,
+F.LineType,
+F.LineNumber,
+F.LineDescription,
+F.BillToCustomerId,
+F.InterfaceHeaderContext,
+F.GeneralLedgerDate,
+F.TransactionDate,
+F.LastPaymentDate,
+F.PeriodName,
+F.PeriodYear,
+F.LedgerId,
+F.DocumentSequenceValue,
+F.TransactionNumber,
+F.InvoiceCurrencyCode,
+F.PostToGeneralLedgerFlag,
+F.AccountClass,
+F.LegalEntity,
+F.CodeCombinationId,
+F.LocationCode,
+F.ClientCode,
+F.BatchSource,
+F.BatchSourceDescription,
+F.DepartmentCode,
+F.AccountCode,
+F.InterCompanyCode,
+F.Future2Code,
+F.ConversionRate,
+F.TaxRate,
+F.TransactionLineTax,
+F.Amount,
+F.AmountUsd,
+F.PaymentAmount,
+F.BalanceAmount,
+F.LastUpdatedById,
+F.LastUpdatedByName,
+F.CreateById,
+F.CreateByName,
+F.LoadBy,
+F.LoadDate,
+F.LoadProcess,
+F.CreateBy,
+F.CreateDate,
+F.CreateProcess,
+F.UpdateBy,
+F.UpdateDate,
+F.UpdateProcess,
+F.InactiveInd,
+F.InactiveDate,
+F.InactiveReason,
+ CONCAT(F.ReceivableTransactionsKey,CONCAT(CAST(EXTRACT(YEAR from current_date) as string), LPAD(CAST(EXTRACT(MONTH from current_date) as string),2,'0') )) SnapshotKey ,
+upper(FORMAT_DATETIME('%b-%Y', current_date))  as SnapshotMonth,
+current_date as SnapshotDate,
+ EXTRACT(YEAR from current_date) as SnapshotYear,
+ EXTRACT(MONTH from current_date) as SnapshotPeriodNum,
+case when date_diff(current_Date,DATE(F.TransactionDate),DAY) >=0 and date_diff(current_Date,DATE(F.TransactionDate),DAY)<=30 then '0-30 Days' else		
+case when date_diff(current_Date,DATE(F.TransactionDate),DAY) >30 and date_diff(current_Date,DATE(F.TransactionDate),DAY)<=60 then '31-60 Days' else	
+case when date_diff(current_Date,DATE(F.TransactionDate),DAY) >60 and date_diff(current_Date,DATE(F.TransactionDate),DAY)<=90 then '61-90 Days' else	
+case when date_diff(current_Date,DATE(F.TransactionDate),DAY) >90 and date_diff(current_Date,DATE(F.TransactionDate),DAY)<=120 then '91-120 Days' else '>120 Days'	end end end end as AgeBucketByTransactionDate,
+case when A.BillToCustomerId is null then 'N' else 'Y' end as NewCustomerFlag
+FROM
+  $${ref("${edw_dataset}","Accounting_ARTransactions")} AS F LEFT OUTER JOIN
+distinctCustomers AS A ON
+F.BillToCustomerId = A.BillToCustomerId
+WHERE
+F.BalanceAmount > 0

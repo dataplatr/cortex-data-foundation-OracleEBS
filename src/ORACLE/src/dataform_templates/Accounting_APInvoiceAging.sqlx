@@ -1,0 +1,120 @@
+---------------------------------------------------------------------
+-- Edw.Accounting_APInvoiceAging.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["SnapshotKey"],
+
+  assertions:{
+    uniqueKey: ["SnapshotKey"],
+    nonNull:["SnapshotKey"],
+   
+  }
+}
+
+
+Select
+ParentSystemId,	
+SystemId,
+concat (InvoiceId,"-",CONCAT(CAST(EXTRACT(YEAR from current_date) as string), LPAD(CAST(EXTRACT(MONTH from current_date) as string),2,'0') )) as SnapshotKey,	
+VendorId,	
+VendorSiteID,
+InvoiceId,	
+LegalEntityId,	
+GlDate,	
+OrganisationId,	
+DocumentCategoryCode,
+DocumentSequenceValue,
+DocumentSequenceID,	
+ExchangeDate,	
+ExchangeRateType,	
+ExchangeRate,	
+InvoiceReceivedDate,
+GoodsReceivedDate,
+FreightAmount,	
+PaymentStatusFlag,	
+AccountsPayCodeCombinationId,
+PayGroupLookupCode,	
+PaymentMethodLookupCode,
+PaymentMethodName,
+TermsId,	
+PaymentTerms,
+TermsDate,
+BatchId,
+InvoiceDescription,	
+InvoiceTypeLookupCode,	
+Source,	
+InvoiceDate,	
+InvoiceDateYear,	
+InvoiceDateQuarter,	
+InvoiceDatePeriodNum,	
+InvoiceDatePeriod,	
+InvoiceAmount,	
+InvoiceAmountUSD,	
+AmountApplicableToDiscount,
+DiscountAmountTaken,
+AmountPaid,	
+AmountPaidUSD,
+CurrencyCode,	
+InvoiceNumber,	
+InvoiceCreationDate,	
+InvoiceCreationYear,	
+InvoiceCreationQuarter,	
+InvoiceCreationPeriodNum,	
+InvoiceCreationPeriod,
+PaymentCrossRate,
+PaymentCurrencyCode,
+LedgerId,	
+LedgerName,	
+PurchaseOrderNumber,	
+CapexCode,
+PurchaseOrderCreationDate,	
+PurchaseOrderHeaderAmount,	
+RequisitionNumber,	
+OperatingUnitName,		
+InvoiceStatus,	
+HoldLookupCode,	
+AlsoOnHold,	
+CreatedBy,	
+CreatedByName,	
+LastUpdatedBy,	
+LastUpdatedByName,	
+ifnull(InvoiceAmount,0) - ifnull(AmountPaid,0) as BalanceAmount,	
+(ifnull(InvoiceAmountUSD,0) - ifnull(AmountPaidUSD,0))as BalanceAmountUSD,	
+upper(FORMAT_DATETIME('%b-%y', current_date))  as SnapshotMonth,
+current_date as SnapshotDate,
+ EXTRACT(YEAR from current_date) as SnapshotYear,
+ EXTRACT(MONTH from current_date) as SnapshotPeriodNum,
+case when date_diff(current_Date,DATE(InvoiceCreationDate),DAY) >0 and date_diff(current_Date,DATE(InvoiceCreationDate),DAY)<=30 then '0-30 Days' else		
+case when date_diff(current_Date,DATE(InvoiceCreationDate),DAY) >30 and date_diff(current_Date,DATE(InvoiceCreationDate),DAY)<=60 then '31-60 Days' else	
+case when date_diff(current_Date,DATE(InvoiceCreationDate),DAY) >60 and date_diff(current_Date,DATE(InvoiceCreationDate),DAY)<=90 then '61-90 Days' else	
+case when date_diff(current_Date,DATE(InvoiceCreationDate),DAY) >90 and date_diff(current_Date,DATE(InvoiceCreationDate),DAY)<=120 then '91-120 Days' else '>120 Days'	end end end end as AgeBucketByCreationDate,
+case when date_diff(current_Date,DATE(InvoiceDate),DAY) >0 and date_diff(current_Date,DATE(InvoiceDate),DAY)<=30 then '0-30 Days' else		
+case when date_diff(current_Date,DATE(InvoiceDate),DAY) >30 and date_diff(current_Date,DATE(InvoiceDate),DAY)<=60 then '31-60 Days' else	
+case when date_diff(current_Date,DATE(InvoiceDate),DAY) >60 and date_diff(current_Date,DATE(InvoiceDate),DAY)<=90 then '61-90 Days' else	
+case when date_diff(current_Date,DATE(InvoiceDate),DAY) >90 and date_diff(current_Date,DATE(InvoiceDate),DAY)<=120 then '91-120 Days' else '>120 Days'	end end end end as AgeBucketByInvoiceDate,
+case when date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY) >0 and date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY)<=30 then '0-30 Days' else		
+case when date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY) >30 and date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY)<=60 then '31-60 Days' else	
+case when date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY) >60 and date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY)<=90 then '61-90 Days' else	
+case when date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY) >90 and date_diff(current_Date,DATE(ifnull(InvoiceReceivedDate,InvoiceCreationDate)),DAY)<=120 then '91-120 Days' else '>120 Days'	end end end end as AgeBucketByReceivedDate,	
+ifnull(ConversionRate,1) as ConversionRate,
+LoadBy,	
+LoadDate,	
+LoadProcess	,	
+CreateBy,	
+CreateDate,	
+CreateProcess,	
+UpdateBy,	
+UpdateDate,	
+UpdateProcess,	
+InactiveInd,	
+InactiveDate,	
+InactiveReason
+from $${ref("${edw_dataset}","Accounting_APInvoiceDistributions")} inv
+where
+CancelledDate is null
+and PaymentStatusFlag <> 'Y'
+and Rank=1
+and InvoiceAmount<>0

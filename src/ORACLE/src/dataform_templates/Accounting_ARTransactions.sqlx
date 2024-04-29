@@ -1,0 +1,92 @@
+config {
+    type: "incremental",
+    schema: "${edw_dataset}",
+    tags: ["Finance-OracleDetail"],
+
+    assertions: {
+        uniqueKey: ["ReceivableTransactionsKey"],
+        nonNull: ["ReceivableTransactionsKey"],
+
+    }
+}
+
+  ---------------------------------------------------------------------
+  -- Accounting_ARTransactions.sqlx Loading script using Dataform
+  ---------------------------------------------------------------------
+SELECT
+  RCT.ParentSystemId,
+  RCT.SystemId,
+  RCT.ReceivableTransactionsKey,
+  RCT.CustomerTransactionId,
+  RCT.CustomerTransactionLineId,
+  RCT.LineType,
+  RCT.LineNumber,
+  RCT.LineDescription,
+  RCT.BillToCustomerId,
+  RCT.InterfaceHeaderContext,
+  RCT.GeneralLedgerDate,
+  RCT.TransactionDate,
+  RCT.LastPaymentDate,
+  RCT.PeriodName,
+  RCT.PeriodYear,
+  RCT.LedgerId,
+  RCT.DocumentSequenceValue,
+  RCT.TransactionNumber,
+  RCT.InvoiceCurrencyCode,
+  RCT.PostToGeneralLedgerFlag,
+  RCT.AccountClass,
+  RCT.LegalEntity,
+  RCT.CodeCombinationId,
+  RCT.LocationCode,
+  RCT.ClientCode,
+  RCT.BatchSource,
+  RCT.BatchSourceDescription,
+  RCT.DepartmentCode,
+  RCT.AccountCode,
+  RCT.InterCompanyCode,
+  RCT.Future2Code,
+  CAST(RCT.ConversionRate AS numeric) AS ConversionRate,
+  RCT.TaxRate,
+  RCT.ExtendedAmountTax AS TransactionLineTax,
+  RCT.Amount,
+  RCT.Amount*CAST(RCT.ConversionRate AS numeric) AS AmountUsd,
+  RCT.LineRank,
+  COALESCE(CASE
+      WHEN RCT.LineRank<>1 THEN 0
+    ELSE
+    RCT.PaymentAmount
+  END
+    ,0) AS PaymentAmount,
+  CASE
+    WHEN RCT.LineRank=1 THEN (COALESCE(RCT.Amount,0)- COALESCE(PaymentAmount,0))
+  ELSE
+  COALESCE(amount,0)
+END
+  AS BalanceAmount,
+  RCT.LastUpdatedById,
+  RCT.LastUpdatedByName,
+  RCT.CreateById,
+  RCT.CreateByName,
+  RCT.LoadBy,
+  RCT.LoadDate,
+  RCT.LoadProcess,
+  RCT.CreateBy,
+  RCT.CreateDate,
+  RCT.CreateProcess,
+  RCT.UpdateBy,
+  RCT.UpdateDate,
+  RCT.UpdateProcess,
+  RCT.InactiveInd,
+  RCT.InactiveDate,
+  RCT.InactiveReason,
+  '' AS Name,
+  '' AS Type
+FROM
+  $${ref("${edw_dataset}","Accounting_ARTransactionsDetails")}
+  AS RCT
+WHERE
+  DATE(RCT.LoadDate) > IFNULL((
+    SELECT
+      DATE(MAX(LoadDate))
+    FROM
+      $${self()}),'1900-01-01')

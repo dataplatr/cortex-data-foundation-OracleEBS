@@ -1,0 +1,59 @@
+---------------------------------------------------------------------
+-- Edw.Accounting_AssetCategory.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["CategoryId"],
+
+  assertions:{
+    uniqueKey: ["CategoryId"],
+    nonNull:["CategoryId","CapitalizeFlag"],
+   
+  }
+}
+
+
+select
+ParentSystemID as ParentSystemId,
+SystemID as SystemId,
+CATEGORY_ID as CategoryId,
+SUMMARY_FLAG as SummaryFlag,
+ENABLED_FLAG as EnabledFlag,
+OWNED_LEASED as OwnerLeased,
+PRODUCTION_CAPACITY as ProductionCapacity,
+CATEGORY_TYPE as CategoryType,
+CAPITALIZE_FLAG as CapitalizeFlag,
+SEGMENT1 as MajorCategory,
+SEGMENT2 as MinorCategory,
+SEGMENT3 as Segment3,
+SEGMENT4 as Segment4,
+SEGMENT5 as Segment5,
+SEGMENT6 as Segment6,
+SEGMENT7 as Segment7,
+START_DATE_ACTIVE as ActiveStartDate,
+END_DATE_ACTIVE as ActiveEndDate,
+PROPERTY_TYPE_CODE as PropertyTypeCode,
+DATE_INEFFECTIVE as DateIneffective,
+CREATED_BY as CreatedBy,
+CREATION_DATE as CreationDate,
+LAST_UPDATE_DATE as LastUpdateDate,
+LAST_UPDATED_BY as LastUpdatedBy,
+LAST_UPDATE_LOGIN as LastUpdateLogin,
+INVENTORIAL as Inventorial,
+LoadBy,
+LoadDate,
+LoadProcess,
+CreateBy,
+CreateDate,
+CreateProcess,
+UpdateBy,
+UpdateDate,
+UpdateProcess,
+InactiveInd,
+InactiveDate,
+InactiveReason
+from $${ref("FA_CATEGORIES_B")} cat
+where 
+DATE(cat.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')
