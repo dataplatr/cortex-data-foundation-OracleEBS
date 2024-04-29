@@ -1,16 +1,3 @@
-# Copyright 2022 Google LLC
-
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-
-#     https://www.apache.org/licenses/LICENSE-2.0
-
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 """
 Generates Ods Tables to copy/move Oracle data from
 Stage table to BigQuery Ods dataset.
@@ -106,9 +93,9 @@ def main():
                         _SETTINGS_FILE)
         sys.exit()
 
-    if not "oracle_tables" in configs:
+    if not "oracle_ods_tables" in configs:
         logging.warning(
-            "File '%s' is missing property `oracle_tables`. "
+            "File '%s' is missing property `oracle_ods_tables`. "
             "Skipping BQ Table generation.", _SETTINGS_FILE)
         sys.exit()
 
@@ -116,7 +103,7 @@ def main():
 
     bq_client = bigquery.Client()
 
-    table_configs = configs["oracle_tables"]
+    table_configs = configs["oracle_ods_tables"]
     for table_config in table_configs:
         process_table(bq_client, table_config, ods_dataset, ods_project)
 
