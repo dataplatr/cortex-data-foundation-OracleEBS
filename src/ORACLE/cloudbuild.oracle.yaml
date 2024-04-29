@@ -49,7 +49,7 @@ steps:
         python src/raw_table_generator/create_stage_tables.py
         echo "✅ Generated Raw BigQuery tables."
 
-        # Ods Table creation
+        # CDC Table creation
         echo "Creating Ods BigQuery Tables."
         python src/ods_table_generator/create_ods_tables.py
         echo "✅ Created Ods BigQuery tables ."
@@ -58,9 +58,17 @@ steps:
         echo "Creating Edw BigQuery Tables."
         python src/edw_table_generator/create_edw_tables.py
         echo "✅ Created Edw BigQuery tables ."
-        
+
+        #create stored procedure
+        echo "creating stored procedure"
+        python src/stored_procedure/audit_sp.py
+        echo "✅ Created Stored procedure ."
+
+        python src/dataform_ws_dag_generator/sqlx_generator.py
+        echo "✅ Generated dataform files ."
+
         python src/dataform_ws_dag_generator/generate_dataform_ws_dags.py
-        echo "✅ Created Edw BigQuery tables ."
+        echo "✅ Generated DAG files ."
 
         # Copy generated DAG python and related files to composer DAG bucket and dataform files to GCS bucket
          
@@ -74,10 +82,14 @@ steps:
             dag_bucket="$target_bucket"
         fi
 
-        echo "Copying dataform sqlx files and oracle DAG files to respective buckets... "
-        gsutil cp -r src/datataform_sqlx_files/* gs://$target_bucket &&
-        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags &&
-        gsutil -m cp -r src/json_schema/* gs://$target_bucket/schema
+        # Copy generated sqlx files to Target GCS bucket
+        if [[ $(find generated_sql -type f 2> /dev/null | wc -l) -gt 0 ]]
+        then
+          echo "Copying dataform SQL files to gs://$target_bucket/."
+          gsutil -m cp -r './generated_sql/oracle/dataform/sqlx_scripts/*' gs://$target_bucket/
+        else
+          echo "🔪No SQLX files found under generated_sql/oracle directory or the directory does not exist. Skipping copy.🔪"
+        fi
         
         if [[ $(find generated_dag -type f 2> /dev/null | wc -l) -gt 0 ]]
         then
@@ -89,6 +101,10 @@ steps:
           echo "🔪No Python files found under generated_dag/oracle directory or the directory does not exist. Skipping copy.🔪"
         fi
 
+        echo "Copying oracle DAG files and json_schema to respective buckets... "
+        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags &&
+        gsutil -m cp -r src/json_schema/* gs://$target_bucket/schema
+        
         
 timeout: 10200s
 substitutions:
