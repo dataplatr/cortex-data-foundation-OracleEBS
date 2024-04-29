@@ -64,7 +64,7 @@ steps:
         python src/stored_procedure/audit_sp.py
         echo "✅ Created Stored procedure ."
 
-        python src/dataform_ws_dag_generator/sqlx_generator.py
+        python src/dataform_ws_dag_generator/df_file_generator.py
         echo "✅ Generated dataform files ."
 
         python src/dataform_ws_dag_generator/generate_dataform_ws_dags.py
