@@ -1,4 +1,4 @@
-oracle_raw_tables::
+oracle_raw_tables:
   - base_table: AP_INVOICES_ALL
   - base_table: AP_INVOICE_LINES_ALL
   - base_table: AP_INVOICE_DISTRIBUTIONS_ALL
