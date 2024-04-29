@@ -1,0 +1,10 @@
+TargetField,DataType
+SourceSystemId,STRING
+ProjectId,STRING
+DataSetId,STRING
+TableName,STRING
+LoadProcess,STRING
+LoadExecutionStatus,STRING
+DwCreateDate,DATETIME
+DwUpdateDate,DATETIME
+CdcLoadDate,DATETIME

@@ -1,0 +1,11 @@
+TargetField,DataType
+RunAuditId,STRING
+SourceName,STRING
+ParentSystemId,INTEGER
+SystemId,INTEGER
+Username,STRING
+JobName,STRING
+ScheduledStartDate,DATETIME
+LastCompletedDate,DATETIME
+Status,STRING
+Reason,STRING
