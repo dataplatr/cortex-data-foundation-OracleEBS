@@ -91,9 +91,9 @@ def main():
                         _SETTINGS_FILE)
         sys.exit()
 
-    if not "oracle_tables" in configs:
+    if not "edw_oracle_tables" in configs:
         logging.warning(
-            "File '%s' is missing property `oracle_tables`. "
+            "File '%s' is missing property `edw_oracle_tables`. "
             "Skipping BQ Table generation.", _SETTINGS_FILE)
         sys.exit()
 
