@@ -45,7 +45,7 @@ _SQLX_FILEPATH= Path(_THIS_DIR, "../dataform_templates/")
 _SOURCE_FILEPATH=Path(_THIS_DIR, "../dataform_templates/source_files")
 
 # Directory under which all the generated sql files will be created.
-_GENERATED_SQLX_DIR = "generated_sql/oracle/dataform/sql_scripts"
+_GENERATED_SQLX_DIR = "generated_sql/oracle/dataform/sqlx_scripts"
 
 def process_table(table_setting, edw_dataset,ods_dataset):
     """For a given table config, creates required tables as well as
