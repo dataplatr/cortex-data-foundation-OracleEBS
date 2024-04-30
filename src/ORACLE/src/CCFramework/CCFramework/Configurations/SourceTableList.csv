@@ -1,0 +1,3 @@
+﻿SourceSystem,SourceDatasetId,TableName,IsIncremental,PrimaryKey,UpdateKey,CDCColumnName,SoftDeleteColumn,ArchiveDate,ArchiveKey
+ORACLE_EBS,OracleEBS,OracleEbs-AP_HOLD_CODES,N,"HOLD_LOOKUP_CODE,HOLD_TYPE","HOLD_LOOKUP_CODE,HOLD_TYPE",LAST_UPDATE_DATE,active_flg,01-01-2022 00:00,CreateDate
+ORACLE_EBS,OracleEBS,OracleEbs-AP_TERMS_LINES,N,"TERM_ID,SEQUENCE_NUM","TERM_ID, SEQUENCE_NUM",LAST_UPDATE_DATE,,,
