@@ -1,0 +1,536 @@
+---------------------------------------------------------------------
+-- Accounting_GLJournalDetails.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+
+  assertions:{
+    uniqueKey: ["GeneralLedgerJournalKey"],
+    nonNull:["GeneralLedgerJournalKey"],
+   
+  }
+}
+
+with convrate as
+(
+select 
+FROM_CURRENCY as FromCurrency,
+TO_CURRENCY as ToCurrency,
+EXTRACT(YEAR FROM CONVERSION_DATE) as ConversionDateYear,
+EXTRACT(QUARTER FROM CONVERSION_DATE) as ConversionDateQuarter,
+EXTRACT(MONTH FROM CONVERSION_DATE) as ConversionDatePeriodNum,
+upper(FORMAT_DATETIME('%b-%y', CONVERSION_DATE)) as ConversionDatePeriod,
+CONVERSION_DATE as ConversionDate,
+cast(CONVERSION_RATE as numeric) as ConversionRate
+from $${ref("GL_DAILY_RATES")}
+WHERE 
+TO_CURRENCY='USD' and InactiveInd = false and CONVERSION_TYPE='1021'
+qualify row_number () over (partition by FROM_CURRENCY,TO_CURRENCY,FORMAT_DATETIME('%b-%y', CONVERSION_DATE) order by CONVERSION_TYPE asc,  CONVERSION_DATE desc)=1
+),
+
+balconvrate as
+(
+select 
+FROM_CURRENCY as FromCurrency,
+TO_CURRENCY as ToCurrency,
+EXTRACT(YEAR FROM CONVERSION_DATE) as ConversionDateYear,
+EXTRACT(QUARTER FROM CONVERSION_DATE) as ConversionDateQuarter,
+EXTRACT(MONTH FROM CONVERSION_DATE) as ConversionDatePeriodNum,
+upper(FORMAT_DATETIME('%b-%y', CONVERSION_DATE)) as ConversionDatePeriod,
+CONVERSION_DATE as ConversionDate,
+cast(CONVERSION_RATE as numeric) as ConversionRate
+from $${ref("GL_DAILY_RATES")}
+WHERE 
+TO_CURRENCY='USD' and InactiveInd = false and CONVERSION_TYPE='1022'
+qualify row_number () over (partition by FROM_CURRENCY,TO_CURRENCY,FORMAT_DATETIME('%b-%y', CONVERSION_DATE) order by CONVERSION_TYPE asc,  CONVERSION_DATE desc)=1
+),
+
+loc as 
+(SELECT DISTINCT
+T.FLEX_VALUE_MEANING as LocationCode,
+T.DESCRIPTION as LocationName,
+hra.country as CountryCode,
+C.TERRITORY_SHORT_NAME as CountryName
+FROM
+$${ref("FND_FLEX_VALUES")} V inner join $${ref("FND_FLEX_VALUE_SETS")} S on S.FLEX_VALUE_SET_ID = V.FLEX_VALUE_SET_ID and S.InactiveInd = false
+inner join $${ref("FND_FLEX_VALUES_TL")} T on T.FLEX_VALUE_ID = V.FLEX_VALUE_ID AND T.FLEX_VALUE_ID = V.FLEX_VALUE_ID and T.LANGUAGE = 'US' and T.InactiveInd = false
+left outer join $${ref("HR_LOCATIONS_ALL")} hra on hra.attribute2=T.FLEX_VALUE_MEANING and hra.inactive_date is null and hra.InactiveInd = false
+left outer join $${ref("FND_TERRITORIES_TL")} C on C.TERRITORY_CODE=hra.country and C.LANGUAGE = 'US' and C.InactiveInd = false
+WHERE FLEX_VALUE_SET_NAME = 'TELETECH_LOCATION' and V.InactiveInd = false)
+
+-- incomeaccount as
+-- (SELECT distinct BaseAccount,
+-- 'Y' as IncomeStatementFlag
+--  FROM $${ref("${edw_dataset}","Finance-AccountPrimaryHierarchy")}
+-- WHERE TopAccount='Income Statement' and InactiveInd = false)
+
+SELECT
+  GLJ_AP.ParentSystemId,
+  GLJ_AP.SystemId,
+  GLJ_AP.LedgerId,
+  GLJ_AP.LedgerIdName,
+  GLJ_AP.LedgerName,
+  GLJ_AP.LedgerCurrencyCode,
+  concat(GLJ_AP.GeneralLedgerJournalKey,'-',ifnull(GLJ_AP.InvoiceDistributionId,0)) as GeneralLedgerJournalKey,
+  GLJ_AP.JournalBatchId,
+  GLJ_AP.JournalHeaderId,
+  GLJ_AP.JournalHeaderName,
+  GLJ_AP.JournalHeaderDesc,
+  GLJ_AP.AccrualRevFlag,
+  GLJ_AP.JournalLineNumber,
+  GLJ_AP.JournalLineDesc,
+  GLJ_AP.JournalBatchName,
+  GLJ_AP.JournalBatchDesc,
+  GLJ_AP.JournalBatchPostedDate,
+  GLJ_AP.JournalCategory,
+  GLJ_AP.JournalCategoryDesc,
+  GLJ_AP.LegalEntity,
+  GLJ_AP.CodeCombinationId,
+  GLJ_AP.LocationCode,
+  GLJ_AP.ClientCode,
+  GLJ_AP.DepartmentCode,
+  GLJ_AP.AccountCode,
+  GLJ_AP.InterCompanyCode,
+  GLJ_AP.Future2Code,
+  GLJ_AP.PeriodName,
+  GLJ_AP.EffectiveDate,
+  GLJ_AP.JournalSource,
+  GLJ_AP.JournalSourceName,
+  GLJ_AP.JournalStatus,
+  GLJ_AP.ApplicationId,
+  GLJ_AP.EventId,
+  GLJ_AP.AccountingDate,
+  GLJ_AP.GeneralLedgerTransferDate,
+  GLJ_AP.AccountingEventHeaderId,
+  GLJ_AP.AccountingEventLineNumber,
+  GLJ_AP.AccountingEventDate,
+  GLJ_AP.AccountingEventNumber,
+  GLJ_AP.CurrencyConversionRate,
+  GLJ_AP.CurrencyConversionDate,
+  GLJ_AP.CurrencyConversionType,
+  GLJ_AP.AccountingEventClassName,
+  GLJ_AP.AccountingEventTypeName,
+  GLJ_AP.EnteredDebit,
+  GLJ_AP.EnteredCredit,
+  ifnull(GLJ_AP.EnteredDebit,0) - ifnull(GLJ_AP.EnteredCredit,0) as NetEnteredAmount,
+  GLJ_AP.AccountedDebit,
+  GLJ_AP.AccountedCredit,
+  ifnull(GLJ_AP.AccountedDebit,0) - ifnull(GLJ_AP.AccountedCredit,0) as NetAccountedAmount, 
+  GLJ_AP.EntityCode,
+  GLJ_AP.SourceId,
+  GLJ_AP.CapexCode,
+  GLJ_AP.ReconciliationReference,
+  GLJ_AP.GeneralHeaderExternalReference,
+  GLJ_AP.JournalHeaderBalanceType,
+  GLJ_AP.JournalHeaderBalancedFlag,
+  GLJ_AP.JournalHeaderContext,
+  GLJ_AP.JournalHeaderPostedDate,
+  crt.USER_NAME as SourceCreatedBy,
+  crt.DESCRIPTION as SourceCreatedByName,
+  GLJ_AP.SourceCreationDate,
+  upd.USER_NAME as SourceLastUpdatedBy,
+  upd.DESCRIPTION as SourceLastUpdatedByName,
+  GLJ_AP.SourceLastUpdateDate,
+  loc.LocationName as IntercompanyLocationName,
+  loc.CountryName as IntercompanyLocationCountry,
+  case when cal.DayOfWeekString='Sunday' then DATE_SUB(date(CalendarDate), INTERVAL 2 DAY) else case when cal.DayOfWeekString='Saturday' then DATE_SUB(date(CalendarDate), INTERVAL 1 DAY) else date(CalendarDate) end end AS TargetedClosedDate,
+  GLJ_AP.JournalLineContext,
+  GLJ_AP.JournalLineTaxCode,
+  GLJ_AP.JournalLineIgnoreRateFlag,
+  GLJ_AP.TransferToIntercompany,
+  GLJ_AP.CustomerTransactionNumber,
+  GLJ_AP.CustomerTransactionId,
+  GLJ_AP.TransactionDescription,
+  GLJ_AP.BillToCustomerId,
+  GLJ_AP.BillToSiteUseId,
+  GLJ_AP.VendorId,
+  GLJ_AP.VendorSiteId,
+  GLJ_AP.DocumentSequenceValue,
+  GLJ_AP.TransactionCurrencyCode,
+  GLJ_AP.CustomerTransLineNumber,
+  GLJ_AP.DistributionOriginalGLDate,
+  GLJ_AP.DistributionAmount,
+  GLJ_AP.DistributionAmountBase,
+  GLJ_AP.DistributionGLDate,
+  GLJ_AP.DistributionGLPostedDate,
+  GLJ_AP.InvoicedQuantity,
+  GLJ_AP.LineInvoicedQuantity,
+  GLJ_AP.TransactionCreationDate,
+  GLJ_AP.TransactionDate,
+  GLJ_AP.TransactionType,
+  GLJ_AP.UnitSellingPrice,
+  GLJ_AP.UnitSellingPriceBase,
+  GLJ_AP.TransactionLineDescription,
+  GLJ_AP.InvoiceLineItemDescription,
+  GLJ_AP.LineTypeCode,
+  GLJ_AP.LineSource,
+  GLJ_AP.CashOrCredit,
+  GLJ_AP.ExpenditureType,
+  GLJ_AP.DistributionAccountingDate,
+  GLJ_AP.ExpenseReportKey,
+  GLJ_AP.InvoiceDistributionId,
+  GLJ_AP.MerchantName,
+  ' ' as AccountingClass,
+  DistributionDetailAmountCredit as DistributionDetailAmountCredit,
+  DistributionDetailAmountDebit as DistributionDetailAmountDebit,
+  DistributionDetailAmountCreditBase as DistributionDetailAmountCreditBase,
+  DistributionDetailAmountDebitBase as DistributionDetailAmountDebitBase,
+  DistributionDetailLineNumber as DistributionDetailLineNumber,
+  GLJ_AP.DistributionCount,
+  case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountDebit else GLJ_AP.EnteredDebit end as DistributionEnteredDebit,
+  case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountCredit else GLJ_AP.EnteredCredit end as DistributionEnteredCredit,
+  ifnull(case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountDebit else GLJ_AP.EnteredDebit end,0) - ifnull(case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountCredit else GLJ_AP.EnteredCredit end ,0) as DistributionNetEnteredAmount,
+  case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountDebitBase else GLJ_AP.AccountedDebit end as DistributionAccountedDebit,
+  case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountCreditBase else GLJ_AP.AccountedCredit end as DistributionAccountedCredit,
+   ifnull(case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountDebitBase else GLJ_AP.AccountedDebit end ,0) - ifnull(case when GLJ_AP.InvoiceCount > 0 then DistributionDetailAmountCreditBase else GLJ_AP.AccountedCredit end ,0) as DistributionNetAccountedAmount,
+  row_number () over(partition by GLJ_AP.GeneralLedgerJournalKey) as RankJournal,
+  row_number () over(partition by GLJ_AP.GeneralLedgerJournalKey,GLJ_AP.CustomerTransactionId) as RankJournalInvoice,
+  row_number () over(partition by GLJ_AP.GeneralLedgerJournalKey,GLJ_AP.CustomerTransactionId,GLJ_AP.CustomerTransLineNumber) as RankJournalInvoiceLine,
+  case when   GLJ_AP.InvoiceCount > 0 then 1 else  row_number () over(partition by GLJ_AP.GeneralLedgerJournalKey,GLJ_AP.CustomerTransactionId) end as RankInvoiceDistribution,
+  GLJ_AP.LoadBy,
+  GLJ_AP.LoadDate,
+  GLJ_AP.LoadProcess,
+  GLJ_AP.CreateBy,
+  GLJ_AP.CreateDate,
+  GLJ_AP.CreateProcess,
+  GLJ_AP.UpdateBy,
+  GLJ_AP.UpdateDate,
+  GLJ_AP.UpdateProcess,
+  GLJ_AP.InactiveInd,
+  GLJ_AP.InactiveDate,
+  GLJ_AP.InactiveReason
+FROM
+	$${ref("Accounting_GLJournalPayables")} GLJ_AP
+	left outer join convrate on GLJ_AP.LedgerCurrencyCode=convrate.FromCurrency and GLJ_AP.PeriodName=convrate.ConversionDatePeriod
+	left outer join balconvrate on GLJ_AP.LedgerCurrencyCode=balconvrate.FromCurrency and GLJ_AP.PeriodName=balconvrate.ConversionDatePeriod
+	left outer join $${ref("FND_USER")} crt
+	on GLJ_AP.SourceCreatedBy=crt.USER_ID and crt.InactiveInd=false
+	left outer join $${ref("FND_USER")} upd
+	on GLJ_AP.SourceLastUpdatedBy=upd.USER_ID and upd.InactiveInd=false
+	left outer join loc
+	on GLJ_AP.InterCompanyCode=loc.LocationCode
+	left outer join $${ref("${edw_dataset}","Accounting-GLPeriods")} period
+	on GLJ_AP.PeriodName=period.PeriodName and period.PeriodSetName='CORP CALENDAR' and period.PeriodType='Month' and period.InactiveInd = false
+	left outer join $${ref("${edw_dataset}","Date-dimCalendar")} cal
+	on DATE_ADD(DATE(period.StartDate), INTERVAL 14 DAY) = DATE(cal.CalendarDate)
+	
+WHERE
+	(1=1)
+	AND GLJ_AP.InactiveInd = false
+  AND DATE(GLJ_AP.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')
+
+
+UNION ALL
+
+SELECT
+  GLJ_AR.ParentSystemId,
+  GLJ_AR.SystemId,
+  GLJ_AR.LedgerId,
+  GLJ_AR.LedgerIdName,
+  GLJ_AR.LedgerName,
+  GLJ_AR.LedgerCurrencyCode,
+  GLJ_AR.GeneralLedgerJournalKey,
+  GLJ_AR.JournalBatchId,
+  GLJ_AR.JournalHeaderId,
+  GLJ_AR.JournalHeaderName,
+  GLJ_AR.JournalHeaderDesc,
+  GLJ_AR.AccrualRevFlag,
+  GLJ_AR.JournalLineNumber,
+  GLJ_AR.JournalLineDesc,
+  GLJ_AR.JournalBatchName,
+  GLJ_AR.JournalBatchDesc,
+  GLJ_AR.JournalBatchPostedDate,
+  GLJ_AR.JournalCategory,
+  GLJ_AR.JournalCategoryDesc,
+  GLJ_AR.LegalEntity,
+  GLJ_AR.CodeCombinationId,
+  GLJ_AR.LocationCode,
+  GLJ_AR.ClientCode,
+  GLJ_AR.DepartmentCode,
+  GLJ_AR.AccountCode,
+  GLJ_AR.InterCompanyCode,
+  GLJ_AR.Future2Code,
+  GLJ_AR.PeriodName,
+  GLJ_AR.EffectiveDate,
+  GLJ_AR.JournalSource,
+  GLJ_AR.JournalSourceName,
+  GLJ_AR.JournalStatus,
+  GLJ_AR.ApplicationId,
+  GLJ_AR.EventId,
+  GLJ_AR.AccountingDate,
+  GLJ_AR.GeneralLedgerTransferDate,
+  GLJ_AR.AccountingEventHeaderId,
+  GLJ_AR.AccountingEventLineNumber,
+  GLJ_AR.AccountingEventDate,
+  GLJ_AR.AccountingEventNumber,
+  GLJ_AR.CurrencyConversionRate,
+  GLJ_AR.CurrencyConversionDate,
+  GLJ_AR.CurrencyConversionType,
+  GLJ_AR.AccountingEventClassName,
+  GLJ_AR.AccountingEventTypeName,
+  GLJ_AR.EnteredDebit,
+  GLJ_AR.EnteredCredit,
+  ifnull(GLJ_AR.EnteredDebit,0) - ifnull(GLJ_AR.EnteredCredit,0) as NetEnteredAmount,
+  GLJ_AR.AccountedDebit,
+  GLJ_AR.AccountedCredit,
+  ifnull(GLJ_AR.AccountedDebit,0) - ifnull(GLJ_AR.AccountedCredit,0) as NetAccountedAmount,
+  GLJ_AR.EntityCode,
+  GLJ_AR.SourceId,
+  GLJ_AR.CapexCode,
+  GLJ_AR.ReconciliationReference,
+  GLJ_AR.GeneralHeaderExternalReference,
+  GLJ_AR.JournalHeaderBalanceType,
+  GLJ_AR.JournalHeaderBalancedFlag,
+  GLJ_AR.JournalHeaderContext,
+  GLJ_AR.JournalHeaderPostedDate,
+  crt.USER_NAME as SourceCreatedBy,
+  crt.DESCRIPTION as SourceCreatedByName,
+  GLJ_AR.SourceCreationDate,
+  upd.USER_NAME as SourceLastUpdatedBy,
+  upd.DESCRIPTION as SourceLastUpdatedByName,
+  GLJ_AR.SourceLastUpdateDate,
+  loc.LocationName as IntercompanyLocationName,
+  loc.CountryName as IntercompanyLocationCountry,
+  case when cal.DayOfWeekString='Sunday' then DATE_SUB(date(CalendarDate), INTERVAL 2 DAY) else case when cal.DayOfWeekString='Saturday' then DATE_SUB(date(CalendarDate), INTERVAL 1 DAY) else date(CalendarDate)  end end AS TargetedClosedDate,
+  GLJ_AR.JournalLineContext,
+  GLJ_AR.JournalLineTaxCode,
+  GLJ_AR.JournalLineIgnoreRateFlag,
+  GLJ_AR.TransferToIntercompany,
+  GLJ_AR.CustomerTransactionNumber,
+  GLJ_AR.CustomerTransactionId,
+  ' ' as TransactionDescription,
+  GLJ_AR.BillToCustomerId,
+  GLJ_AR.BillToSiteUseId,
+  GLJ_AR.VendorId,
+  GLJ_AR.VendorSiteId,
+  GLJ_AR.DocumentSequenceValue,
+  GLJ_AR.TransactionCurrencyCode,
+  GLJ_AR.CustomerTransLineNumber,
+  GLJ_AR.DistributionOriginalGLDate,
+  GLJ_AR.DistributionAmount,
+  GLJ_AR.DistributionAmountBase,
+  GLJ_AR.DistributionGLDate,
+  GLJ_AR.DistributionGLPostedDate,
+  sum(GLJ_AR.LineInvoicedQuantity/case when ifnull(GLJ_AR.DistributionCount,0)=0 then 1 else GLJ_AR.DistributionCount end) over (partition by  GLJ_AR.CustomerTransactionId) AS InvoicedQuantity,
+  GLJ_AR.LineInvoicedQuantity,
+  GLJ_AR.TransactionCreationDate,
+  GLJ_AR.TransactionDate,
+  GLJ_AR.TransactionType,
+  GLJ_AR.UnitSellingPrice,
+  GLJ_AR.UnitSellingPriceBase,
+  GLJ_AR.TransactionLineDescription,
+  ' ' AS InvoiceLineItemDescription,
+  ' ' as LineTypeCode,
+  ' ' as LineSource,
+  ' ' as CashOrCredit,
+  ' ' as ExpenditureType,
+  DATE(NULL) as DistributionAccountingDate,
+  ' ' as ExpenseReportKey,
+  GLJ_AR.InvoiceDistributionId,
+  ' ' as MerchantName,
+  GLJ_AR.AccountingClass,
+  GLJ_AR.DistributionDetailAmountCredit,
+  GLJ_AR.DistributionDetailAmountDebit,
+  GLJ_AR.DistributionDetailAmountCreditBase,
+  GLJ_AR.DistributionDetailAmountDebitBase,
+  GLJ_AR.DistributionDetailLineNumber,
+  GLJ_AR.DistributionCount,
+  case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountDebit else GLJ_AR.EnteredDebit end as DistributionEnteredDebit,
+  case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountCredit else GLJ_AR.EnteredCredit end as DistributionEnteredCredit,
+  ifnull(case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountDebit else GLJ_AR.EnteredDebit end,0) - ifnull(case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountCredit else GLJ_AR.EnteredCredit end ,0) as DistributionNetEnteredAmount,
+  case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountDebitBase else GLJ_AR.AccountedDebit end as DistributionAccountedDebit,
+  case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountCreditBase else GLJ_AR.AccountedCredit end as DistributionAccountedCredit,
+   ifnull(case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountDebitBase else GLJ_AR.AccountedDebit end ,0) - ifnull(case when GLJ_AR.InvoiceCount > 0 then DistributionDetailAmountCreditBase else GLJ_AR.AccountedCredit end ,0) as DistributionNetAccountedAmount,
+  row_number () over(partition by concat(GLJ_AR.JournalHeaderId,GLJ_AR.JournalLineNumber)) as RankJournal,
+   row_number () over(partition by concat(GLJ_AR.JournalHeaderId,GLJ_AR.JournalLineNumber),GLJ_AR.CustomerTransactionId) as RankJournalInvoice,
+    row_number () over(partition by concat(GLJ_AR.JournalHeaderId,GLJ_AR.JournalLineNumber),GLJ_AR.CustomerTransactionId,GLJ_AR.CustomerTransLineNumber) as RankJournalInvoiceLine,
+case when   GLJ_AR.InvoiceCount > 0 then 1 else row_number () over(partition by concat(GLJ_AR.JournalHeaderId,GLJ_AR.JournalLineNumber),GLJ_AR.CustomerTransactionId) end as RankInvoiceDistribution,
+  GLJ_AR.LoadBy,
+  GLJ_AR.LoadDate,
+  GLJ_AR.LoadProcess,
+  GLJ_AR.CreateBy,
+  GLJ_AR.CreateDate,
+  GLJ_AR.CreateProcess,
+  GLJ_AR.UpdateBy,
+  GLJ_AR.UpdateDate,
+  GLJ_AR.UpdateProcess,
+  GLJ_AR.InactiveInd,
+  GLJ_AR.InactiveDate,
+  GLJ_AR.InactiveReason
+FROM
+	$${ref("Accounting_GLJournalReceivables")} GLJ_AR
+	left outer join convrate on GLJ_AR.LedgerCurrencyCode=convrate.FromCurrency and GLJ_AR.PeriodName=convrate.ConversionDatePeriod
+	left outer join balconvrate on GLJ_AR.LedgerCurrencyCode=balconvrate.FromCurrency and GLJ_AR.PeriodName=balconvrate.ConversionDatePeriod
+	left outer join $${ref("FND_USER")} crt
+	on GLJ_AR.SourceCreatedBy=crt.USER_ID and crt.InactiveInd=false
+	left outer join $${ref("FND_USER")} upd
+	on GLJ_AR.SourceLastUpdatedBy=upd.USER_ID and upd.InactiveInd=false
+	left outer join loc
+	on GLJ_AR.InterCompanyCode=loc.LocationCode
+	left outer join $${ref("${edw_dataset}","Accounting-GLPeriods")} period
+	on GLJ_AR.PeriodName=period.PeriodName and period.PeriodSetName='CORP CALENDAR' and period.PeriodType='Month' and period.InactiveInd = false
+	left outer join $${ref("${edw_dataset}","Date-dimCalendar")} cal
+	on DATE_ADD(DATE(period.StartDate), INTERVAL 14 DAY) = DATE(cal.CalendarDate)
+WHERE
+	(1=1)
+	AND GLJ_AR.InactiveInd = false
+  AND DATE(GLJ_AR.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')
+
+UNION ALL
+
+SELECT
+  GLJ.ParentSystemId,
+  GLJ.SystemId,
+  GLJ.LedgerId,
+  GLJ.LedgerIdName,
+  GLJ.LedgerName,
+  GLJ.LedgerCurrencyCode,
+  GLJ.GeneralLedgerJournalKey,
+  GLJ.JournalBatchId,
+  GLJ.JournalHeaderId,
+  GLJ.JournalHeaderName,
+  GLJ.JournalHeaderDesc,
+  GLJ.AccrualRevFlag,
+  GLJ.JournalLineNumber,
+  GLJ.JournalLineDesc,
+  GLJ.JournalBatchName,
+  GLJ.JournalBatchDesc,
+  GLJ.JournalBatchPostedDate,
+  GLJ.JournalCategory,
+  GLJ.JournalCategoryDesc,
+  GLJ.LegalEntity,
+  GLJ.CodeCombinationId,
+  GLJ.LocationCode,
+  GLJ.ClientCode,
+  GLJ.DepartmentCode,
+  GLJ.AccountCode,
+  GLJ.InterCompanyCode,
+  GLJ.Future2Code,
+  GLJ.PeriodName,
+  GLJ.EffectiveDate,
+  GLJ.JournalSource,
+  GLJ.JournalSourceName,
+  GLJ.JournalStatus,
+  GLJ.ApplicationId,
+  GLJ.EventId,
+  GLJ.AccountingDate,
+  GLJ.GeneralLedgerTransferDate,
+  GLJ.AccountingEventHeaderId,
+  GLJ.AccountingEventLineNumber,
+  GLJ.AccountingEventDate,
+  GLJ.AccountingEventNumber,
+  GLJ.CurrencyConversionRate,
+  GLJ.CurrencyConversionDate,
+  GLJ.CurrencyConversionType,
+  GLJ.AccountingEventClassName,
+  GLJ.AccountingEventTypeName,
+  GLJ.EnteredDebit,
+  GLJ.EnteredCredit,
+  ifnull(GLJ.EnteredDebit,0) - ifnull(GLJ.EnteredCredit,0) as NetEnteredAmount,
+  GLJ.AccountedDebit,
+  GLJ.AccountedCredit,
+  ifnull(GLJ.AccountedDebit,0) - ifnull(GLJ.AccountedCredit,0) as NetAccountedAmount,
+  GLJ.EntityCode,
+  GLJ.SourceId,
+  GLJ.CapexCode,
+  GLJ.ReconciliationReference,
+  GLJ.GeneralHeaderExternalReference,
+  GLJ.JournalHeaderBalanceType,
+  GLJ.JournalHeaderBalancedFlag,
+  GLJ.JournalHeaderContext,
+  GLJ.JournalHeaderPostedDate,
+  crt.USER_NAME as SourceCreatedBy,
+  crt.DESCRIPTION as SourceCreatedByName,
+  GLJ.SourceCreationDate,
+  upd.USER_NAME as SourceLastUpdatedBy,
+  upd.DESCRIPTION as SourceLastUpdatedByName,
+  GLJ.SourceLastUpdateDate,
+  loc.LocationName as IntercompanyLocationName,
+  loc.CountryName as IntercompanyLocationCountry,
+  case when cal.DayOfWeekString='Sunday' then DATE_SUB(date(CalendarDate), INTERVAL 2 DAY) else case when cal.DayOfWeekString='Saturday' then DATE_SUB(date(CalendarDate), INTERVAL 1 DAY) else date(CalendarDate)  end end AS TargetedClosedDate,
+  GLJ.JournalLineContext,
+  GLJ.JournalLineTaxCode,
+  GLJ.JournalLineIgnoreRateFlag,
+  GLJ.TransferToIntercompany,
+  ' ' AS CustomerTransactionNumber,
+  NULL AS CustomerTransactionId,
+  ' ' as TransactionDescription,
+  NULL AS BillToCustomerId,
+  NULL AS BillToSiteUseId,
+  NULL AS VendorId,
+  NULL AS VendorSiteId,
+  NULL AS DocumentSequenceValue,
+  GLJ.TransactionCurrencyCode,
+  NULL AS CustomerTransLineNumber,
+  DATE(NULL) AS DistOriginalGLDate,
+  NULL AS DistributionAmount,
+  NULL AS DistributionAmountBase,
+  DATE(NULL) AS DistributionGLDate,
+  DATE(NULL) AS DistributionGLPostedDate,
+  NULL as InvoicedQuantity,
+  NULL as LineInvoicedQuantity,
+  DATE(NULL) as TransactionCreationDate,
+  DATE(NULL) AS TransactionDate,
+  ' ' AS TransactionType,
+  NULL AS UnitSellingPrice,
+  NULL AS UnitSellingPriceBase,
+  ' ' AS TransactionLineDescription,
+  ' ' as InvoiceLineItemDescription,
+  ' ' as LineTypeCode,
+  ' ' as LineSource,
+  ' ' as CashOrCredit,
+  ' ' as ExpenditureType,
+  DATE(NULL) as DistributionAccountingDate,
+    ' ' as ExpenseReportKey,
+  NULL as InvoiceDistributionId,
+  ' ' as MerchantName,
+  ' ' as AccountingClass,
+  NULL as DistributionDetailAmountCredit,
+  NULL as DistributionDetailAmountDebit,
+  NULL as DistributionDetailAmountCreditBase,
+  NULL as DistributionDetailAmountDebitBase,
+  NULL as DistributionDetailLineNumber,
+  NULL as DistributionCount,
+  GLJ.EnteredDebit as DistributionEnteredDebit,
+  GLJ.EnteredCredit as DistributionEnteredCredit,
+  ifnull(GLJ.EnteredDebit,0) - ifnull(GLJ.EnteredCredit,0) as DistributionNetEnteredAmount,
+  GLJ.AccountedDebit as DistributionAccountedDebit,
+  GLJ.AccountedCredit as DistributionAccountedCredit,
+  ifnull(GLJ.AccountedDebit,0) - ifnull(GLJ.AccountedCredit,0) as DistributionNetAccountedAmount,
+  row_number () over(partition by GLJ.GeneralLedgerJournalKey) as RankJournal,
+  row_number () over(partition by GLJ.GeneralLedgerJournalKey) as RankJournalInvoice,
+  row_number () over(partition by GLJ.GeneralLedgerJournalKey) as RankJournalInvoiceLine,
+  row_number () over(partition by GLJ.GeneralLedgerJournalKey) as RankInvoiceDistribution,
+  GLJ.LoadBy,
+  GLJ.LoadDate,
+  GLJ.LoadProcess,
+  GLJ.CreateBy,
+  GLJ.CreateDate,
+  GLJ.CreateProcess,
+  GLJ.UpdateBy,
+  GLJ.UpdateDate,
+  GLJ.UpdateProcess,
+  GLJ.InactiveInd,
+  GLJ.InactiveDate,
+  GLJ.InactiveReason
+FROM
+	$${ref("Accounting_GLJournalBase")} GLJ
+	left outer join convrate on GLJ.LedgerCurrencyCode=convrate.FromCurrency and GLJ.PeriodName=convrate.ConversionDatePeriod
+	left outer join balconvrate on GLJ.LedgerCurrencyCode=balconvrate.FromCurrency and GLJ.PeriodName=balconvrate.ConversionDatePeriod
+	left outer join $${ref("FND_USER")} crt
+	on GLJ.SourceCreatedBy=crt.USER_ID and crt.InactiveInd=false
+	left outer join $${ref("FND_USER")} upd
+	on GLJ.SourceLastUpdatedBy=upd.USER_ID and upd.InactiveInd=false
+	left outer join loc
+	on GLJ.InterCompanyCode=loc.LocationCode
+	left outer join $${ref("${edw_dataset}","Accounting-GLPeriods")} period
+	on GLJ.PeriodName=period.PeriodName and period.PeriodSetName='CORP CALENDAR' and period.PeriodType='Month' and period.InactiveInd = false
+	left outer join $${ref("${edw_dataset}","Date-dimCalendar")} cal
+	on DATE_ADD(DATE(period.StartDate), INTERVAL 14 DAY) = DATE(cal.CalendarDate)
+WHERE
+	(1=1)
+	AND UPPER (GLJ.JournalSource) NOT IN ('RECEIVABLES','PAYABLES')
+	AND GLJ.InactiveInd = false
+  AND DATE(GLJ.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')
