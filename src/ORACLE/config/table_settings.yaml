@@ -75,6 +75,10 @@ oracle_raw_tables:
   - base_table: FND_LOOKUP_VALUES
   - base_table: FND_USER
   - base_table: AP_CHECKS_ALL
+  - base_table: FND_FLEX_VALUES_VL
+  - base_table: AP_SUPPLIERS
+  - base_table: AP_TERMS_TL
+  - base_table: AP_TOLERANCE_TEMPLATES
 
 oracle_ods_tables:
   - base_table: AP_INVOICES_ALL
@@ -155,6 +159,10 @@ oracle_ods_tables:
   - base_table: CdcLoadDetails
   - base_table: FND_USER
   - base_table: AP_CHECKS_ALL
+  - base_table: FND_FLEX_VALUES_VL
+  - base_table: AP_SUPPLIERS
+  - base_table: AP_TERMS_TL
+  - base_table: AP_TOLERANCE_TEMPLATES
 
 edw_oracle_tables:
   - base_table: Accounting_ARAging
