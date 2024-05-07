@@ -1,0 +1,193 @@
+---------------------------------------------------------------------
+-- Edw.Accounting_APInvoiceDistributions.sqlx Loading script using Dataform
+---------------------------------------------------------------------
+config {
+  type: "incremental",
+  schema: "${edw_dataset}",
+  tags: ["Finance-OracleDetail"],
+  uniqueKey: ["InvoiceId","InvoiceDistributionId"],
+
+  assertions:{
+    uniqueKey: ["InvoiceId","InvoiceDistributionId"],
+    nonNull:["InvoiceId","InvoiceDistributionId"],
+   
+  }
+}
+
+with ffv as
+(
+select flex_value as LocationCode,
+attribute16 as LegalEntityNumber 
+from 
+	$${ref("FND_FLEX_VALUES")} 
+ WHERE flex_value_set_id = 1002610 and InactiveInd = false 
+),
+
+req as
+(SELECT pha.segment1 PONumber
+, String_Agg(distinct prha.segment1,',') RequisitionNumber
+, count(distinct prha.segment1) NumberOfRequisition  
+FROM $${ref("PO_REQUISITION_HEADERS_ALL")}  prha
+inner join $${ref("PO_REQUISITION_LINES_ALL")}  prla  
+on prha.requisition_header_id = prla.requisition_header_id and prla.InactiveInd=false
+inner join $${ref("PO_REQ_DISTRIBUTIONS_ALL")}  prda
+on prla.requisition_line_id = prda.requisition_line_id and prda.InactiveInd=false
+inner join $${ref("PO_DISTRIBUTIONS_ALL")} pda on
+prda.distribution_id = pda.req_distribution_id inner join $${ref("PO_HEADERS_ALL")} pha on pda.po_header_id = pha.po_header_id and pda.InactiveInd=false
+where prha.InactiveInd=false
+group by pha.segment1)
+
+Select
+inv.ParentSystemId,	
+inv.SystemId,	
+VendorId,	
+InvoiceId,	
+QuickPOHeaderId as QuickPurchaseOrderHeaderID,	
+PaymentMethodCode,	
+LegalEntityId,
+TaxationCountry,	
+SelfAssessedTaxAmount,	
+CAST(TotalTaxAmount AS NUMERIC) AS TotalTaxAmount,	
+CAST(AwardId AS NUMERIC) AS AwardId,	
+CAST(GlDate AS DATETIME) AS GlDate,	
+CAST(PaymentCrossRateDate AS DATETIME) AS PaymentCrossRateDate,	
+PaymentCrossRateType,	
+AutoTaxCalculationFlag,	
+OrganisationId,	
+DocumentCategoryCode,	
+DocumentSequenceValue,	
+DocumentSequenceId,	
+CAST(ExcludeFreightFromDiscount AS string) as ExcludeFreightFromDiscount,	
+CAST(DiscountIsInvoiceLessTaxFlag AS string) AS DiscountIsInvoiceLessTaxFlag,	
+CAST(ExchangeDate AS DATETIME) AS ExchangeDate,	
+ExchangeRateType,	
+CAST(ExchangeRate AS NUMERIC) AS ExchangeRate,	
+VoucherNumber,	
+CAST(InvoiceReceivedDate AS DATETIME) AS InvoiceReceivedDate,	
+CAST(GoodsReceivedDate AS DATETIME) AS GoodsReceivedDate,	
+CAST(FreightAmount AS NUMERIC) FreightAmount,	
+PaymentStatusFlag,	
+AccountsPayCodeCombinationId,	
+PayGroupLookupCode,	
+PaymentMethodLookupCode,	
+CAST(TermsDate AS DATETIME) AS TermsDate,	
+TermsId,	
+CAST(AmountApplicableToDiscount AS NUMERIC) AS AmountApplicableToDiscount,	
+CAST(BatchId AS NUMERIC) BatchId,
+InvoiceDescription,	
+InvoiceTypeLookupCode,	
+Source,	
+CAST(InvoiceDate AS DATETIME) AS InvoiceDate,	
+EXTRACT(YEAR FROM inv.InvoiceDate) as InvoiceDateYear,
+EXTRACT(QUARTER FROM inv.InvoiceDate) as InvoiceDateQuarter,
+EXTRACT(MONTH FROM inv.InvoiceDate) as InvoiceDatePeriodNum,
+upper(FORMAT_DATETIME('%b-%y', inv.InvoiceDate)) as InvoiceDatePeriod,
+cast(CancelledDate as DATETIME) AS CancelledDate,	
+CAST(DiscountAmountTaken AS NUMERIC) AS DiscountAmountTaken,	
+CAST(AmountPaid AS NUMERIC) AS AmountPaid,	
+CAST(AmountPaid*cast(ifnull(ConversionRate,1) as numeric)AS NUMERIC) as AmountPaidUSD,
+VendorSiteId,	
+CAST(InvoiceAmount AS NUMERIC) AS InvoiceAmount,	
+CAST(InvoiceAmount*cast(ifnull(ConversionRate,1) as numeric) as NUMERIC) AS InvoiceAmountUSD,	
+PaymentCrossRate,	
+PaymentCurrencyCode,	
+CurrencyCode,	
+InvoiceNumber,	
+CAST(OracleCreationDate AS DATETIME) as InvoiceCreationDate,
+EXTRACT(YEAR FROM OracleCreationDate) as InvoiceCreationYear,
+EXTRACT(QUARTER FROM OracleCreationDate) as InvoiceCreationQuarter,
+EXTRACT(MONTH FROM OracleCreationDate) as InvoiceCreationPeriodNum,
+upper(FORMAT_DATETIME('%b-%y', OracleCreationDate)) as InvoiceCreationPeriod,
+WfApprovalStatus,	
+RcvShipmentLineId,	
+IncludedTaxAmount,	
+PODistributionId as PurchaseOrderDistributionId,	
+POLineLocationId as PurchaseOrderLineLocationId,	
+POLineId as PurchaseOrderLineId,	
+POHeaderId as PurchaseOrderHeaderId,	
+UnitMeasureLookupCode,	
+QuantityInvoiced,	
+PeriodName,	
+ItemDescription,	
+InventoryItemId,	
+LineDescription,	
+LineTypeLookupCode,	
+LineNumber,	
+TaxRate,	
+LineAmount,
+LineAmount*cast(ifnull(ConversionRate,1) as numeric) as LineAmountUSD,	
+InvoiceLineNumber,	
+AccountingEventId,	
+MatchedUomLookupCode,	
+InvoiceDistributionId,	
+DistributionLineNumber,
+PostedFlag,	
+DistributionAmount,	
+DistributionAmount*cast(ifnull(ConversionRate,1) as numeric) as DistributionAmountUSD,	
+LedgerId,	
+DistributionCodeCombinationId,	
+AccountingDate,	
+EXTRACT(YEAR FROM AccountingDate) as AccountingDateYear,
+EXTRACT(QUARTER FROM AccountingDate) as AcountingDateQuarter,
+EXTRACT(MONTH FROM AccountingDate) as AcountingDatePeriodNum,
+upper(FORMAT_DATETIME('%b-%y', AccountingDate)) as AcountingDatePeriod,
+MatchStatusFlag,	
+LedgerName,	
+cast(ifnull(ConversionRate,1) as numeric) as ConversionRate,	
+inv.PONumber as PurchaseOrderNumber,	
+inv.CapexCode as CapexCode,
+POCreationDate as PurchaseOrderCreationDate,	
+POHeaderAmount as PurchaseOrderHeaderAmount,	
+cast(POConversionRate as numeric) as PurchaseOrderConversionRate,
+req.RequisitionNumber as RequisitionNumber,
+req.NumberOfRequisition as NumberofRequisition,	
+CheckNumber,	
+LastPaymentDate	,
+OperatingUnitName,	
+PaymentTerms,	
+LocationCountry,	
+PaymentMethodName,	
+InvoiceStatus,	
+HoldLookupCode,
+AlsoOnHold,
+InvoiceVsDistribution,
+CheckPaymentStatus,
+crt.USER_NAME as CreatedBy,
+crt.DESCRIPTION as CreatedByName,
+upd.USER_NAME as LastUpdatedBy,
+upd.DESCRIPTION as LastUpdatedByName,
+cc.Location as LocationCode,
+cc.Client as ClientCode,
+cc.Department as DepartmentCode,
+cc.Account as AccountCode,
+cast(cc.Intercompany as string) as IntercompanyCode,
+cast(cc.Future2 as string) as FutureCode,
+cast(ffv.LegalEntityNumber as string) as LegalEntity,
+Rank,	
+row_number () over(partition by invoiceid,InvoiceLineNumber order by InvoiceDistributionId) RankInvoiceLine,
+RankPOHeader,	
+inv.LoadBy,	
+inv.LoadDate,	
+inv.LoadProcess,	
+inv.CreateBy,	
+inv.CreateDate,	
+inv.CreateProcess,	
+inv.UpdateBy,	
+inv.UpdateDate,	
+inv.UpdateProcess,	
+inv.InactiveInd,	
+inv.InactiveDate,
+inv.InactiveReason
+from 
+$${ref("${edw_dataset}","Accounting_InvoiceDistributions")} inv
+left outer join req
+on inv.PONumber=req.PONumber
+left outer join $${ref("FND_USER")} crt
+on inv.CreatedBy=crt.USER_ID and crt.InactiveInd=false
+left outer join $${ref("FND_USER")} upd
+on inv.LastUpdatedBy=upd.USER_ID and upd.InactiveInd=false
+left outer join $${ref("${edw_dataset}","Accounting-CodeCombinationsDetails")} cc on
+inv.DistributionCodeCombinationId=cc.CodeCombinationId and cc.InactiveInd=false
+left outer join ffv on cc.Location=ffv.LocationCode
+where
+DATE(inv.LoadDate) > ifnull((SELECT DATE(MAX(LoadDate)) FROM $${self()}),'1900-01-01')
