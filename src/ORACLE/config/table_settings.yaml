@@ -184,6 +184,7 @@ edw_oracle_tables:
   - base_table: Accounting_AssetTransactionsDetails
   - base_table: Accounting_GLBalancesDetails
   - base_table: Accounting-CodeCombinationsDetails
+  - base_table: Accounting-SupplierSites
 
 df_sources:
   - source: Ods
