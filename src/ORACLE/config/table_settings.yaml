@@ -196,4 +196,3 @@ edw_oracle_tables:
 
 df_sources:
   - source: Ods
-  - source: Edw
