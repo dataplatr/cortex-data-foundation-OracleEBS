@@ -19,7 +19,7 @@ from google.cloud import storage
 
 PROJECT_ID = "${project_id}"
 REGION = "${dataform_ws_region}"
-DAG_ID = f"oracle_dataform_ws_demo"
+DAG_ID = f"oracle_dataform_ws"
 REPOSITORY_ID = "${repository_id}"
 WORKSPACE_ID = "${workspace_id}"
 DATAFORM_SCHEMA_NAME = f"schema_{DAG_ID}"
