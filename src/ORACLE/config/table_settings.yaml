@@ -79,7 +79,8 @@ oracle_raw_tables:
   - base_table: AP_SUPPLIERS
   - base_table: AP_TERMS_TL
   - base_table: AP_TOLERANCE_TEMPLATES
-
+  - base_table: Date-dimCalendar
+  
 oracle_ods_tables:
   - base_table: AP_INVOICES_ALL
   - base_table: AP_INVOICE_LINES_ALL
@@ -163,6 +164,7 @@ oracle_ods_tables:
   - base_table: AP_SUPPLIERS
   - base_table: AP_TERMS_TL
   - base_table: AP_TOLERANCE_TEMPLATES
+  - base_table: Date-dimCalendar
 
 edw_oracle_tables:
   - base_table: Accounting_ARAging
