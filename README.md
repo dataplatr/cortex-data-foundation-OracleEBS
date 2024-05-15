@@ -34,9 +34,6 @@ After the deployment is finished, proceed with the following steps:
 For complete instructions, please see the documentation : https://github.com/dataplatr/cortex-data-foundation-OracleEBS/blob/main/docs/Cloud_Composer_Framework_Documentation.pdf
 
 
-#After deployment, tables will be generated within the designated datasets in BigQuery.
-
-
 ## **Deployment for Production environments**
 
 ### **Clone the Data Foundation repository**
