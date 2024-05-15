@@ -2,7 +2,8 @@
 
 ## Quick setup for development instance
 
-If you want to create a **demo or development** instance, with automatic generation of BigQuery datasets, automatic permission granting click the below button. Make sure your user account has enough permissions to run builds, assign permissions to the Cloud Build service account, and create artifacts in Cloud Storage and BigQuery.
+If you want to create a development instance with automatic generation of BigQuery datasets and permission granting, make sure your user account has enough permissions to run builds, assign permissions to the Cloud Build service account, 
+ and create artifacts in Cloud Storage and BigQuery. Additionally, ensure to have the Cloud Composer environment to run the dag code. Click the button below to proceed.
 
 [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/?terminal=true&show=terminal&cloudshell_git_repo=https%3A%2F%2Fgithub.com%2Fdataplatr%2Fcortex-data-foundation-OracleEBS&cloudshell_tutorial=docs%2Ftutorial.md)
 
