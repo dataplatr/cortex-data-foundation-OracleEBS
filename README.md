@@ -28,8 +28,8 @@ If you want to create a development instance with automatic generation of BigQue
 After the deployment is finished, proceed with the following steps:
 
 1. Establish a connection between Google Cloud Storage (GCS) and your Oracle data source.
-
-2. To set up Cloud Composer, use the config_variables.json file. First, open the file located in the Configurations folder of your project and specify essential parameters like project Id, location, and oracle connection Id etc. Ensure all values are accurate for your environment.
+2. Create a GitHub repository and commit the predefined Dataform to the repository. Ensure the repository is properly configured and accessible for version control and collaborative development.
+3. To set up Cloud Composer, use the config_variables.json file. First, open the file located in the Configurations folder of your project and specify essential parameters like project Id, location, and oracle connection Id etc. Ensure all values are accurate for your environment.
 
 For complete instructions, please see the documentation : https://github.com/dataplatr/cortex-data-foundation-OracleEBS/blob/main/docs/Cloud_Composer_Framework_Documentation.pdf
 
