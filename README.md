@@ -25,7 +25,7 @@ If you want to create a development instance with automatic generation of BigQue
 
 After deployment, tables will be generated within the designated datasets in BigQuery.
 
-![Enter image alt description](Images/dataform_ws.jpeg)
+![Enter image alt description](Images/bq_datasets.jpeg)
 
 DAG-related files will be copied to the designated DAG bucket.
 
@@ -33,7 +33,7 @@ DAG-related files will be copied to the designated DAG bucket.
 
 A new Dataform workspace will be set up, incorporating predefined Dataform codes.
 
-![Enter image alt description](Images/bq_datasets.png)
+![Enter image alt description](Images/dataform_ws.png)
 
 Schema files will be copied to the designated GCS bucket.
 
