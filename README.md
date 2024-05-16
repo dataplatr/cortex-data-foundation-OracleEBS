@@ -23,6 +23,7 @@ If you want to create a development instance with automatic generation of BigQue
 | df_repository_id | oracle_dataform | Name of the Repository that will be created. |
 | df_workspace_id | oracle_dataform_workspace | Name of the dataform workspace to be created. |
 
+
 **After deployment, tables will be generated within the designated datasets in BigQuery.**
 
 ![Enter image alt description](Images/bq_datasets.jpeg)
@@ -35,8 +36,8 @@ If you want to create a development instance with automatic generation of BigQue
 
 ![Enter image alt description](Images/dataform_ws.png)
 
-**Schema files will be copied to the designated GCS bucket.
-**
+**Schema files will be copied to the designated GCS bucket.**
+
 ![Enter image alt description](Images/shema_files.png)
 
 
