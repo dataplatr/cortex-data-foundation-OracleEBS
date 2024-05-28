@@ -1,7 +1,7 @@
 # Google Cloud Cortex Framework
 <walkthrough-tutorial-duration duration="30min"></walkthrough-tutorial-duration>
 
-## Data Foundation for Google Cloud Cortex Framework
+## Google Cloud Cortex Framework for Oracle
 The Data Foundation for [Google Cloud Cortex Framework](https://cloud.google.com/solutions/cortex) is a set of analytical artifacts, that can be automatically deployed together with reference architectures.
 
 This will guide you through Data Foundation configuration and deployment.
@@ -19,8 +19,6 @@ For more information visit [the Data Foundation Documentation](https://github.co
 <walkthrough-project-setup billing="true"></walkthrough-project-setup>
 
 ## Would you like to deploy in one click?
-
-### **For Demo installations only**
 
 We can automatically create datasets and artifacts for you in a few clicks.
 
