@@ -102,7 +102,7 @@ steps:
         fi
 
         echo "Copying oracle DAG files and json_schema to respective buckets... "
-        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags &&
+        gsutil -m cp -r src/CCFramework/* gs://$dag_bucket/dags/Dev &&
         gsutil -m cp -r src/json_schema/* gs://$target_bucket/schema
         
         
