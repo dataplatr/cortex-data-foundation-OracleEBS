@@ -35,16 +35,20 @@ If you want to create a development instance with automatic generation of BigQue
 
 ![Enter image alt description](Images/composer_bucket.jpeg)
 
+<br>
 
 **A new Dataform workspace will be set up, incorporating predefined Dataform codes.**
 
 ![Enter image alt description](Images/dataform_ws.png)
+
+<br>
 
 
 **Schema files will be copied to the designated GCS bucket.**
 
 ![Enter image alt description](Images/shema_files.png)
 
+<br>
 
 **Next Steps**
 
