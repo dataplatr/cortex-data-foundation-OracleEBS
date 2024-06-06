@@ -23,12 +23,13 @@ If you want to create a development instance with automatic generation of BigQue
 | df_repository_id | oracle_dataform | Name of the Repository that will be created. |
 | df_workspace_id | oracle_dataform_workspace | Name of the dataform workspace to be created. |
 
-
+<br>
 
 **After deployment, tables will be generated within the designated datasets in BigQuery.**
 
 ![Enter image alt description](Images/bq_datasets.jpeg)
 
+<br>
 
 **DAG-related files will be copied to the designated DAG bucket.**
 
